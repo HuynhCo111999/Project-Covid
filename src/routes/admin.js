@@ -9,5 +9,6 @@ router.get('/', async(req, res) => {
 });
 router.get('/treatment-location', locationManagement.index);
 router.post('/add-location', locationManagement.add);
+router.post('/update-location/:id', locationManagement.update);
 
 module.exports = router;

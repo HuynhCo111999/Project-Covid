@@ -1,13 +1,13 @@
 <div class="d-flex justify-content-end mb-3">
     <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
-    data-bs-target="#exampleModalSignUp">
-    Thêm địa điểm
+        data-bs-target="#exampleModalSignUp">
+        Thêm địa điểm
     </button>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Thêm địa điểm điều trị / cách ly mới
@@ -42,6 +42,44 @@
     </div>
 </div>
 
+<!-- Modal Edit-->
+<div class="modal fade" id="ModalEditLocation" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Chỉnh sửa điểm điều trị / cách ly</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="edit-location-form" method="post">
+                        <div class="input-group input-group-static my-3">
+                            <label>Tên địa điểm</label>
+                            <input type="text" class="form-control" name="name" id="edit-name-input">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Sức chứa</label>
+                            <input type="number" class="form-control" name="capacity" id="edit-capacity-input">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Số lượng tiếp nhận hiện tại</label>
+                            <input type="number" class="form-control" name="current" id="edit-current-input">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="edit-location-form">Cập nhật</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="row">
     <div class="col-12">
         <div class="card my-4">
@@ -55,12 +93,12 @@
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
                                     Tên địa điểm</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">
                                     Sức chứa</th>
                                 <th
-                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    class="text-center text-uppercase text-secondary text-md font-weight-bolder opacity-7">
                                     Số lượng tiếp nhận hiện tại</th>
                                 <th class="text-secondary opacity-7"></th>
                             </tr>
@@ -70,23 +108,24 @@
                             <tr>
 
                                 <td>
-                                    <div class="d-flex px-2 py-1">
+                                    <div class="d-flex px-4 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-sm">{{name}}</h6>
+                                            <h6 class="mb-0 text-md">{{name}}</h6>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <p class="text-xs font-weight-bold mb-0">{{capacity}}</p>
+                                    <p class="text-md font-weight-bold mb-0">{{capacity}}</p>
                                 </td>
-                                <td class="align-middle text-center text-sm">
+                                <td class="align-middle text-center text-md">
                                     <span class="badge badge-sm bg-gradient-success">{{current}}</span>
                                 </td>
                                 <td class="align-middle">
-                                    <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
-                                        data-toggle="tooltip" data-original-title="Edit user">
-                                        Edit
-                                    </a>
+                                    <button type="button" class="btn bg-gradient-primary btn-block"
+                                        data-bs-toggle="modal" data-bs-target="#ModalEditLocation" data-name="{{name}}" 
+                                        data-capacity="{{capacity}}" data-current="{{current}}" data-id="{{id}}">
+                                        Chỉnh sửa
+                                    </button>
                                 </td>
                             </tr>
                             {{/each}}
@@ -97,3 +136,14 @@
         </div>
     </div>
 </div>
+
+<script src="/js/core/jquery-3.6.0.min.js"></script>
+<script>
+    var editModal = $('#ModalEditLocation');
+    editModal.on('shown.bs.modal',function(e){
+        $('#edit-name-input').val($(e.relatedTarget).attr("data-name"));
+        $('#edit-capacity-input').val($(e.relatedTarget).attr("data-capacity"));
+        $('#edit-current-input').val($(e.relatedTarget).attr("data-current"));
+        $('#edit-location-form').attr("action",`/admin/update-location/${$(e.relatedTarget).attr("data-id")}`);
+    })
+</script>
