@@ -1,0 +1,99 @@
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
+    data-bs-target="#exampleModalSignUp">
+    Thêm địa điểm
+    </button>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Thêm địa điểm điều trị / cách ly mới
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="add-location-form" action="/admin/add-location" method="post">
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Tên địa điểm</label>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Sức chứa</label>
+                            <input type="number" class="form-control" name="capacity">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Số lượng tiếp nhận hiện tại</label>
+                            <input type="number" class="form-control" name="current">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="add-location-form">Thêm</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Danh sách địa điểm điều trị / cách ly</h6>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Tên địa điểm</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    Sức chứa</th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Số lượng tiếp nhận hiện tại</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each locations}}
+                            <tr>
+
+                                <td>
+                                    <div class="d-flex px-2 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-sm">{{name}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="text-xs font-weight-bold mb-0">{{capacity}}</p>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <span class="badge badge-sm bg-gradient-success">{{current}}</span>
+                                </td>
+                                <td class="align-middle">
+                                    <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                        data-toggle="tooltip" data-original-title="Edit user">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

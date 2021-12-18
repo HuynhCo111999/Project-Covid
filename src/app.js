@@ -29,6 +29,7 @@ app.set('view engine', 'handlebars')
 app.set('views', path.join(__dirname, 'views'));
 
 //As Routes are defined in pages.js
+app.use('/admin', require('./routes/admin'));
 app.use('/', require('./routes/index'));
 app.use(express.static(__dirname + '/public'));
 require('./routes/auth.routes')(app);
