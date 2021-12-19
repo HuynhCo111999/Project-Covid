@@ -1,3 +1,9 @@
+
+{{#if msg}}
+    <div class="alert alert-danger" role="alert">
+        <strong>Danger!</strong> This is a danger alert—check it out!
+    </div>
+{{/if}}
 <div class="d-flex justify-content-end mb-3">
     <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
         data-bs-target="#exampleModalSignUp">
@@ -25,11 +31,11 @@
                         </div>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Sức chứa</label>
-                            <input type="number" class="form-control" name="capacity">
+                            <input type="number" class="form-control" name="capacity" min="0">
                         </div>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Số lượng tiếp nhận hiện tại</label>
-                            <input type="number" class="form-control" name="current">
+                            <input type="number" class="form-control" name="current" min="0">
                         </div>
                     </form>
                 </div>
@@ -62,11 +68,11 @@
                         </div>
                         <div class="input-group input-group-static my-3">
                             <label>Sức chứa</label>
-                            <input type="number" class="form-control" name="capacity" id="edit-capacity-input">
+                            <input type="number" class="form-control" name="capacity" id="edit-capacity-input" min="0">
                         </div>
                         <div class="input-group input-group-static my-3">
                             <label>Số lượng tiếp nhận hiện tại</label>
-                            <input type="number" class="form-control" name="current" id="edit-current-input">
+                            <input type="number" class="form-control" name="current" id="edit-current-input" min="0">
                         </div>
                     </form>
                 </div>
@@ -94,7 +100,9 @@
                         <thead>
                             <tr>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
-                                    Tên địa điểm</th>
+                                    Mã địa điểm</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                Tên địa điểm</th>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">
                                     Sức chứa</th>
                                 <th
@@ -106,7 +114,13 @@
                         <tbody>
                             {{#each locations}}
                             <tr>
-
+                                <td>
+                                    <div class="d-flex px-4 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-md">{{id}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="d-flex px-4 py-1">
                                         <div class="d-flex flex-column justify-content-center">
@@ -118,7 +132,7 @@
                                     <p class="text-md font-weight-bold mb-0">{{capacity}}</p>
                                 </td>
                                 <td class="align-middle text-center text-md">
-                                    <span class="badge badge-sm bg-gradient-success">{{current}}</span>
+                                    <span class="badge badge-sm bg-gradient-{{color}}">{{current}}</span>
                                 </td>
                                 <td class="align-middle">
                                     <button type="button" class="btn bg-gradient-primary btn-block"
