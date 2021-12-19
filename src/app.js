@@ -15,13 +15,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // database
 const db = require("./models");
-const Role = db.role;
-
+const init = require("./middleware/init-table");
 // db.sequelize.sync();
-// force: true will drop the table if it already exists
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and Resync Database with { force: true }");
-  initial();
+db.sequelize.sync({ force: false, alter: true }).then(() => {
+  init.initial();
 });
 
 app.engine("handlebars", engine());
@@ -39,20 +36,3 @@ app.use("/moderator", require("./routes/moderator"));
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`);
 });
-
-function initial() {
-  Role.create({
-    id: 1,
-    name: "user",
-  });
-
-  Role.create({
-    id: 2,
-    name: "moderator",
-  });
-
-  Role.create({
-    id: 3,
-    name: "admin",
-  });
-}
