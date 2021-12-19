@@ -1,49 +1,72 @@
+<div class="card z-index-0 fadeIn3 fadeInBottom ">
 <h3 class='text-center my-3'>THÔNG TIN NGƯỜI LIÊN QUAN ĐẾN COVID-19</h3>
-<div class="container-fluid w-50">
+<div class="container-fluid w-75">
     <form role="form" method="post" action="/moderator/add-user">
-        <div class="input-group input-group-outline my-3">
-            <label class="form-label">Họ tên</label>
-            <input type="text" class="form-control" name="name">
+        <div class="row">
+            <div class="col">
+                <div class="input-group input-group-outline my-3 col">
+                    <label class="form-label">Họ tên</label>
+                    <input type="text" class="form-control" name="name">
+                </div>
+            </div>       
+            <div class="col-4">
+                <div class="input-group input-group-outline my-3 col">
+                    <label class="form-label">CMND/CCCD</label>
+                    <input type="number" class="form-control" name="card">
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="input-group input-group-outline my-3 col">
+                    <label class="form-label">Năm sinh</label>
+                    <input type="number" class="form-control" name="yob" min="1900" max="2022">
+                </div>
+            </div>
         </div>
-        <div class="input-group input-group-outline my-3 col">
-            <label class="form-label">CMND/CCCD</label>
-            <input type="number" class="form-control" name="card">
+        <div class="row">
+            <div class="col">
+                <div class="input-group input-group-outline my-3 col">
+                    <label class="form-label">Tỉnh/Thành phố</label>
+                    <input type="text" class="form-control" name="province">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group input-group-outline my-3 col">
+                    <label class="form-label">Quận/Huyện</label>
+                    <input type="text" class="form-control" name="district">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group input-group-outline my-3 col">
+                    <label class="form-label">Phường/Xã</label>
+                    <input type="text" class="form-control" name="ward">
+                </div>
+            </div>
         </div>
-        <div class="input-group input-group-outline my-3 col">
-            <label class="form-label">Năm sinh</label>
-            <input type="number" class="form-control" name="yob" min="1900" max="2022">
-        </div>
-        <div class="input-group input-group-outline my-3 col">
-            <label class="form-label">Tỉnh/Thành phố</label>
-            <input type="text" class="form-control" name="province">
-        </div>
-        <div class="input-group input-group-outline my-3 col">
-            <label class="form-label">Quận/Huyện</label>
-            <input type="text" class="form-control" name="district">
-        </div>
-        <div class="input-group input-group-outline my-3 col">
-            <label class="form-label">Phường/Xã</label>
-            <input type="text" class="form-control" name="ward">
-        </div>
-
-        <div class="input-group input-group-outline my-3 col">
-            <select class="form-control" name="status">
-                <option>F0</option>
-                <option>F1</option>
-                <option>F2</option>
-                <option>F3</option>
-            </select>
-        </div>
+        <div class="row">
+            <div class="col-2">
+                <div class="input-group input-group-outline my-3 col">
+                    <select class="form-control" name="status">
+                        <option>F0</option>
+                        <option>F1</option>
+                        <option>F2</option>
+                        <option>F3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group input-group-outline my-3 col">
+                    <label class="form-label">Người liên quan</label>
+                    <input type="text" class="form-control" name="related-person">
+                </div>
+            </div>
+        </div> 
         <div class="input-group input-group-outline my-3 col">
             <label class="form-label">Nơi đang điều trị/cách ly</label>
             <input type="text" class="form-control" name="place">
-        </div>
-        <div class="input-group input-group-outline my-3 col">
-            <label class="form-label">Người liên quan</label>
-            <input type="text" class="form-control" name="related-person">
         </div>
         <div class="text-center mb-5">
             <button type="submit" class="btn bg-gradient-primary w-25 my-4 mb-2">THÊM</button>
         </div>
     </form>
+</div>
 </div>
