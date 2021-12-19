@@ -13,7 +13,9 @@ exports.index = async (req, res) => {
     });
 }
 exports.add = async (req, res) => {
-    if(req.body.current > req.body.capacity) {
+    var cur = parseInt(req.body.current);
+    var cap = parseInt(req.body.capacity);
+    if(cur > cap) {
         res.send('Số lượng tiếp nhận hiện tại phải nhỏ hơn sức chứa.');
         return;
     }
@@ -21,7 +23,9 @@ exports.add = async (req, res) => {
     res.redirect('./treatment-location');
 }
 exports.update = async (req, res) => {
-    if(req.body.current > req.body.capacity) {
+    var cur = parseInt(req.body.current);
+    var cap = parseInt(req.body.capacity);
+    if(cur > cap) {
         res.send('Số lượng tiếp nhận hiện tại phải nhỏ hơn sức chứa.');
         return;
     }
