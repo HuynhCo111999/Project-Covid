@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const { engine } = require('express-handlebars');
+const { engine } = require("express-handlebars");
 const bodyParser = require("body-parser");
-const path = require('path');
-require('dotenv').config()
+const path = require("path");
+require("dotenv").config();
 //set port local
 const port = process.env.PORT || 3000;
 
@@ -19,38 +19,40 @@ const Role = db.role;
 
 // db.sequelize.sync();
 // force: true will drop the table if it already exists
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Database with { force: true }');
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and Resync Database with { force: true }");
   initial();
 });
 
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars')
-app.set('views', path.join(__dirname, 'views'));
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", path.join(__dirname, "views"));
 
 //As Routes are defined in pages.js
-app.use('/', require('./routes/index'));
-app.use(express.static(__dirname + '/public'));
-require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
+app.use("/", require("./routes/index"));
+app.use(express.static(__dirname + "/public"));
+require("./routes/auth.routes")(app);
+require("./routes/user.routes")(app);
+
+app.use("/moderator", require("./routes/moderator"));
 
 app.listen(port, () => {
-    console.log(`Server started on port: ${port}`);
-})
+  console.log(`Server started on port: ${port}`);
+});
 
 function initial() {
-    Role.create({
-      id: 1,
-      name: "user"
-    });
-   
-    Role.create({
-      id: 2,
-      name: "moderator"
-    });
-   
-    Role.create({
-      id: 3,
-      name: "admin"
-    });
-  }
+  Role.create({
+    id: 1,
+    name: "user",
+  });
+
+  Role.create({
+    id: 2,
+    name: "moderator",
+  });
+
+  Role.create({
+    id: 3,
+    name: "admin",
+  });
+}
