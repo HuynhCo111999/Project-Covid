@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const { engine } = require("express-handlebars");
+const expressHbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const path = require("path");
 require("dotenv").config();
@@ -17,11 +18,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = require("./models");
 const init = require("./middleware/init-table");
 // db.sequelize.sync();
-db.sequelize.sync({ force: false, alter: true }).then(() => {
+
+/* db.sequelize.sync({ force: false, alter: true }).then(() => {
+  init.initial();
+}); */
+
+//DROP DATABASE IF EXIST (For development)
+db.sequelize.sync({ force: true }).then(() => {
   init.initial();
 });
 
-app.engine("handlebars", engine());
+const hbs = expressHbs.create({
+  helpers: {
+    ifStr(s1, s2, options) {
+      return s1 === s2 ? options.fn(this) : options.inverse(this);
+    },
+  },
+});
+app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "views"));
 

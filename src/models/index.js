@@ -22,7 +22,6 @@ db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.covidUser = require("../models/covid-user.model.js")(sequelize, Sequelize);
-db.covidNecessity = require("../models/covid-necessity.model")(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
