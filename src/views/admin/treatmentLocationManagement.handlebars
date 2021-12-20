@@ -22,7 +22,7 @@
                     <form role="form text-left" id="add-location-form" action="/admin/add-location" method="post" onsubmit="return validateAdd()">
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Tên địa điểm</label>
-                            <input type="text" class="form-control" name="name">
+                            <input type="text" class="form-control" name="name" id="add-name-input">
                         </div>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Sức chứa</label>
@@ -159,6 +159,26 @@
     })
     const validateAdd = () => {
         const current_input = $('#add-current-input');
+        const name_input = $('#add-name-input');
+        const capacity_input = $('#add-capacity-input');
+        current_input.parent().removeClass("is-invalid");
+        name_input.parent().removeClass("is-invalid");
+        capacity_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#errmsg').html("Vui lòng nhập tên địa điểm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(capacity_input.val() === "") {
+            $('#errmsg').html("Vui lòng sức chứa địa điểm.")
+            capacity_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(current_input.val() === "") {
+            $('#errmsg').html("Vui lòng nhập số lượng tiếp nhận hiện tại của địa điểm.")
+            current_input.parent().addClass("is-invalid");
+            return false;
+        }
 
         var current = parseInt(current_input.val());
         var capacity = parseInt($('#add-capacity-input').val());
@@ -171,6 +191,26 @@
     }
     const validateEdit = () => {
         const current_input = $('#edit-current-input');
+        const name_input = $('#edit-name-input');
+        const capacity_input = $('#edit-capacity-input');
+        current_input.parent().removeClass("is-invalid");
+        name_input.parent().removeClass("is-invalid");
+        capacity_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#errmsg2').html("Vui lòng nhập tên địa điểm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(capacity_input.val() === "") {
+            $('#errmsg2').html("Vui lòng sức chứa địa điểm.")
+            capacity_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(current_input.val() === "") {
+            $('#errmsg2').html("Vui lòng nhập số lượng tiếp nhận hiện tại của địa điểm.")
+            current_input.parent().addClass("is-invalid");
+            return false;
+        }
         
         var current = parseInt(current_input.val());
         var capacity = parseInt($('#edit-capacity-input').val());
