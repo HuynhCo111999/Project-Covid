@@ -1,5 +1,11 @@
 <div class="card z-index-0 fadeIn3 fadeInBottom ">
-<h3 class='text-center my-3'>THÔNG TIN NGƯỜI LIÊN QUAN ĐẾN COVID-19</h3>
+<h3 class='text-center my-3'>THÊM THÔNG TIN NGƯỜI LIÊN QUAN ĐẾN COVID-19</h3>
+{{#each errorMessage}}
+        <p class="text-center mb-2" style="color:red">{{this.msg}}</p>
+{{/each}}
+{{#if successMessage}}
+    <h5 class="text-center my-2 text-success">{{successMessage}}</h5>
+{{/if}}
 <div class="container-fluid w-75">
     <form role="form" method="post" action="/moderator/add-user">
         <div class="row">
