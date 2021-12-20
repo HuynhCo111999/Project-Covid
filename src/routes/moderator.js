@@ -8,16 +8,18 @@ router.get("/add-user", moderatorController.getAddUser);
 router.post(
   "/add-user",
   [
-    body("name", "Họ và tên không được ít hơn 4 kí tự")
+    body("name", "Họ tên không được ít hơn 4 kí tự")
       .trim()
       .isLength({ min: 4 }),
-    body("name", "Họ và tên không được chứa số và các ký tự đặc biệt")
-      .trim()
-      .isAlpha(),
-    body("card", "CMND/CCCD phải từ 9 đến 12 chữ số").isLength({
-      min: 9,
-      max: 12,
-    }),
+    body("name", "Họ tên không được chứa số và các ký tự đặc biệt").matches(
+      /^[A-Za-zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ ]+$/
+    ),
+    body("card", "CMND/CCCD phải bao gồm 9 hoặc 12 chữ số").custom(
+      (value, { req }) => {
+        if (value.toString().length == 9 || value.toString().length == 12)
+          return true;
+      }
+    ),
     body("yob", "Năm sinh không được để trống").isLength({ min: 4, max: 4 }),
     body("province", "Tỉnh/Thành không được để trống")
       .trim()

@@ -9,6 +9,7 @@ exports.getIndex = (req, res) => {
 exports.getAddUser = (req, res) => {
   res.render("moderator/add-user", {
     layout: "moderator/main",
+    errorMessage: ["none"],
   });
 };
 
