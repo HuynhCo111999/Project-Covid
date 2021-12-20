@@ -7,29 +7,44 @@ exports.getIndex = (req, res) => {
 };
 
 exports.getAddUser = (req, res) => {
-  res.render("moderator/add-user", {
-    layout: "moderator/main",
-    errorMessage: ["none"],
-  });
+  covidUser
+    .findAll({
+      attributes: ["name", "yob", "ward", "district", "province"],
+      raw: true,
+    })
+    .then((users) => {
+      res.render("moderator/add-user", {
+        layout: "moderator/main",
+        related_persons: users,
+      });
+    });
 };
 
 exports.postAddUser = (req, res) => {
   const errors = validationResult(req);
-  console.log(errors);
 
   if (!errors.isEmpty()) {
-    return res.status(422).render("moderator/add-user", {
-      layout: "moderator/main",
-      errorMessage: errors.array(),
-      name: req.body.name,
-      card: req.body.card,
-      yob: req.body.yob,
-      province: req.body.province,
-      district: req.body.district,
-      ward: req.body.ward,
-      status: req.body.status,
-      place: req.body.place,
-    });
+    return covidUser
+      .findAll({
+        attributes: ["name", "yob", "ward", "district", "province"],
+        raw: true,
+      })
+      .then((users) => {
+        res.status(422).render("moderator/add-user", {
+          layout: "moderator/main",
+          errorMessage: errors.array(),
+          related_persons: users,
+          name: req.body.name,
+          card: req.body.card,
+          yob: req.body.yob,
+          province: req.body.province,
+          district: req.body.district,
+          ward: req.body.ward,
+          status: req.body.status,
+          related_person: req.body.related_person,
+          place: req.body.place,
+        });
+      });
   }
 
   covidUser
@@ -41,6 +56,7 @@ exports.postAddUser = (req, res) => {
       district: req.body.district,
       ward: req.body.ward,
       status: req.body.status,
+      related_person: req.body.related_person,
       treatment_place: req.body.place,
     })
     .then(() => {
@@ -50,10 +66,18 @@ exports.postAddUser = (req, res) => {
       });
     })
     .then(() => {
-      res.render("moderator/add-user", {
-        layout: "moderator/main",
-        successMessage: "Thêm thành công",
-      });
+      covidUser
+        .findAll({
+          attributes: ["name", "yob", "ward", "district", "province"],
+          raw: true,
+        })
+        .then((users) => {
+          res.render("moderator/add-user", {
+            layout: "moderator/main",
+            related_persons: users,
+            successMessage: "Thêm thành công",
+          });
+        });
     })
     .catch((err) => {
       console.log(err);

@@ -41,7 +41,7 @@
             <div class="col">
                 <div class="input-group input-group-outline mt-3 {{#if province}}focused is-focused{{/if}}">
                     <label class="form-label">Tỉnh/Thành phố</label>
-                    <input type="text" class="form-control" name="province" value={{#if province}}{{province}}{{/if}}>
+                    <input type="text" class="form-control" name="province" value="{{#if province}}{{province}}{{/if}}">
                 </div>
                 {{#each errorMessage}}
                 {{#ifStr this.param "province"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
@@ -50,7 +50,7 @@
             <div class="col">
                 <div class="input-group input-group-outline mt-3 {{#if district}}focused is-focused{{/if}}">
                     <label class="form-label">Quận/Huyện</label>
-                    <input type="text" class="form-control" name="district" value={{#if district}}{{district}}{{/if}}>
+                    <input type="text" class="form-control" name="district" value="{{#if district}}{{district}}{{/if}}">
                 </div>
                 {{#each errorMessage}}
                 {{#ifStr this.param "district"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
@@ -59,7 +59,7 @@
             <div class="col">
                 <div class="input-group input-group-outline mt-3 {{#if ward}}focused is-focused{{/if}}">
                     <label class="form-label">Phường/Xã</label>
-                    <input type="text" class="form-control" name="ward" value={{#if ward}}{{ward}}{{/if}}>
+                    <input type="text" class="form-control" name="ward" value="{{#if ward}}{{ward}}{{/if}}">
                 </div>
                 {{#each errorMessage}}
                 {{#ifStr this.param "ward"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
@@ -79,15 +79,19 @@
             </div>
             <div class="col">
                 <div class="input-group input-group-outline mt-3">
-                    <label class="form-label">Người liên quan</label>
-                    <input type="text" class="form-control" name="related-person">
+                    <select class="form-control" name="related_person">
+                        <option {{#if related_person}}{{else}}selected{{/if}} disabled>Người liên quan</option>
+                        {{#each related_persons}}
+                            <option {{#ifStr related_person "{{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"}}selected{{/ifStr}}>{{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
+                        {{/each}}
+                    </select>
                 </div>
                 {{!-- Thêm validation  --}}
             </div>
         </div> 
         <div class="input-group input-group-outline mt-3 {{#if place}}focused is-focused{{/if}}">
             <label class="form-label">Nơi đang điều trị/cách ly</label>
-            <input type="text" class="form-control" name="place" value={{#if place}}{{place}}{{/if}}>
+            <input type="text" class="form-control" name="place" value="{{#if place}}{{place}}{{/if}}">
         </div>
         {{#each errorMessage}}
         {{#ifStr this.param "place"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}

@@ -11,6 +11,10 @@
   font-size: 0.85rem;
   font-weight: bold;
 }
+.err-border {
+  border-color: red
+}
+
 :root {
   --bs-blue: #63b3ed;
   --bs-indigo: #596cff;
