@@ -1,50 +1,50 @@
 <div class="card z-index-0 fadeIn3 fadeInBottom ">
 <h3 class='text-center my-3'>THÊM THÔNG TIN NGƯỜI LIÊN QUAN ĐẾN COVID-19</h3>
 {{#each errorMessage}}
-        <p class="text-center mb-2" style="color:red">{{this.msg}}</p>
+    <h6 class="text-center mb-2" style="color:red">{{this.msg}}</h6>
 {{/each}}
 {{#if successMessage}}
-    <h5 class="text-center my-2 text-success">{{successMessage}}</h5>
+    <h6 class="text-center my-2 text-success">{{successMessage}}</h6>
 {{/if}}
 <div class="container-fluid w-75">
     <form role="form" method="post" action="/moderator/add-user">
         <div class="row">
             <div class="col">
-                <div class="input-group input-group-outline my-3 col">
+                <div class="input-group input-group-outline my-3 {{#if name}}focused is-focused{{/if}}">
                     <label class="form-label">Họ tên</label>
-                    <input type="text" class="form-control" name="name">
+                    <input type="text" class="form-control" name="name" value={{#if name}}{{name}}{{/if}}>
                 </div>
             </div>       
             <div class="col-4">
-                <div class="input-group input-group-outline my-3 col">
+                <div class="input-group input-group-outline my-3 {{#if card}}focused is-focused{{/if}}">
                     <label class="form-label">CMND/CCCD</label>
-                    <input type="number" class="form-control" name="card">
+                    <input type="number" class="form-control" name="card" value={{#if card}}{{card}}{{/if}}>
                 </div>
             </div>
             <div class="col-2">
-                <div class="input-group input-group-outline my-3 col">
+                <div class="input-group input-group-outline my-3 {{#if yob}}focused is-focused{{/if}}">
                     <label class="form-label">Năm sinh</label>
-                    <input type="number" class="form-control" name="yob" min="1900" max="2022">
+                    <input type="number" class="form-control" name="yob" min="1900" max="2022" value={{#if yob}}{{yob}}{{/if}}>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <div class="input-group input-group-outline my-3 col">
+                <div class="input-group input-group-outline my-3 {{#if province}}focused is-focused{{/if}}">
                     <label class="form-label">Tỉnh/Thành phố</label>
-                    <input type="text" class="form-control" name="province">
+                    <input type="text" class="form-control" name="province" value={{#if province}}{{province}}{{/if}}>
                 </div>
             </div>
             <div class="col">
-                <div class="input-group input-group-outline my-3 col">
+                <div class="input-group input-group-outline my-3 {{#if district}}focused is-focused{{/if}}">
                     <label class="form-label">Quận/Huyện</label>
-                    <input type="text" class="form-control" name="district">
+                    <input type="text" class="form-control" name="district" value={{#if district}}{{district}}{{/if}}>
                 </div>
             </div>
             <div class="col">
-                <div class="input-group input-group-outline my-3 col">
+                <div class="input-group input-group-outline my-3 {{#if ward}}focused is-focused{{/if}}">
                     <label class="form-label">Phường/Xã</label>
-                    <input type="text" class="form-control" name="ward">
+                    <input type="text" class="form-control" name="ward" value={{#if ward}}{{ward}}{{/if}}>
                 </div>
             </div>
         </div>
@@ -53,6 +53,7 @@
                 <div class="input-group input-group-outline my-3 col">
                     <select class="form-control" name="status">
                         <option>F0</option>
+                        {{!-- {{#if status == "F1"}}<option selected>F1</option>{{/if}} --}}          
                         <option>F1</option>
                         <option>F2</option>
                         <option>F3</option>
@@ -60,15 +61,15 @@
                 </div>
             </div>
             <div class="col">
-                <div class="input-group input-group-outline my-3 col">
+                <div class="input-group input-group-outline my-3">
                     <label class="form-label">Người liên quan</label>
                     <input type="text" class="form-control" name="related-person">
                 </div>
             </div>
         </div> 
-        <div class="input-group input-group-outline my-3 col">
+        <div class="input-group input-group-outline my-3 {{#if place}}focused is-focused{{/if}}">
             <label class="form-label">Nơi đang điều trị/cách ly</label>
-            <input type="text" class="form-control" name="place">
+            <input type="text" class="form-control" name="place" value={{#if place}}{{place}}{{/if}}>
         </div>
         <div class="text-center mb-5">
             <button type="submit" class="btn bg-gradient-primary w-25 my-4 mb-2">THÊM</button>

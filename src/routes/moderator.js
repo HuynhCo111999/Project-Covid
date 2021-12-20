@@ -11,6 +11,9 @@ router.post(
     body("name", "Họ và tên không được ít hơn 4 kí tự")
       .trim()
       .isLength({ min: 4 }),
+    body("name", "Họ và tên không được chứa số và các ký tự đặc biệt")
+      .trim()
+      .isAlpha(),
     body("card", "CMND/CCCD phải từ 9 đến 12 chữ số").isLength({
       min: 9,
       max: 12,
