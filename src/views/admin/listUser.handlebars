@@ -1,0 +1,161 @@
+
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
+        data-bs-target="#exampleModalSignUp">
+        <i class="material-icons opacity-10">person_add</i>
+    </button>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Thêm Người quản lí
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="add-location-form" action="/admin/createUser" method="post">
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" id="add-name-input">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-control" name="email" min="0" id="add-capacity-input">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" min="0" id="add-capacity-input">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            {{!-- <label class="form-label">Số lượng tiếp nhận hiện tại</label> --}}
+                            <select class="form-control" id="exampleFormControlSelect1" name="roles">
+                                <option selected value="moderator">Moderator</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                    </form>
+                    <p class="text-danger" id="errmsg"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="add-location-form">Thêm</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit-->
+<div class="modal fade" id="ModalEditLocation" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Chỉnh sửa điểm điều trị / cách ly</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="edit-location-form" method="post" onsubmit="return validateEdit()">
+                        <div class="input-group input-group-static my-3">
+                            <label>Tên địa điểm</label>
+                            <input type="text" class="form-control" name="name" id="edit-name-input">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Sức chứa</label>
+                            <input type="number" class="form-control" name="capacity" id="edit-capacity-input" min="0">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Số lượng tiếp nhận hiện tại</label>
+                            <input type="number" class="form-control" name="current" id="edit-current-input" min="0">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="errmsg2"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="edit-location-form">Cập nhật</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Danh sách người sử dụng</h6>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    UserId</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    Username</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">
+                                    Email</th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    password</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each listUsers}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-4 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-md">{{id}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-md">{{username}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="text-md font-weight-bold mb-0">{{email}}</p>
+                                </td>
+                                <td class="align-middle text-center text-md">
+                                    <span class="text-md">{{password}}</span>
+                                </td>
+                                <td class="align-middle">
+                                    <button style="height: auto; margin: auto" type="button" class="btn bg-gradient-primary btn-block"
+                                        data-bs-toggle="modal" data-bs-target="#ModalEditLocation" data-name="{{username}}" 
+                                        data-capacity="{{email}}" data-current="{{email}}" data-id="{{id}}">
+                                        <i class="material-icons opacity-10">edit</i>
+                                    </button>
+                                    <button style="height: auto; margin: auto" type="button" class="btn bg-gradient-primary btn-block"
+                                        data-bs-toggle="modal" data-bs-target="#ModalEditLocation" data-name="{{username}}" 
+                                        data-capacity="{{email}}" data-current="{{email}}" data-id="{{id}}">
+                                        <i class="material-icons opacity-10">delete</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,6 +3,7 @@ const app = express();
 const { engine } = require('express-handlebars');
 const bodyParser = require("body-parser");
 const path = require('path');
+const cookieParser = require('cookie-parser');
 require('dotenv').config()
 //set port local
 const port = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cookieParser());
 // database
 const db = require("./models");
 const Role = db.role;

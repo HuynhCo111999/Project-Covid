@@ -25,13 +25,13 @@ exports.signup = (req, res) => {
           }
         }).then(roles => {
           user.setRoles(roles).then(() => {
-            res.send({ message: "User registered successfully!" });
+            res.redirect('/admin/users');
           });
         });
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
-          res.send({ message: "User registered successfully!" });
+          res.redirect('/admin/users');
         });
       }
     })
@@ -41,6 +41,8 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+  console.log("req: ", req.body);
+
   User.findOne({
     where: {
       username: req.body.username
@@ -48,7 +50,8 @@ exports.signin = (req, res) => {
   })
     .then(user => {
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        // return res.status(404).send({ message: "User Not found." });
+        res.redirect('/');
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -57,28 +60,34 @@ exports.signin = (req, res) => {
       );
 
       if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
+        // return res.status(401).send({
+        //   accessToken: null,
+        //   message: "Invalid Password!"
+        // });
+        res.redirect('/')
       }
 
       var token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
-
-      var authorities = [];
+      res.cookie("access_token", token);
       user.getRoles().then(roles => {
         for (let i = 0; i < roles.length; i++) {
-          authorities.push("ROLE_" + roles[i].name.toUpperCase());
+          if(roles[i].name.toUpperCase() === "ADMIN")
+            res.redirect('/admin');
+          else if (roles[i].name.toUpperCase() === "MODERATOR")
+            res.redirect('/moderator');
+          else 
+            res.redirect('user');
         }
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roles: authorities,
-          accessToken: token
-        });
+        
+        // res.status(200).send({
+        //   id: user.id,
+        //   username: user.username,
+        //   email: user.email,
+        //   roles: authorities,
+        //   accessToken: token
+        // });
       });
     })
     .catch(err => {
