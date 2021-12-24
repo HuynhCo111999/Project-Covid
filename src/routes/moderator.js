@@ -5,6 +5,8 @@ const { check, body } = require("express-validator/check");
 // localhost:3000/moderator
 router.get("/", moderatorController.getIndex);
 router.get("/add-user", moderatorController.getAddUser);
+router.get("/necessities", moderatorController.getNecessities);
+
 router.post(
   "/add-user",
   [
