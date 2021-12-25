@@ -2,10 +2,6 @@ const covidUser = require("../models/index").covidUser;
 const User = require("../models/index").user;
 const { validationResult } = require("express-validator/check");
 
-exports.getNecessities = (req, res) => {
-  res.render("moderator/necessities-management", { layout: "moderator/main"});
-};
-
 exports.getIndex = (req, res) => {
   res.render("moderator/main", { layout: "moderator/main" });
 };
