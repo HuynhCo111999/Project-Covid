@@ -33,5 +33,8 @@ router.post('/deleteUser',
   ],
   authController.deleteUser
 )
+router.post('/history', 
+  authController.getHistory
+)
 
 module.exports = router;

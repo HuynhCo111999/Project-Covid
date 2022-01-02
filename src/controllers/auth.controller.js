@@ -2,7 +2,7 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
 const Role = db.role;
-
+const Histores = db.histories;
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -130,7 +130,7 @@ exports.signin = (req, res) => {
       });
 
       res.cookie("access_token", token);
-
+      
       user.getRoles().then(roles => {
         for (let i = 0; i < roles.length; i++) {
           if(roles[i].name.toUpperCase() === "ADMIN")
@@ -138,7 +138,7 @@ exports.signin = (req, res) => {
           else if (roles[i].name.toUpperCase() === "MODERATOR")
             return res.redirect('/moderator');
           else 
-            return res.redirect('user');
+            return res.redirect('/user');
         }
         // res.status(200).send({
         //   id: user.id,
@@ -155,3 +155,13 @@ exports.signin = (req, res) => {
       });
     });
 };
+
+exports.getHistory = async(req, res) => {
+  const userId = req.query.id;
+  const histores = await Histores.findOne({
+    where: {
+      userId: userId
+    }
+  }); 
+  res.json(histores);
+}
