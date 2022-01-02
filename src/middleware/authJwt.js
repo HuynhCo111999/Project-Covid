@@ -6,8 +6,6 @@ const User = db.user;
 verifyToken = (req, res, next) => {
   // let token = req.headers["x-access-token"];
   let token = req.cookies['access_token'];
-
-
   if (!token) {
     return res.status(403).send({
       message: "No token provided!"
@@ -32,7 +30,7 @@ isAdmin = (req, res, next) => {
     if(!user) {
       return;
     }
-
+    
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "admin") {

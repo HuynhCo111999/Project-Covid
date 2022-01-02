@@ -121,7 +121,7 @@ exports.signin = (req, res) => {
         //   message: "Invalid Password!"
         // });
         return res.render('login', {
-          error: 'Password is invalid! Please check again!'
+          error: 'Password is wrong! Please check again!'
         })
       }
 
