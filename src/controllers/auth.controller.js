@@ -8,7 +8,7 @@ const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
-exports.signup = (req, res) => {
+exports.createUser = (req, res) => {
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -16,6 +16,7 @@ exports.signup = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8)
   })
     .then(user => {
+      console.log("roles create: ", req.body.roles);
       if (req.body.roles) {
         Role.findAll({
           where: {
@@ -40,18 +41,73 @@ exports.signup = (req, res) => {
     });
 };
 
+
+exports.deleteUser = async(req, res) => {
+  try {
+    const id = parseInt(req.query.id);
+    await product.destroy({
+        where: {
+            id: id
+        }
+    })
+    return res.redirect('/admin/users');
+  } catch (error) {
+      res.send(error);
+  }
+}
+
+exports.createUserTest = (req, res) => {
+  // Save User to Database
+  User.create({
+    username: req.body.username,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 8)
+  })
+    .then(user => {
+      if (req.body.roles) {
+        Role.findAll({
+          where: {
+            name: {
+              [Op.or]: req.body.roles
+            }
+          }
+        }).then(roles => {
+          user.setRoles(roles).then(() => {
+            return res.json({
+              success: 1,
+              message: 'User is registered!'
+            })
+          });
+        });
+      } else {
+        // user role = 1
+        user.setRoles([1]).then(() => {
+          return res.json({
+            success: 1,
+            message: 'User is registered!'
+          })
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
 exports.signin = (req, res) => {
   console.log("req: ", req.body);
-
   User.findOne({
     where: {
       username: req.body.username
     }
   })
     .then(user => {
+      console.log("user: ", user);
       if (!user) {
         // return res.status(404).send({ message: "User Not found." });
-        res.redirect('/');
+        return res.render('login', {
+          error: 'User not found. Please check again!'
+        });
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -64,23 +120,26 @@ exports.signin = (req, res) => {
         //   accessToken: null,
         //   message: "Invalid Password!"
         // });
-        res.redirect('/')
+        return res.render('login', {
+          error: 'Password is invalid! Please check again!'
+        })
       }
 
       var token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
+
       res.cookie("access_token", token);
+
       user.getRoles().then(roles => {
         for (let i = 0; i < roles.length; i++) {
           if(roles[i].name.toUpperCase() === "ADMIN")
-            res.redirect('/admin');
+            return res.redirect('/admin/users');
           else if (roles[i].name.toUpperCase() === "MODERATOR")
-            res.redirect('/moderator');
+            return res.redirect('/moderator');
           else 
-            res.redirect('user');
+            return res.redirect('user');
         }
-        
         // res.status(200).send({
         //   id: user.id,
         //   username: user.username,
@@ -91,6 +150,8 @@ exports.signin = (req, res) => {
       });
     })
     .catch(err => {
-      res.status(500).send({ message: err.message });
+      return res.render('login', {
+          error: 'User not found. Please check again!'
+      });
     });
 };
