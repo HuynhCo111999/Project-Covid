@@ -1,6 +1,7 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const { engine } = require('express-handlebars');
+const { engine } = require("express-handlebars");
+const expressHbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -17,18 +18,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 // database
 const db = require("./models");
-const Role = db.role;
-
+const init = require("./middleware/init-table");
 // db.sequelize.sync();
-// force: true will drop the table if it already exists
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Database with { force: true }');
-  initial();
+db.sequelize.sync({ force: true, alter: true }).then(() => {
+  init.initial();
 });
 
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars')
-app.set('views', path.join(__dirname, 'views'));
+const hbs = expressHbs.create({
+  helpers: {
+    ifStr(s1, s2, options) {
+      return s1 === s2 ? options.fn(this) : options.inverse(this);
+    },
+  },
+});
+app.engine("handlebars", hbs.engine);
+app.set("view engine", "handlebars");
+app.set("views", path.join(__dirname, "views"));
 
 //As Routes are defined in pages.js
 app.use('/admin', require('./routes/admin'));
@@ -37,23 +42,8 @@ app.use(express.static(__dirname + '/public'));
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 
-app.listen(port, () => {
-    console.log(`Server started on port: ${port}`);
-})
+app.use("/moderator", require("./routes/moderator"));
 
-function initial() {
-    Role.create({
-      id: 1,
-      name: "user"
-    });
-   
-    Role.create({
-      id: 2,
-      name: "moderator"
-    });
-   
-    Role.create({
-      id: 3,
-      name: "admin"
-    });
-  }
+app.listen(port, () => {
+  console.log(`Server started on port: ${port}`);
+});
