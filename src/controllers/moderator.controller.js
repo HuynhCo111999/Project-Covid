@@ -127,13 +127,16 @@ exports.deleteUser = async (req, res) => {
     .catch((err) => console.log(err));
 };
 
+exports.getIndexFromEdit = (req, res) => {
+  res.redirect("/moderator");
+};
+
 exports.getEditUser = async (req, res) => {
   const userId = req.params.id;
 
   const user = await covidUser.findByPk(userId, {
     raw: true,
   });
-  console.log(user);
 
   if (!user) return res.redirect("/moderator");
 
@@ -146,6 +149,7 @@ exports.getEditUser = async (req, res) => {
 
   return res.render("moderator/edit-user", {
     layout: "moderator/main",
+    userId: userId,
     name: user.name,
     related_persons: users,
     location: location,
@@ -154,8 +158,88 @@ exports.getEditUser = async (req, res) => {
     district: user.district,
     ward: user.ward,
     yob: user.yob,
+    status: user.status,
     related_person: user.related_person,
     place: user.treatment_place,
     function: "list",
   });
+};
+
+exports.editUser = async (req, res) => {
+  const userId = req.body.userId;
+  const errors = validationResult(req);
+
+  const users = await covidUser.findAll({
+    raw: true,
+  });
+  const location = await treatmentLocation.findAll({
+    raw: true,
+  });
+
+  let hasUser = false;
+  for (let user of users) {
+    if (
+      req.body.card === user.identity_card.toString() &&
+      user.id.toString() !== userId
+    )
+      hasUser = true;
+  }
+
+  if (hasUser) {
+    errors.errors.push({
+      value: req.body.card,
+      msg: "CMND/CCCD đã tồn tại",
+      param: "card",
+      location: "body",
+    });
+  }
+
+  console.log(errors);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("moderator/edit-user", {
+      layout: "moderator/main",
+      errorMessage: errors.array(),
+      userId: userId,
+      related_persons: users,
+      location: location,
+      name: req.body.name,
+      card: req.body.card,
+      yob: req.body.yob,
+      province: req.body.province,
+      district: req.body.district,
+      ward: req.body.ward,
+      status: req.body.status,
+      related_person: req.body.related_person,
+      place: req.body.place,
+      function: "list",
+    });
+  }
+
+  covidUser
+    .findByPk(userId)
+    .then((user) => {
+      user.name = req.body.name;
+      user.identity_card = req.body.card;
+      user.yob = req.body.yob;
+      user.province = req.body.province;
+      user.district = req.body.district;
+      user.ward = req.body.ward;
+      user.status = req.body.status;
+      user.related_person = req.body.related_person;
+      user.treatment_place = req.body.place;
+      return user.save();
+    })
+    .then(async () => {
+      const updated = await covidUser.findAll({
+        raw: true,
+      });
+      res.render("moderator/main", {
+        layout: "moderator/main",
+        function: "list",
+        users: updated,
+        successMessage: "Sửa thành công",
+      });
+    })
+    .catch((err) => console.log(err));
 };

@@ -5,6 +5,9 @@
                 <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 text-center">
                     <h5 class="text-white text-capitalize pt-2">DANH SÁCH NGƯỜI LIÊN QUAN ĐẾN COVID-19</h5>
                 </div>
+                {{#if successMessage}}
+                <h5 class="text-center mt-4 mb-0 text-success">{{successMessage}}</h5>
+                {{/if}}
             </div>
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive p-0">
@@ -66,6 +69,7 @@
                                                     <p style="font-weight: 400; color: black"><strong>CMND/CCCD:  </strong> {{this.identity_card}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Năm sinh:  </strong> {{this.yob}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Địa chỉ:  </strong> {{this.ward}} - {{this.district}} - {{this.province}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Trạng thái hiện tại:  </strong> {{this.status}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Nơi đang điều trị/cách ly:  </strong> {{this.treatment_place}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Người liên quan Covid-19:  </strong> {{this.related_person}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Lịch sử quá trình quản lý ....</strong></p>

@@ -4,7 +4,7 @@
     <h5 class="text-center mb-3 text-success">{{successMessage}}</h5>
     {{/if}}
     <div class="container-fluid w-75">
-        <form role="form" method="post" action="/moderator/add-user">
+        <form role="form" method="post" action="/moderator/edit-user">
             <div class="row mb-3">
                 <div class="col">
                     <div class="input-group input-group-outline mt-3 {{#if name}}focused is-focused{{/if}}">
@@ -102,6 +102,7 @@
                     {{/each}}
                 </select>
             </div>
+            <input type="hidden" name="userId" value="{{userId}}">
             <div class="text-center mb-5">
                 <button type="submit" class="btn bg-gradient-primary w-25 my-4 mb-2">SỬA</button>
             </div>
