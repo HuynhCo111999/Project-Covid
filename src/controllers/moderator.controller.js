@@ -112,3 +112,7 @@ exports.postAddUser = async (req, res) => {
       console.log(err);
     });
 };
+
+exports.deleteUser = async (req, res) => {
+  
+};

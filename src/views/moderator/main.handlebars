@@ -53,7 +53,33 @@
                                     </div>
                                 </td>
                                 <td class="align-middle">
-                                    <a href="/moderator/user/{{this.id}}" class="btn btn-primary my-1">Xem chi tiết</a>
+                                    <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Xem chi tiết</button>
+                                    <div class="modal fade" id="user{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary">
+                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin chi tiết</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p style="font-weight: 400; color: black"><strong>Họ và tên:  </strong> {{this.name}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>CMND/CCCD:  </strong> {{this.identity_card}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Năm sinh:  </strong> {{this.yob}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Địa chỉ:  </strong> {{this.ward}} - {{this.district}} - {{this.province}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Nơi đang điều trị/cách ly:  </strong> {{this.treatment_place}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Người liên quan Covid-19:  </strong> {{this.related_person}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Lịch sử quá trình quản lý ....</strong></p>
+                                                </div>
+                                                <div class="modal-footer d-flex justify-content-between">
+                                                    <div>
+                                                        <button type="button" class="btn btn-danger px-3 py-2 me-1"><i class="fas fa-trash-alt"></i> Xóa</button>
+                                                        <a href="/moderator/delete-user" type="button" class="btn btn-secondary px-3 py-2"><i class="far fa-edit"></i> Sửa</a>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             {{/each}}

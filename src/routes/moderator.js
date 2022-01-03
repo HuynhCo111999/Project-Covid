@@ -1,11 +1,13 @@
 const router = require("express").Router();
 const moderatorController = require("../controllers/moderator.controller");
-const necessitiesController = require("../controllers/necessities-management.controller")
+const necessitiesController = require("../controllers/necessities-management.controller");
 const { check, body } = require("express-validator/check");
 
 // localhost:3000/moderator
 router.get("/", moderatorController.getIndex);
 router.get("/add-user", moderatorController.getAddUser);
+router.get("/necessities", necessitiesController.get);
+router.post("/add-necessity", necessitiesController.add);
 router.post(
   "/add-user",
   [
@@ -37,7 +39,9 @@ router.post(
       .trim()
       .isLength({ min: 1 }),
   ],
-
   moderatorController.postAddUser
 );
+
+router.get("/delete-user", moderatorController.deleteUser);
+
 module.exports = router;

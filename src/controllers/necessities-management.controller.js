@@ -1,7 +1,7 @@
 exports.get = (req, res) => {
   res.render("moderator/necessities-management", {
     layout: "moderator/main",
-    function: "neccessities-product",
+    function: "necessities-produdct",
   });
 };
 
