@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const moderatorController = require("../controllers/moderator.controller");
 const necessitiesController = require("../controllers/necessities-management.controller")
-const { check, body } = require("express-validator/check");
+const { check, body } = require("express-validator");
 
 // localhost:3000/moderator
 router.get("/", moderatorController.getIndex);

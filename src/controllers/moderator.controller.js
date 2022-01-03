@@ -3,7 +3,10 @@ const User = require("../models/index").user;
 const { validationResult } = require("express-validator");
 
 exports.getIndex = (req, res) => {
-    res.render("moderator/main", { layout: "moderator/main" });
+  res.render("moderator/main", {
+    layout: "moderator/main",
+    function: "list",
+  });
 };
 
 exports.getAddUser = (req, res) => {
@@ -16,6 +19,7 @@ exports.getAddUser = (req, res) => {
       res.render("moderator/add-user", {
         layout: "moderator/main",
         related_persons: users,
+        function: "add-user",
       });
     });
 };
@@ -43,6 +47,7 @@ exports.postAddUser = (req, res) => {
           status: req.body.status,
           related_person: req.body.related_person,
           place: req.body.place,
+          function: "add-user",
         });
       });
   }
@@ -76,6 +81,7 @@ exports.postAddUser = (req, res) => {
             layout: "moderator/main",
             related_persons: users,
             successMessage: "Thêm thành công",
+            function: "add-user",
           });
         });
     })
