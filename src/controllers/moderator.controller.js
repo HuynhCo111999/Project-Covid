@@ -114,5 +114,15 @@ exports.postAddUser = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-  
+  const userId = req.params.id;
+
+  covidUser
+    .findByPk(userId)
+    .then((user) => {
+      return user.destroy();
+    })
+    .then(() => {
+      return res.redirect("/moderator");
+    })
+    .catch((err) => console.log(err));
 };
