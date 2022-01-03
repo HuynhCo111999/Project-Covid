@@ -44,4 +44,6 @@ router.post(
 
 router.get("/delete-user/:id", moderatorController.deleteUser);
 
+router.get("/edit-user/:id", moderatorController.getEditUser)
+
 module.exports = router;

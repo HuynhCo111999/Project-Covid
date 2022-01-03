@@ -5,7 +5,7 @@
 {{/if}}
 <div class="container-fluid w-75">
     <form role="form" method="post" action="/moderator/add-user">
-        <div class="row">
+        <div class="row mb-3">
             <div class="col">
                 <div class="input-group input-group-outline mt-3 {{#if name}}focused is-focused{{/if}}">
                     <label class="form-label">Họ tên</label>
@@ -37,7 +37,7 @@
         <div class="row">
             
         </div>
-        <div class="row">
+        <div class="row mb-3">
             <div class="col">
                 <div class="input-group input-group-outline mt-3 {{#if province}}focused is-focused{{/if}}">
                     <label class="form-label">Tỉnh/Thành phố</label>
@@ -69,7 +69,7 @@
         <div class="row">
             <div class="col-2">
                 <div class="input-group input-group-outline mt-3 col">
-                    <select class="form-control" name="status">
+                    <select class="form-control status-select" name="status" onclick="highlightStatus()">
                         <option {{#ifStr status "F0"}}selected{{/ifStr}}>F0</option>         
                         <option {{#ifStr status "F1"}}selected{{/ifStr}}>F1</option>
                         <option {{#ifStr status "F2"}}selected{{/ifStr}}>F2</option>
@@ -79,7 +79,7 @@
             </div>
             <div class="col">
                 <div class="input-group input-group-outline mt-3">
-                    <select class="form-control" name="related_person">
+                    <select class="form-control person-select" name="related_person" onchange="highlightPerson()">
                         <option {{#if related_person}}{{else}}selected{{/if}} disabled>Người liên quan</option>
                         {{#each related_persons}}
                             <option {{#ifStr related_person "{{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"}}selected{{/ifStr}}>{{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
@@ -88,8 +88,8 @@
                 </div>
             </div>
         </div> 
-        <div class="input-group input-group-outline mt-3">
-            <select class="form-control" name="place">
+        <div class="input-group input-group-outline mt-4">
+            <select class="form-control place-select" name="place" onchange="highlightPlace()">
                 <option {{#if place}}{{else}}selected{{/if}} disabled>Nơi điều trị/cách ly</option>
                 {{#each location}}
                     <option {{#ifStr place "{{this.name}}"}}selected{{/ifStr}}>{{this.name}}</option>

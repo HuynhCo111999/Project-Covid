@@ -126,3 +126,36 @@ exports.deleteUser = async (req, res) => {
     })
     .catch((err) => console.log(err));
 };
+
+exports.getEditUser = async (req, res) => {
+  const userId = req.params.id;
+
+  const user = await covidUser.findByPk(userId, {
+    raw: true,
+  });
+  console.log(user);
+
+  if (!user) return res.redirect("/moderator");
+
+  const users = await covidUser.findAll({
+    raw: true,
+  });
+  const location = await treatmentLocation.findAll({
+    raw: true,
+  });
+
+  return res.render("moderator/edit-user", {
+    layout: "moderator/main",
+    name: user.name,
+    related_persons: users,
+    location: location,
+    card: user.identity_card,
+    province: user.province,
+    district: user.district,
+    ward: user.ward,
+    yob: user.yob,
+    related_person: user.related_person,
+    place: user.treatment_place,
+    function: "list",
+  });
+};
