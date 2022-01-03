@@ -1,2 +1,66 @@
-<h1>DANH SÁCH NGƯỜI LIÊN QUAN ĐẾN COVID-19</h1>
-<h1>....</h1>
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 text-center">
+                    <h5 class="text-white text-capitalize pt-2">DANH SÁCH NGƯỜI LIÊN QUAN ĐẾN COVID-19</h5>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                    Họ tên</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                    CMND/CCCD</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                    Năm sinh</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                    Địa chỉ</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                    Trạng thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each users}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md">{{this.name}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{this.identity_card}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{this.yob}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <h6 class="mb-0 text-md">{{this.ward}} - {{this.district}} - {{this.province}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{this.status}}</h6>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <a href="/moderator/user/{{this.id}}" class="btn btn-primary my-1">Xem chi tiết</a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,10 +3,14 @@ const User = require("../models/index").user;
 const treatmentLocation = require("../models/index").treatmentLocation;
 const { validationResult } = require("express-validator");
 
-exports.getIndex = (req, res) => {
+exports.getIndex = async (req, res) => {
+  const users = await covidUser.findAll({
+    raw: true,
+  });
   res.render("moderator/main", {
     layout: "moderator/main",
     function: "list",
+    users: users,
   });
 };
 
@@ -51,7 +55,7 @@ exports.postAddUser = async (req, res) => {
   }
 
   if (!errors.isEmpty()) {
-    res.status(422).render("moderator/add-user", {
+    return res.status(422).render("moderator/add-user", {
       layout: "moderator/main",
       errorMessage: errors.array(),
       related_persons: users,
@@ -96,7 +100,7 @@ exports.postAddUser = async (req, res) => {
         raw: true,
       });
 
-      res.render("moderator/add-user", {
+      return res.render("moderator/add-user", {
         layout: "moderator/main",
         related_persons: users,
         location: location,
