@@ -86,16 +86,16 @@
                         {{/each}}
                     </select>
                 </div>
-                {{!-- Thêm validation  --}}
             </div>
         </div> 
-        <div class="input-group input-group-outline mt-3 {{#if place}}focused is-focused{{/if}}">
-            <label class="form-label">Nơi đang điều trị/cách ly</label>
-            <input type="text" class="form-control" name="place" value="{{#if place}}{{place}}{{/if}}">
+        <div class="input-group input-group-outline mt-3">
+            <select class="form-control" name="place">
+                <option {{#if place}}{{else}}selected{{/if}} disabled>Nơi điều trị/cách ly</option>
+                {{#each location}}
+                    <option {{#ifStr place "{{this.name}}"}}selected{{/ifStr}}>{{this.name}}</option>
+                {{/each}}
+            </select>
         </div>
-        {{#each errorMessage}}
-        {{#ifStr this.param "place"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-        {{/each}}
         <div class="text-center mb-5">
             <button type="submit" class="btn bg-gradient-primary w-25 my-4 mb-2">THÊM</button>
         </div>
