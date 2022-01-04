@@ -29,6 +29,12 @@ const hbs = expressHbs.create({
     ifStr(s1, s2, options) {
       return s1 === s2 ? options.fn(this) : options.inverse(this);
     },
+    getName(s) {
+      return s.split(".")[1].split(",")[0];
+    },
+    getId(s) {
+      return s.split(".")[0].trim();
+    },
   },
 });
 app.engine("handlebars", hbs.engine);

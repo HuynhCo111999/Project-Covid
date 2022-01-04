@@ -16,7 +16,6 @@ exports.getIndex = async (req, res) => {
 
 exports.getAddUser = async (req, res) => {
   const users = await covidUser.findAll({
-    attributes: ["name", "yob", "ward", "district", "province"],
     raw: true,
   });
   const location = await treatmentLocation.findAll({
@@ -93,7 +92,6 @@ exports.postAddUser = async (req, res) => {
     })
     .then(async () => {
       const users = await covidUser.findAll({
-        attributes: ["name", "yob", "ward", "district", "province"],
         raw: true,
       });
       const location = await treatmentLocation.findAll({
@@ -116,12 +114,28 @@ exports.postAddUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const userId = req.params.id;
 
+  const user = await covidUser.findByPk(userId, { raw: true });
+  const account = await User.findOne({
+    username: user.identity_card.toString(),
+  });
+
   covidUser
     .findByPk(userId)
     .then((user) => {
+      account.destroy();
       return user.destroy();
     })
-    .then(() => {
+    .then(async () => {
+      const users = await covidUser.findAll({
+        raw: true,
+      });
+      for (let user of users) {
+        if (user.related_person.toString().split(".")[0] === userId) {
+          const u = await covidUser.findByPk(user.id);
+          u.related_person = null;
+          u.save();
+        }
+      }
       return res.redirect("/moderator");
     })
     .catch((err) => console.log(err));
@@ -140,9 +154,12 @@ exports.getEditUser = async (req, res) => {
 
   if (!user) return res.redirect("/moderator");
 
-  const users = await covidUser.findAll({
+  let users = await covidUser.findAll({
     raw: true,
   });
+
+  users = users.filter((user) => user.id.toString() !== userId);
+
   const location = await treatmentLocation.findAll({
     raw: true,
   });
@@ -193,8 +210,6 @@ exports.editUser = async (req, res) => {
       location: "body",
     });
   }
-
-  console.log(errors);
 
   if (!errors.isEmpty()) {
     return res.status(422).render("moderator/edit-user", {

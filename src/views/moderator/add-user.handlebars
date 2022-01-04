@@ -82,7 +82,7 @@
                     <select class="form-control person-select" name="related_person" onchange="highlightPerson()">
                         <option {{#if related_person}}{{else}}selected{{/if}} disabled>Người liên quan</option>
                         {{#each related_persons}}
-                            <option {{#ifStr related_person "{{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"}}selected{{/ifStr}}>{{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
+                            <option {{#ifStr related_person "{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
                         {{/each}}
                     </select>
                 </div>

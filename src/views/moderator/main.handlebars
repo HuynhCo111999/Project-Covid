@@ -8,26 +8,36 @@
                 {{#if successMessage}}
                 <h5 class="text-center mt-4 mb-0 text-success">{{successMessage}}</h5>
                 {{/if}}
+                
             </div>
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive p-0">
-                    <table class="table align-items-center mb-0">
+                    {{#if successMessage}}
+                    {{else}}
+                    <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
+                        <div class="input-group input-group-outline w-50 mt-1 me-4">
+                            <label class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control border-primary" id="searchInput">
+                        </div>   
+                    </div>
+                    {{/if}}
+                    <table class="table align-items-center mb-0" style="table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center" data-column="name" data-order="desc">
                                     Họ tên</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center" data-column="card" data-order="desc">
                                     CMND/CCCD</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center" data-column="yob" data-order="desc">
                                     Năm sinh</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25" data-column="address" data-order="desc">
                                     Địa chỉ</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center" data-column="status" data-order="desc">
                                     Trạng thái</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableBody">
                             {{#each users}}
                             <tr>
                                 <td>
@@ -55,7 +65,7 @@
                                         <h6 class="mb-0 text-md">{{this.status}}</h6>
                                     </div>
                                 </td>
-                                <td class="align-middle">
+                                <td style="white-space: normal">
                                     <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Xem chi tiết</button>
                                     <div class="modal fade" id="user{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -71,7 +81,7 @@
                                                     <p style="font-weight: 400; color: black"><strong>Địa chỉ:  </strong> {{this.ward}} - {{this.district}} - {{this.province}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Trạng thái hiện tại:  </strong> {{this.status}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Nơi đang điều trị/cách ly:  </strong> {{this.treatment_place}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Người liên quan Covid-19:  </strong> {{this.related_person}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Người liên quan Covid-19:  </strong>{{#if this.related_person}}{{#getName this.related_person}}{{/getName}} <a style="cursor: pointer; color: #e91e63" data-bs-toggle="modal" data-bs-target="#user{{#getId this.related_person}}{{/getId}}">(Xem chi tiết thông tin)</a>{{else}}Không có{{/if}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Lịch sử quá trình quản lý ....</strong></p>
                                                 </div>
                                                 <div class="modal-footer d-flex justify-content-between">
