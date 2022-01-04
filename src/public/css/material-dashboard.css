@@ -24535,4 +24535,8 @@ pre[class*="language-"] {
   }
 }
 
+.table-header {
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=material-dashboard.css.map */

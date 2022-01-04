@@ -21,19 +21,19 @@
                         </div>   
                     </div>
                     {{/if}}
-                    <table class="table align-items-center mb-0" style="table-layout: fixed;">
+                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center" data-column="name" data-order="desc">
-                                    Họ tên</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center" data-column="card" data-order="desc">
-                                    CMND/CCCD</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center" data-column="yob" data-order="desc">
-                                    Năm sinh</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25" data-column="address" data-order="desc">
-                                    Địa chỉ</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center" data-column="status" data-order="desc">
-                                    Trạng thái</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(0)">
+                                    Họ tên &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(1)">
+                                    CMND/CCCD &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(2)">
+                                    Năm sinh &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25 table-header" onclick="sortTable(3)">
+                                    Địa chỉ &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(4)">
+                                    Trạng thái &#9650</th>
                                 <th></th>
                             </tr>
                         </thead>
