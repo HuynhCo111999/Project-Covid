@@ -92,12 +92,15 @@
                 </div>
             </div>
             <div class="input-group input-group-outline mt-4">
-                <select class="form-control border-primary border-2" name="place">
+                <select class="form-control border-primary border-2 w-100" name="place">
                     <option {{#if place}}{{else}}selected{{/if}} disabled>Nơi điều trị/cách ly</option>
                     {{#each location}}
                     <option {{#ifStr place "{{this.name}}" }}selected{{/ifStr}}>{{this.name}}</option>
                     {{/each}}
                 </select>
+                {{#each errorMessage}}
+                    {{#ifStr this.param "place"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                {{/each}}
             </div>
             <input type="hidden" name="userId" value="{{userId}}">
             <div class="text-center mb-5">
