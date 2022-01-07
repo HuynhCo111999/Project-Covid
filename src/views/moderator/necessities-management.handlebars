@@ -50,12 +50,13 @@
             </div>
             <div class="card-body px-0 pb-2">
                 <div class="row justify-content-start mx-3">
+                    {{#each necessities}}
                     <div class="col-md-auto m-3">
                         <div class="card" style="width: 18rem;">
                             <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
                             <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
+                                <h5 class="card-title">{{name}}</h5>
+                                <p class="card-text">{{price}}đ/ {{unit_of_measurement}}</p>
                             </div>
                             <div class="card-body">
                                 <a href="#" class="card-link text-success">Chỉnh sửa</a>
@@ -63,84 +64,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
+                    {{/each}}
                 </div>    
             </div>
         </div>  

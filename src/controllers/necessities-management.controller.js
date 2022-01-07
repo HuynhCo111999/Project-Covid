@@ -1,7 +1,13 @@
 const covidNecessity = require("../models/index").covidNecessity;
 
-exports.get = (req, res) => {
-    res.render("moderator/necessities-management", { layout: "moderator/main"});
+exports.get = async (req, res) => {
+    const necessities = await covidNecessity.findAll({ raw: true });
+    
+    res.render("moderator/necessities-management",
+                {
+                    layout: "moderator/main",
+                    necessities: necessities,
+                });
 };
 
 exports.add = async (req, res) => {
