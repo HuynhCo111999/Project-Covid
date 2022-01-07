@@ -32,6 +32,7 @@ router.post(
       .trim()
       .isLength({ min: 1 }),
     body("ward", "Phường/Xã không được để trống").trim().isLength({ min: 1 }),
+    body("place", "Nơi điều trị không được để trống.").isLength({ min: 1 }),
   ],
   moderatorController.postAddUser
 );
@@ -63,6 +64,7 @@ router.post(
       .trim()
       .isLength({ min: 1 }),
     body("ward", "Phường/Xã không được để trống").trim().isLength({ min: 1 }),
+    body("place", "Nơi điều trị không được để trống.").isLength({ min: 1 }),
   ],
   moderatorController.editUser
 );
