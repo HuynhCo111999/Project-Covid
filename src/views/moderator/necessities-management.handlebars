@@ -16,7 +16,7 @@
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
-                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="return ">
+                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="return validateAdd()">
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" name="name" id="add-name-input">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Đơn vị định lượng</label>
-                            <input type="text" class="form-control" name="unit-of-measurement" id="add-unit-input">
+                            <input type="text" class="form-control" name="unit" id="add-unit-input">
                         </div>
                     </form>
                     <p class="text-danger" id="error-msg"></p>
@@ -147,3 +147,30 @@
     </div>
 </div>
 
+<script src="/js/core/jquery-3.6.0.min.js"></script>
+<script>
+    const validateAdd = () => {
+        const name_input = $('#add-name-input');
+        const price_input = $('#add-price-input');
+        const unit_input = $('#add-unit-input');
+        name_input.parent().removeClass("is-invalid");
+        price_input.parent().removeClass("is-invalid");
+        unit_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#error-msg').html("Vui lòng nhập tên sản phẩm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(price_input.val() === "") {
+            $('#error-msg').html("Vui lòng nhập giá sản phẩm.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(unit_input.val() === "") {
+            $('#error-msg').html("Vui lòng nhập đơn vị định lượng.")
+            unit_input.parent().addClass("is-invalid");
+            return false;
+        }
+        return true;
+    }
+</script>

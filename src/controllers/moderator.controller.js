@@ -1,9 +1,9 @@
 const covidUser = require("../models/index").covidUser;
 const User = require("../models/index").user;
-const { validationResult } = require("express-validator/check");
+const { validationResult } = require("express-validator");
 
 exports.getIndex = (req, res) => {
-  res.render("moderator/main", { layout: "moderator/main" });
+    res.render("moderator/main", { layout: "moderator/main" });
 };
 
 exports.getAddUser = (req, res) => {

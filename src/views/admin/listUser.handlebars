@@ -1,0 +1,206 @@
+
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
+        data-bs-target="#exampleModalSignUp">
+        <i class="material-icons opacity-10">person_add</i>
+    </button>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Thêm Người quản lí
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="add-location-form" action="/admin/createUser" method="post" onsubmit="return validateAdd()">
+                        {{> message}}
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" id="add-name-input">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-control" name="email" min="0" id="add-email-input">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" min="0" id="add-password-input">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            {{!-- <label class="form-label">Số lượng tiếp nhận hiện tại</label> --}}
+                            <select class="form-control" id="exampleFormControlSelect1" name="roles">
+                                <option selected value="moderator">Moderator</option>
+                            </select>
+                        </div>
+                    </form>
+                    <p class="text-danger" id="errmsg"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="add-location-form">Thêm</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="ModalMoreInforUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" >
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel" style="text-align: center;">Thông tin User</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3" style="text-align: center; color: black">
+                    
+                </div>
+                <form role="form text-left" id="delete-user-form" method="post">
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Danh sách người quản lí</h6>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    UserId</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    Username</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">
+                                    Email
+                                </th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    UserType
+                                </th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    password</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each listUsers}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-4 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-md">{{id}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-md">{{username}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="text-md font-weight-bold mb-0">{{email}}</p>
+                                </td>
+                                <th >
+                                    <p class="text-md font-weight-bold mb-0" style="text-align: center;">{{role}}</p>
+                                </th>
+                                <td class="align-middle text-center text-md">
+                                    <span class="text-md">{{password}}</span>
+                                </td>
+                                {{!-- <td class="align-middle">
+                                    <button style="height: auto; margin: auto" type="button" class="btn bg-gradient-primary btn-block"
+                                        data-bs-toggle="modal" data-bs-target="#ModalEditUser" data-name="{{username}}" 
+                                        data-capacity="{{email}}" data-current="{{email}}" data-id="{{id}}">
+                                        <i class="material-icons opacity-10">edit</i>
+                                    </button>
+                                    <button style="height: auto; margin: auto" type="button" class="btn bg-gradient-primary btn-block"
+                                        data-bs-toggle="modal" data-bs-target="#ModalDeleteUser" data-id="{{id}}">
+                                        <i class="material-icons opacity-10">delete</i>
+                                    </button>
+                                </td> --}}
+                                <td class="align-middle">
+                                    <button style="height: auto; margin: auto" type="button" class="btn bg-gradient-primary btn-block"
+                                        data-bs-toggle="modal" data-bs-target="#ModalMoreInforUser" data-id="{{id}}">
+                                        <i class="material-icons opacity-10">more</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/core/jquery-3.6.0.min.js"></script>
+
+<script>
+    /* const editModal = $('#ModalEditCategory');
+    editModal.on('shown.bs.modal',function(e){
+        $('#edit-name-input').val($(e.relatedTarget).attr("data-name"));
+        $('#edit-code-input').val($(e.relatedTarget).attr("data-code"));
+        $('#edit-img-input').val($(e.relatedTarget).attr("data-img"));
+        $('#edit-category-form').attr("action",`/updateProduct?id=${$(e.relatedTarget).attr("data-id")}`);
+    })
+    
+    const deleteModal = $('#ModalDeleteUser');
+    deleteModal.on('shown.bs.modal',function(e){
+        $('#delete-user-form').attr("action",`/admin/deleteUser?id=${$(e.relatedTarget).attr("data-id")}`);
+    }) */
+    const validateAdd = () => {
+        const password_input = $('#add-password-input');
+        const name_input = $('#add-name-input');
+        const email_input = $('#add-email-input');
+        password_input.parent().removeClass("is-invalid");
+        name_input.parent().removeClass("is-invalid");
+        email_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#errmsg').html("Vui lòng nhập tên người quản lí.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(password_input.val() === "") {
+            $('#errmsg').html("Vui lòng nhập Password.")
+            capacity_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(email_input.val() === "") {
+            $('#errmsg').html("Vui lòng nhập Email.")
+            current_input.parent().addClass("is-invalid");
+            return false;
+        }
+        return true;
+    }
+
+    $(".modal").on("hidden.bs.modal", function() {
+        $("input").val("");
+        $(".input-group-outline").removeClass("is-filled");
+    });
+</script>

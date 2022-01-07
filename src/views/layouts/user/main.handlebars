@@ -26,10 +26,10 @@
     <link id="pagestyle" href="/css/material-dashboard.css" rel="stylesheet" />
 </head>
 
-<body class="g-sidenav-show  bg-gray-200">
-    {{> admin/sidebar}}
+<body class="g-sidenav-show bg-gray-200">
+    {{> user/sidebar}}
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        {{> admin/navbar}}
+        {{> user/navbar passThisToView=someData}}
         <div class="container-fluid py-4">
             {{{body}}}
             {{> footer}}

@@ -11,13 +11,22 @@ module.exports = function(app) {
   });
 
   app.post(
-    "/api/auth/signup",
+    "/api/auth/createUser",
     [
       verifySignUp.checkDuplicateUsernameOrEmail,
       verifySignUp.checkRolesExisted
     ],
-    controller.signup
+    controller.createUser
   );
 
   app.post("/api/auth/signin", controller.signin);
+
+  app.post(
+    "/api/auth/create-user",
+    [
+      verifySignUp.checkDuplicateUsernameOrEmail,
+      verifySignUp.checkRolesExisted
+    ],
+    controller.createUserTest
+  );
 };

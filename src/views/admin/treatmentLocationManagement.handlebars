@@ -1,0 +1,228 @@
+
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
+        data-bs-target="#exampleModalSignUp">
+        Thêm địa điểm
+    </button>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Thêm địa điểm điều trị / cách ly mới
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="add-location-form" action="/admin/add-location" method="post" onsubmit="return validateAdd()">
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Tên địa điểm</label>
+                            <input type="text" class="form-control" name="name" id="add-name-input">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Sức chứa</label>
+                            <input type="number" class="form-control" name="capacity" min="0" id="add-capacity-input">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Số lượng tiếp nhận hiện tại</label>
+                            <input type="number" class="form-control" name="current" min="0" id="add-current-input">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="errmsg"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="add-location-form">Thêm</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit-->
+<div class="modal fade" id="ModalEditLocation" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Chỉnh sửa điểm điều trị / cách ly</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="edit-location-form" method="post" onsubmit="return validateEdit()">
+                        <div class="input-group input-group-static my-3">
+                            <label>Tên địa điểm</label>
+                            <input type="text" class="form-control" name="name" id="edit-name-input">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Sức chứa</label>
+                            <input type="number" class="form-control" name="capacity" id="edit-capacity-input" min="0">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Số lượng tiếp nhận hiện tại</label>
+                            <input type="number" class="form-control" name="current" id="edit-current-input" min="0">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="errmsg2"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="edit-location-form">Cập nhật</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Danh sách địa điểm điều trị / cách ly</h6>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    Mã địa điểm</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                Tên địa điểm</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">
+                                    Sức chứa</th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                    Số lượng tiếp nhận hiện tại</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each locations}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-4 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-md">{{id}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-md">{{name}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="text-md font-weight-bold mb-0">{{capacity}}</p>
+                                </td>
+                                <td class="align-middle text-center text-md">
+                                    <span class="badge badge-sm bg-gradient-{{color}}">{{current}}</span>
+                                </td>
+                                <td class="align-middle">
+                                    <button type="button" class="btn bg-gradient-primary btn-block"
+                                        data-bs-toggle="modal" data-bs-target="#ModalEditLocation" data-name="{{name}}" 
+                                        data-capacity="{{capacity}}" data-current="{{current}}" data-id="{{id}}">
+                                        Chỉnh sửa
+                                    </button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/core/jquery-3.6.0.min.js"></script>
+<script>
+    var editModal = $('#ModalEditLocation');
+    editModal.on('shown.bs.modal',function(e){
+        $('#edit-name-input').val($(e.relatedTarget).attr("data-name"));
+        $('#edit-capacity-input').val($(e.relatedTarget).attr("data-capacity"));
+        $('#edit-current-input').val($(e.relatedTarget).attr("data-current"));
+        $('#edit-location-form').attr("action",`/admin/update-location/${$(e.relatedTarget).attr("data-id")}`);
+    })
+    const validateAdd = () => {
+        const current_input = $('#add-current-input');
+        const name_input = $('#add-name-input');
+        const capacity_input = $('#add-capacity-input');
+        current_input.parent().removeClass("is-invalid");
+        name_input.parent().removeClass("is-invalid");
+        capacity_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#errmsg').html("Vui lòng nhập tên địa điểm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(capacity_input.val() === "") {
+            $('#errmsg').html("Vui lòng sức chứa địa điểm.")
+            capacity_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(current_input.val() === "") {
+            $('#errmsg').html("Vui lòng nhập số lượng tiếp nhận hiện tại của địa điểm.")
+            current_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        var current = parseInt(current_input.val());
+        var capacity = parseInt($('#add-capacity-input').val());
+        if(current > capacity) {
+            $('#errmsg').html("Số lượng tiếp nhận hiện tại không thể lớn hơn sức chứa.")
+            current_input.parent().addClass("is-invalid");
+            return false;
+        }
+        return true;
+    }
+    const validateEdit = () => {
+        const current_input = $('#edit-current-input');
+        const name_input = $('#edit-name-input');
+        const capacity_input = $('#edit-capacity-input');
+        current_input.parent().removeClass("is-invalid");
+        name_input.parent().removeClass("is-invalid");
+        capacity_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#errmsg2').html("Vui lòng nhập tên địa điểm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(capacity_input.val() === "") {
+            $('#errmsg2').html("Vui lòng sức chứa địa điểm.")
+            capacity_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(current_input.val() === "") {
+            $('#errmsg2').html("Vui lòng nhập số lượng tiếp nhận hiện tại của địa điểm.")
+            current_input.parent().addClass("is-invalid");
+            return false;
+        }
+        
+        var current = parseInt(current_input.val());
+        var capacity = parseInt($('#edit-capacity-input').val());
+        if(current > capacity) {
+            $('#errmsg2').html("Số lượng tiếp nhận hiện tại không thể lớn hơn sức chứa.")
+            current_input.parent().addClass("is-invalid");
+            return false;
+        }
+        return true;
+    }
+    $(".modal").on("hidden.bs.modal", function() {
+        $("input").val("");
+        $(".input-group-outline").removeClass("is-filled");
+    });
+</script>

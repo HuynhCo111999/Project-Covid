@@ -4,8 +4,8 @@ const db = require("../models");
 const User = db.user;
 
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
-
+  // let token = req.headers["x-access-token"];
+  let token = req.cookies['access_token'];
   if (!token) {
     return res.status(403).send({
       message: "No token provided!"
@@ -24,7 +24,13 @@ verifyToken = (req, res, next) => {
 };
 
 isAdmin = (req, res, next) => {
+  console.log("user Id: ", req.userId);
   User.findByPk(req.userId).then(user => {
+    console.log("isAdmin: ", user);
+    if(!user) {
+      return;
+    }
+    
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "admin") {
@@ -59,6 +65,7 @@ isModerator = (req, res, next) => {
 };
 
 isModeratorOrAdmin = (req, res, next) => {
+
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
@@ -72,7 +79,6 @@ isModeratorOrAdmin = (req, res, next) => {
           return;
         }
       }
-
       res.status(403).send({
         message: "Require Moderator or Admin Role!"
       });

@@ -3,8 +3,9 @@ const app = express();
 const { engine } = require("express-handlebars");
 const expressHbs = require("express-handlebars");
 const bodyParser = require("body-parser");
-const path = require("path");
-require("dotenv").config();
+const path = require('path');
+const cookieParser = require('cookie-parser');
+require('dotenv').config()
 //set port local
 const port = process.env.PORT || 3000;
 
@@ -14,17 +15,12 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cookieParser());
 // database
 const db = require("./models");
 const init = require("./middleware/init-table");
 // db.sequelize.sync();
-
-/* db.sequelize.sync({ force: false, alter: true }).then(() => {
-  init.initial();
-}); */
-
-//DROP DATABASE IF EXIST (For development)
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ force: true, alter: true }).then(() => {
   init.initial();
 });
 
@@ -40,10 +36,11 @@ app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "views"));
 
 //As Routes are defined in pages.js
-app.use("/", require("./routes/index"));
-app.use(express.static(__dirname + "/public"));
-require("./routes/auth.routes")(app);
-require("./routes/user.routes")(app);
+app.use('/admin', require('./routes/admin'));
+app.use('/', require('./routes/index'));
+app.use(express.static(__dirname + '/public'));
+require('./routes/auth.routes')(app);
+require('./routes/user.routes')(app);
 
 app.use("/moderator", require("./routes/moderator"));
 
