@@ -1,7 +1,50 @@
+<!-- Add necessities button -->
 <div class="d-flex justify-content-end mb-3">
   <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#modalAdd">
     Thêm nhu yếu phẩm
   </button>
+</div>
+
+<!-- List of necessities -->
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Danh sách các nhu yếu phẩm</h6>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <div class="row justify-content-start mx-3">
+                    {{#each necessities}}
+                    <div class="col-md-auto m-3">
+                        <div class="card" style="width: 18rem;">
+                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
+                            <div class="card-body">
+                                <h4 class="card-title">{{name}}</h4>
+                                <p class="card-text font-weight-bold">{{price}} ₫/ {{unit_of_measurement}}</p>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-lg bg-transparent border border-white text-success"
+                                        data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                        data-name="{{name}}"
+                                        data-price="{{price}}"
+                                        data-unit="{{unit_of_measurement}}"
+                                        data-id="{{id}}">
+                                        Chỉnh sửa
+                                </button>
+                                <button type="button" class="btn btn-lg bg-transparent border border-white text-danger"
+                                        >
+                                        Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>    
+            </div>
+        </div>  
+    </div>
 </div>
 
 <!-- Modal add -->
@@ -23,14 +66,14 @@
                         </div>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Giá sản phẩm</label>
-                            <input type="number" class="form-control" name="price" id="add-price-input">
+                            <input type="number" class="form-control" name="price" id="add-price-input" min="0">
                         </div>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Đơn vị định lượng</label>
                             <input type="text" class="form-control" name="unit" id="add-unit-input">
                         </div>
                     </form>
-                    <p class="text-danger" id="error-msg"></p>
+                    <p class="text-danger" id="add-noti-msg"></p>
                 </div> 
             </div>
             <div class="modal-footer">
@@ -40,37 +83,43 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card my-4">
-            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Danh sách các nhu yếu phẩm</h6>
-                </div>
+<!-- Modal edit -->
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Chỉnh sửa thông tin nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
             </div>
-            <div class="card-body px-0 pb-2">
-                <div class="row justify-content-start mx-3">
-                    {{#each necessities}}
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">{{name}}</h5>
-                                <p class="card-text">{{price}}đ/ {{unit_of_measurement}}</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link text-success">Chỉnh sửa</a>
-                                <a href="#" class="card-link text-danger">Xóa</a>
-                            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form tex-left" id="edit-form" method="post" onsubmit="return validateEdit()">
+                        <div class="input-group input-group-static my-3">
+                            <label>Tên sản phẩm</label>
+                            <input type="text" class="form-control" name="name" id="edit-name-input">
                         </div>
-                    </div>
-                    {{/each}}
-                </div>    
+                        <div class="input-group input-group-static my-3">
+                            <label>Giá sản phẩm</label>
+                            <input type="number" class="form-control" name="price" id="edit-price-input" min="0">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Đơn vị định lượng</label>
+                            <input type="text" class="form-control" name="unit" id="edit-unit-input">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="edit-noti-msg"></p>
+                </div> 
             </div>
-        </div>  
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="edit-form">Cập nhật</button>
+            </div>
+        </div>
     </div>
 </div>
 
+<!-- Scripts -->
 <script src="/js/core/jquery-3.6.0.min.js"></script>
 <script>
     const validateAdd = () => {
@@ -81,17 +130,50 @@
         price_input.parent().removeClass("is-invalid");
         unit_input.parent().removeClass("is-invalid");
         if(name_input.val() === "") {
-            $('#error-msg').html("Vui lòng nhập tên sản phẩm.")
+            $('#add-noti-msg').html("Vui lòng nhập tên sản phẩm.")
             name_input.parent().addClass("is-invalid");
             return false;
         }
         if(price_input.val() === "") {
-            $('#error-msg').html("Vui lòng nhập giá sản phẩm.")
+            $('#add-noti-msg').html("Vui lòng nhập giá sản phẩm.")
             price_input.parent().addClass("is-invalid");
             return false;
         }
         if(unit_input.val() === "") {
-            $('#error-msg').html("Vui lòng nhập đơn vị định lượng.")
+            $('#add-noti-msg').html("Vui lòng nhập đơn vị định lượng.")
+            unit_input.parent().addClass("is-invalid");
+            return false;
+        }
+        return true;
+    }
+
+    var modalEdit = $('#modalEdit');
+    modalEdit.on('shown.bs.modal',function(e){
+        $('#edit-name-input').val($(e.relatedTarget).attr("data-name"));
+        $('#edit-price-input').val($(e.relatedTarget).attr("data-price"));
+        $('#edit-unit-input').val($(e.relatedTarget).attr("data-unit"));
+        $('#edit-form').attr("action",`/moderator/update-necessity/${$(e.relatedTarget).attr("data-id")}`);
+    })
+
+    const validateEdit = () => {
+        const name_input = $('#edit-name-input');
+        const price_input = $('#edit-price-input');
+        const unit_input = $('#edit-unit-input');
+        name_input.parent().removeClass("is-invalid");
+        price_input.parent().removeClass("is-invalid");
+        unit_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập tên sản phẩm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(price_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập giá sản phẩm.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(unit_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập đơn vị định lượng.")
             unit_input.parent().addClass("is-invalid");
             return false;
         }

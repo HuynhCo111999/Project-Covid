@@ -8,6 +8,7 @@ router.get("/", moderatorController.getIndex);
 router.get("/add-user", moderatorController.getAddUser);
 router.get("/necessities", necessitiesController.get);
 router.post("/add-necessity", necessitiesController.add);
+router.post('/update-necessity/:id', necessitiesController.update);
 
 router.post(
   "/add-user",

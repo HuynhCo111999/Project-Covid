@@ -25,3 +25,25 @@ exports.add = async (req, res) => {
         res.send(error);
     }
 };
+
+exports.update = async (req, res) => {
+    try
+    {
+        const id = parseInt(req.params.id);
+        await covidNecessity.update({
+            name: req.body.name,
+            price: req.body.price,
+            unit_of_measurement: req.body.unit
+        }, 
+            {
+                where: {
+                    id: id
+                }
+        });
+        res.redirect('../necessities');
+    }
+    catch (error)
+    {
+        res.send(error);
+    }
+};
