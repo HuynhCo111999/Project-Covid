@@ -47,3 +47,20 @@ exports.update = async (req, res) => {
         res.send(error);
     }
 };
+
+exports.delete = async (req, res) => {
+    try
+    { 
+        const id = parseInt(req.params.id);
+        await covidNecessity.destroy({
+            where: {
+                id: id
+            }
+        });
+        res.redirect('../necessities');
+    }
+    catch (error)
+    {
+        res.send(error);
+    }
+};

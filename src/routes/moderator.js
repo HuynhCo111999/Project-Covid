@@ -9,6 +9,7 @@ router.get("/add-user", moderatorController.getAddUser);
 router.get("/necessities", necessitiesController.get);
 router.post("/add-necessity", necessitiesController.add);
 router.post('/update-necessity/:id', necessitiesController.update);
+router.post('/delete-necessity/:id', necessitiesController.delete);
 
 router.post(
   "/add-user",

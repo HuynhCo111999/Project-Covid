@@ -34,7 +34,8 @@
                                         Chỉnh sửa
                                 </button>
                                 <button type="button" class="btn btn-lg bg-transparent border border-white text-danger"
-                                        >
+                                        data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                        data-id="{{id}}">
                                         Xóa
                                 </button>
                             </div>
@@ -119,6 +120,33 @@
     </div>
 </div>
 
+<!-- Model delete -->
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Xóa nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form tex-left" id="delete-form" method="post">
+                        <div class="input-group input-group-static my-3">
+                            <label>Bạn xác nhận XÓA nhu yếu phẩm này?</label>
+                        </div>
+                    </form>
+                    <p class="text-danger" id="delete-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="delete-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Scripts -->
 <script src="/js/core/jquery-3.6.0.min.js"></script>
 <script>
@@ -179,4 +207,9 @@
         }
         return true;
     }
+    
+    var modalDelete = $('#modalDelete');
+    modalDelete.on('shown.bs.modal',function(e){
+        $('#delete-form').attr("action",`/moderator/delete-necessity/${$(e.relatedTarget).attr("data-id")}`);
+    })
 </script>
