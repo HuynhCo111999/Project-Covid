@@ -58,17 +58,36 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" >
-                <h6 class="modal-title font-weight-normal" id="exampleModalLabel" style="text-align: center;">Thông tin User</h6>
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel" style="text-align: center;">Activity log</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3" style="text-align: center; color: black">
-                    
+                     <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                        #
+                                    </th>
+                                    <th class="text-md font-weight-bolder opacity-7">
+                                        status
+                                    </th>
+                                    <th class="text-md font-weight-bolder opacity-7">
+                                        Time
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="content-info">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="nothing" style="margin: 20px; font-size: 20px">
+                    </div>
                 </div>
-                <form role="form text-left" id="delete-user-form" method="post">
-                </form>
+            
             </div>
             
         </div>
@@ -144,7 +163,7 @@
                                     </button>
                                 </td> --}}
                                 <td class="align-middle">
-                                    <button style="height: auto; margin: auto" type="button" class="btn bg-gradient-primary btn-block"
+                                    <button onclick="handleClickInfo({{id}})" style="height: auto; margin: auto" type="button" class="btn bg-gradient-primary btn-block"
                                         data-bs-toggle="modal" data-bs-target="#ModalMoreInforUser" data-id="{{id}}">
                                         <i class="material-icons opacity-10">more</i>
                                     </button>
@@ -174,6 +193,36 @@
     deleteModal.on('shown.bs.modal',function(e){
         $('#delete-user-form').attr("action",`/admin/deleteUser?id=${$(e.relatedTarget).attr("data-id")}`);
     }) */
+
+    const handleClickInfo = (id) => {
+        fetch(`http://localhost:3000/admin/history?id=${id}`, {
+            method: 'POST'
+        }).then(response => 
+            response.json())
+          .then(data => {
+            const bodyContent = document.getElementById("content-info");
+            if(data.length === 0) {
+                const nothing = document.getElementById("nothing");
+                nothing.innerText = "No data";
+            }
+            else {
+                data.forEach((item, index) => {
+                    const tr = document.createElement('tr');
+                    const th1 = document.createElement('th');
+                    th1.innerText = index;
+                    const th2 = document.createElement('th');
+                    th2.innerText = item.status;
+                    const th3 = document.createElement('th');
+                    th3.innerText = item.time;
+                    tr.appendChild(th1);
+                    tr.appendChild(th2);
+                    tr.appendChild(th3);
+                    bodyContent.appendChild(tr)
+                })
+            }
+          });
+    }
+
     const validateAdd = () => {
         const password_input = $('#add-password-input');
         const name_input = $('#add-name-input');
