@@ -113,6 +113,7 @@ exports.postAddUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   const userId = req.params.id;
+  console.log(userId);
 
   const user = await covidUser.findByPk(userId, { raw: true });
   const account = await User.findOne({
@@ -130,11 +131,13 @@ exports.deleteUser = async (req, res) => {
         raw: true,
       });
       for (let user of users) {
-        if (user.related_person.toString().split(".")[0] === userId) {
-          const u = await covidUser.findByPk(user.id);
-          u.related_person = null;
-          u.save();
-        }
+        if (user.related_person) {
+          if (user.related_person.toString().split(".")[0] === userId) {
+            const u = await covidUser.findByPk(user.id);
+            u.related_person = null;
+            u.save();
+          }
+        }     
       }
       return res.redirect("/moderator");
     })
