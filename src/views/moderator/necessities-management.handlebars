@@ -61,6 +61,26 @@
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
                     <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="return validateAdd()">
+                        
+                        <main class="main_full">
+                            <div class="container">
+                                <div class="panel">
+                                    <div class="button_outer" id="button_outer_0">
+                                        <div class="btn_upload">
+                                            <input type="file" id="upload_file_0">
+                                            Thêm ảnh 1
+                                        </div>
+                                        <div class="processing_bar"></div>
+                                        <div class="success_box"></div>
+                                    </div>
+                                </div>
+                                <div class="error_msg" id="error_msg_0"></div>
+                                <div class="uploaded_file_view" id="uploaded_view_0">
+                                    <span class="file_remove" id="file_remove_0">X</span>
+                                </div>
+						    </div>
+                        </main>
+
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" name="name" id="add-name-input">
@@ -137,7 +157,6 @@
                             <label>Bạn xác nhận XÓA nhu yếu phẩm này?</label>
                         </div>
                     </form>
-                    <p class="text-danger" id="delete-noti-msg"></p>
                 </div> 
             </div>
             <div class="modal-footer">
@@ -148,8 +167,10 @@
 </div>
 
 <!-- Scripts -->
-<script src="/js/core/jquery-3.6.0.min.js"></script>
-<script>
+<script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="/js/slick/slick.min.js"></script>
+<script type="text/javascript" src="/js/upload-file-script.js"></script>
+<script type="text/javascript">
     const validateAdd = () => {
         const name_input = $('#add-name-input');
         const price_input = $('#add-price-input');
