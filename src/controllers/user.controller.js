@@ -23,7 +23,7 @@ exports.getModerators = async (req, res) => {
     })
   })
   // console.log("listUsers: ", listUsers)
-  res.render('admin/listUser', {
+  return res.render('admin/listUser', {
     layout: 'admin/main',
     listUsers: filterUsers,
   });
@@ -145,6 +145,7 @@ exports.postChangeInformation = async(req, res) => {
 
     res.redirect('/user');
 };
+
 
 
 exports.allAccess = (req, res) => {
