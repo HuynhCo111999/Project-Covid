@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const moderatorController = require("../controllers/moderator.controller");
-const necessitiesController = require("../controllers/necessities-management.controller")
-const { check, body } = require("express-validator/check");
+const necessitiesController = require("../controllers/necessities-management.controller");
+const { check, body } = require("express-validator");
+const covidUser = require("../models/index").covidUser;
+const { user } = require("../models");
 
 // localhost:3000/moderator
 router.get("/", moderatorController.getIndex);
@@ -22,6 +24,7 @@ router.post(
       (value, { req }) => {
         if (value.toString().length == 9 || value.toString().length == 12)
           return true;
+        return false;
       }
     ),
     body("yob", "Năm sinh không được để trống").isLength({ min: 4, max: 4 }),
@@ -32,13 +35,6 @@ router.post(
       .trim()
       .isLength({ min: 1 }),
     body("ward", "Phường/Xã không được để trống").trim().isLength({ min: 1 }),
-    // body("related-person", "Tên người liên quan không được ít hơn 4 kí tự")
-    //   .trim()
-    //   .isLength({ min: 4 }),
-    // ,
-    body("place", "Nơi điều trị không được để trống")
-      .trim()
-      .isLength({ min: 1 }),
   ],
 
   moderatorController.postAddUser

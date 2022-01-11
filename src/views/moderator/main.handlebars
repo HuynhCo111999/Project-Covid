@@ -1,2 +1,106 @@
-<h1>DANH SÁCH NGƯỜI LIÊN QUAN ĐẾN COVID-19</h1>
-<h1>....</h1>
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 text-center">
+                    <h5 class="text-white text-capitalize pt-2">DANH SÁCH NGƯỜI LIÊN QUAN ĐẾN COVID-19</h5>
+                </div>
+                {{#if successMessage}}
+                <h5 class="text-center mt-4 mb-0 text-success">{{successMessage}}</h5>
+                {{/if}}
+                
+            </div>
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    {{#if successMessage}}
+                    {{else}}
+                    <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
+                        <div class="input-group input-group-outline w-50 mt-1 me-4">
+                            <label class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control border-primary" id="searchInput">
+                        </div>   
+                    </div>
+                    {{/if}}
+                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(0)">
+                                    Họ tên &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(1)">
+                                    CMND/CCCD &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(2)">
+                                    Năm sinh &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25 table-header" onclick="sortTable(3)">
+                                    Địa chỉ &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(4)">
+                                    Trạng thái &#9650</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            {{#each users}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md">{{this.name}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{this.identity_card}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{this.yob}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <h6 class="mb-0 text-md">{{this.ward}} - {{this.district}} - {{this.province}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{this.status}}</h6>
+                                    </div>
+                                </td>
+                                <td style="white-space: normal">
+                                    <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Xem chi tiết</button>
+                                    <div class="modal fade" id="user{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary">
+                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin chi tiết</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p style="font-weight: 400; color: black"><strong>Họ và tên:  </strong> {{this.name}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>CMND/CCCD:  </strong> {{this.identity_card}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Năm sinh:  </strong> {{this.yob}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Địa chỉ:  </strong> {{this.ward}} - {{this.district}} - {{this.province}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Trạng thái hiện tại:  </strong> {{this.status}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Nơi đang điều trị/cách ly:  </strong> {{this.treatment_place}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Người liên quan Covid-19:  </strong>{{#if this.related_person}}{{#getName this.related_person}}{{/getName}} <a style="cursor: pointer; color: #e91e63" data-bs-toggle="modal" data-bs-target="#user{{#getId this.related_person}}{{/getId}}">(Xem chi tiết thông tin)</a>{{else}}Không có{{/if}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Lịch sử quá trình quản lý ....</strong></p>
+                                                </div>
+                                                <div class="modal-footer d-flex justify-content-between">
+                                                    <div>
+                                                        <a href="/moderator/delete-user/{{this.id}}" stype="button" class="btn btn-danger px-3 py-2 me-1"><i class="fas fa-trash-alt"></i> Xóa</a>
+                                                        <a href="/moderator/edit-user/{{this.id}}" type="button" class="btn btn-secondary px-3 py-2"><i class="far fa-edit"></i> Sửa</a>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

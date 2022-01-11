@@ -3,9 +3,9 @@ const app = express();
 const { engine } = require("express-handlebars");
 const expressHbs = require("express-handlebars");
 const bodyParser = require("body-parser");
-const path = require('path');
-const cookieParser = require('cookie-parser');
-require('dotenv').config()
+const path = require("path");
+const cookieParser = require("cookie-parser");
+require("dotenv").config();
 //set port local
 const port = process.env.PORT || 3000;
 
@@ -29,6 +29,12 @@ const hbs = expressHbs.create({
     ifStr(s1, s2, options) {
       return s1 === s2 ? options.fn(this) : options.inverse(this);
     },
+    getName(s) {
+      return s.split(".")[1].split(",")[0];
+    },
+    getId(s) {
+      return s.split(".")[0].trim();
+    },
   },
 });
 app.engine("handlebars", hbs.engine);
@@ -36,11 +42,11 @@ app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "views"));
 
 //As Routes are defined in pages.js
-app.use('/admin', require('./routes/admin'));
-app.use('/', require('./routes/index'));
-app.use(express.static(__dirname + '/public'));
-require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
+app.use("/admin", require("./routes/admin"));
+app.use("/", require("./routes/index"));
+app.use(express.static(__dirname + "/public"));
+require("./routes/auth.routes")(app);
+require("./routes/user.routes")(app);
 
 app.use("/moderator", require("./routes/moderator"));
 
