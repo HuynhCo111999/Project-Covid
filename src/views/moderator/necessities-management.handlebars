@@ -267,7 +267,8 @@
         $(`#edit_uploaded_view_0`).append(`<img src="${$(e.relatedTarget).attr("data-path")}" />`).addClass("show");
     })
 
-    modalEdit.on('hidden.bs.modal',function(e){
+    $().ready(() => {
+        modalEdit.on('hidden.bs.modal',function(e){
         $(`#edit_uploaded_view_0`).find("img").remove();
         $('#edit_error_msg_0').text("");
     })
@@ -305,6 +306,9 @@
     
     var modalDelete = $('#modalDelete');
     modalDelete.on('shown.bs.modal',function(e){
+        console.log("hello");
         $('#delete-form').attr("action",`/moderator/delete-necessity/${$(e.relatedTarget).attr("data-id")}`);
     })
+    })
+    
 </script>
