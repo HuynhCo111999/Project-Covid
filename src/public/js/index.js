@@ -59,12 +59,9 @@ function sortTable(n) {
 
 $().ready(function () {
   $("#searchInput").on("keyup", function () {
-    console.log("hello");
     var value = $(this).val().toLowerCase();
     $("#tableBody tr").filter(function () {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-    });
-    $("#cardContent").filter(function () {
+      console.log($(this).text());
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
     });
   });
