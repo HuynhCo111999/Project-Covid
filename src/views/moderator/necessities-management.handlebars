@@ -1,9 +1,3 @@
-<!-- Add necessities button -->
-<div class="d-flex justify-content-end mb-3">
-  <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#modalAdd">
-    Thêm nhu yếu phẩm
-  </button>
-</div>
 
 <!-- List of necessities -->
 <div class="row">
@@ -11,22 +5,29 @@
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Danh sách các nhu yếu phẩm</h6>
+                    <h5 class="text-white text-capitalize ps-3 text-center">Danh sách các nhu yếu phẩm</h5>
                 </div>
             </div>
             <div class="card-body px-0 pb-2">
                 <!-- Search -->
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
                     <div class="input-group input-group-outline w-50 mt-1 me-4">
-                        <label class="form-label">Search...</label>
-                        <input type="text" class="form-control border-primary" id="search_input">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control border-primary" id="searchInput">
+                    </div>
+                    <!-- Add necessities button -->
+                    <div style="position: absolute; right: 2rem">
+                      <button type="button" class="btn bg-gradient-primary btn-block m-0" data-bs-toggle="modal" data-bs-target="#modalAdd">
+                        Thêm nhu yếu phẩm
+                      </button>
                     </div>
                 </div>
+                
 
                 <div class="row justify-content-start mx-3">
                     {{#each necessities}}
                     <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
+                        <div class="card" style="width: 18rem;" id="cardContent">
                             
                             <img src="{{image_path}}" class="card-img-top" alt="Hình ảnh sản phẩm {{id}}">
                             
@@ -191,7 +192,7 @@
                 <div class="card-body pb-3">
                     <form role="form tex-left" id="delete-form" method="post">
                         <div class="input-group input-group-static my-3">
-                            <label>Bạn xác nhận XÓA nhu yếu phẩm này?</label>
+                            <p class="text-dark">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này?</p>
                         </div>
                     </form>
                 </div> 
