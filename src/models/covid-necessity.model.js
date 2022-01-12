@@ -12,7 +12,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      image_path: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
     });
-  
     return Necessity;
   };

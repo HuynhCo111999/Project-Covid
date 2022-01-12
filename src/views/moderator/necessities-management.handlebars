@@ -19,7 +19,12 @@
                     {{#each necessities}}
                     <div class="col-md-auto m-3">
                         <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
+                            
+                            <img src="{{image_path}}" class="card-img-top" alt="Hình ảnh sản phẩm {{id}}">
+                            
+                            
+                            {{!-- <img src="/uploads/1/1.png" class="card-img-top" alt="Hình ảnh sản phẩm"> --}}
+                            
                             <div class="card-body">
                                 <h4 class="card-title">{{name}}</h4>
                                 <p class="card-text font-weight-bold">{{price}} ₫/ {{unit_of_measurement}}</p>
@@ -30,7 +35,8 @@
                                         data-name="{{name}}"
                                         data-price="{{price}}"
                                         data-unit="{{unit_of_measurement}}"
-                                        data-id="{{id}}">
+                                        data-id="{{id}}"
+                                        data-path="{{image_path}}">
                                         Chỉnh sửa
                                 </button>
                                 <button type="button" class="btn btn-lg bg-transparent border border-white text-danger"
@@ -60,15 +66,16 @@
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
-                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="return validateAdd()">
+                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="return validateAdd()"
+                          enctype="multipart/form-data">
                         
                         <main class="main_full">
                             <div class="container">
                                 <div class="panel">
                                     <div class="button_outer" id="button_outer_0">
                                         <div class="btn_upload">
-                                            <input type="file" id="upload_file_0">
-                                            Thêm ảnh 1
+                                            <input type="file" id="upload_file_0" name="upload">
+                                            Thêm ảnh
                                         </div>
                                         <div class="processing_bar"></div>
                                         <div class="success_box"></div>
@@ -116,7 +123,29 @@
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
-                    <form role="form tex-left" id="edit-form" method="post" onsubmit="return validateEdit()">
+                    <form role="form tex-left" id="edit-form" method="post" onsubmit="return validateEdit()"
+                          enctype="multipart/form-data">
+
+                        <main class="main_full">
+                            <div class="container">
+                                <div class="panel">
+                                    <div class="button_outer" id="edit_button_outer_0">
+                                        <div class="btn_upload">
+                                            <input type="file" id="edit_upload_file_0" name="edit_upload">
+                                            Thêm ảnh 
+                                        </div>
+                                        <div class="processing_bar"></div>
+                                        <div class="success_box"></div>
+                                    </div>
+                                </div>
+                                <div class="error_msg" id="edit_error_msg_0"></div>
+                                <div class="uploaded_file_view" id="edit_uploaded_view_0">
+                                    <span class="file_remove" id="edit_file_remove_0">X</span>
+                                    <img id="edit_image">
+                                </div>
+						    </div>
+                        </main>
+
                         <div class="input-group input-group-static my-3">
                             <label>Tên sản phẩm</label>
                             <input type="text" class="form-control" name="name" id="edit-name-input">
@@ -175,6 +204,7 @@
         const name_input = $('#add-name-input');
         const price_input = $('#add-price-input');
         const unit_input = $('#add-unit-input');
+        const image_input = $('#upload_file_0');
         name_input.parent().removeClass("is-invalid");
         price_input.parent().removeClass("is-invalid");
         unit_input.parent().removeClass("is-invalid");
@@ -193,6 +223,11 @@
             unit_input.parent().addClass("is-invalid");
             return false;
         }
+        var ext = image_input.val().split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+			$('#error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+            return false;
+		}
         return true;
     }
 
@@ -202,12 +237,25 @@
         $('#edit-price-input').val($(e.relatedTarget).attr("data-price"));
         $('#edit-unit-input').val($(e.relatedTarget).attr("data-unit"));
         $('#edit-form').attr("action",`/moderator/update-necessity/${$(e.relatedTarget).attr("data-id")}`);
+
+        var btnOuter = $(`#edit_button_outer_0`);
+        var btnUpload = $(`#editupload_file_0`);
+        btnOuter.addClass("file_uploading");
+		btnOuter.addClass("file_uploaded");
+        btnUpload.removeClass("show");
+        $(`#edit_uploaded_view_0`).append(`<img src="${$(e.relatedTarget).attr("data-path")}" />`).addClass("show");
+    })
+
+    modalEdit.on('hidden.bs.modal',function(e){
+        $(`#edit_uploaded_view_0`).find("img").remove();
+        $('#edit_error_msg_0').text("");
     })
 
     const validateEdit = () => {
         const name_input = $('#edit-name-input');
         const price_input = $('#edit-price-input');
         const unit_input = $('#edit-unit-input');
+        const image_input = $('#edit_upload_file_0');
         name_input.parent().removeClass("is-invalid");
         price_input.parent().removeClass("is-invalid");
         unit_input.parent().removeClass("is-invalid");
@@ -226,6 +274,11 @@
             unit_input.parent().addClass("is-invalid");
             return false;
         }
+        var ext = image_input.val().split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+			$('#edit_error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+            return false;
+		}
         return true;
     }
     

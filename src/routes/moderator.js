@@ -2,13 +2,14 @@ const router = require("express").Router();
 const moderatorController = require("../controllers/moderator.controller");
 const necessitiesController = require("../controllers/necessities-management.controller")
 const { check, body } = require("express-validator/check");
+const upload = require('../middleware/upload');
 
 // localhost:3000/moderator
 router.get("/", moderatorController.getIndex);
 router.get("/add-user", moderatorController.getAddUser);
 router.get("/necessities", necessitiesController.get);
-router.post("/add-necessity", necessitiesController.add);
-router.post('/update-necessity/:id', necessitiesController.update);
+router.post("/add-necessity", upload.single('upload'), necessitiesController.add);
+router.post('/update-necessity/:id', upload.single('edit_upload'), necessitiesController.update);
 router.post('/delete-necessity/:id', necessitiesController.delete);
 
 router.post(
