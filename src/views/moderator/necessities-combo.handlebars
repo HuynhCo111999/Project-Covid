@@ -22,9 +22,91 @@
                         <input type="text" class="form-control border-primary" id="search_input">
                     </div>
                 </div>
-
-                
             </div>
+            <div class="table-responsive p-0">
+                    {{!-- <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
+                        <div class="input-group input-group-outline w-50 mt-1 me-4">
+                            <label class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control border-primary" id="searchInput">
+                        </div>   
+                    </div> --}}
+                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-50 table-header" onclick="">
+                                    Tên gói &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="">
+                                    Số lượng giới hạn &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="">
+                                    Thời gian giới hạn &#9650</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            {{#each combos}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md">{{name}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{sales_limit}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{#parseTimeLimit sales_cycle}}  {{/parseTimeLimit}}</h6>
+                                    </div>
+                                </td>
+                                <td style="white-space: normal">
+                                    <a class="btn btn-primary my-1" type="button" href="/moderator/necessities-combo-details/1">Chi tiết gói</a>
+                                    {{!-- <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#combo">Chi tiết gói</button> --}}
+                                    <!-- Modal details -->
+                                    {{!-- <div class="modal fade" id="combo" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">'
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary">
+                                                    <h5 class="modal-title text-white" id="detailModalLabel">Các sản phẩm trong gói</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> --}}
+                                    {{!-- <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Xem chi tiết</button> --}}
+                                    {{!-- <div class="modal fade" id="user{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary">
+                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin chi tiết</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p style="font-weight: 400; color: black"><strong>Họ và tên:  </strong> {{this.name}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>CMND/CCCD:  </strong> {{this.identity_card}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Năm sinh:  </strong> {{this.yob}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Địa chỉ:  </strong> {{this.ward}} - {{this.district}} - {{this.province}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Trạng thái hiện tại:  </strong> {{this.status}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Nơi đang điều trị/cách ly:  </strong> {{this.treatment_place}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Người liên quan Covid-19:  </strong>{{#if this.related_person}}{{#getName this.related_person}}{{/getName}} <a style="cursor: pointer; color: #e91e63" data-bs-toggle="modal" data-bs-target="#user{{#getId this.related_person}}{{/getId}}">(Xem chi tiết thông tin)</a>{{else}}Không có{{/if}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Lịch sử quá trình quản lý ....</strong></p>
+                                                </div>
+                                                <div class="modal-footer d-flex justify-content-between">
+                                                    <div>
+                                                        <a href="/moderator/delete-user/{{this.id}}" stype="button" class="btn btn-danger px-3 py-2 me-1"><i class="fas fa-trash-alt"></i> Xóa</a>
+                                                        <a href="/moderator/edit-user/{{this.id}}" type="button" class="btn btn-secondary px-3 py-2"><i class="far fa-edit"></i> Sửa</a>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> --}}
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
         </div>  
     </div>
 </div>
@@ -41,7 +123,7 @@
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
-                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="">
+                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity-combo" method="post" onsubmit="return validateAdd()">
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Tên gói</label>
                             <input type="text" class="form-control" name="name" id="add-name-input">
@@ -54,6 +136,7 @@
 
                         <div class="input-group input-group-outline my-3 mx-2">
                             <p>Thời gian giới hạn:</p>
+                            <input class="form-control" type="text" name="cycle" id="add-sales-cycle-input" hidden>
                             <input class="mx-2 my-2" type="radio" id="day" name="sales_cycle" value="day">
                             <label class="mr-2 my-1" for="day">Ngày</label>
                             <input class="mx-2 my-2" type="radio" id="week" name="sales_cycle" value="week">
@@ -62,7 +145,33 @@
                             <label class="mr-2 my-1" for="month">Tháng</label>
                         </div>
 
-                        
+                        <div class="input-group input-group-outline my-3">
+                            <select class="form-control" name="necesstity_to_add_1">
+                                    <option id="opt_1" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm 1 cần thêm</option>
+                                {{#each necessities}}
+                                    <option {{#ifStr necessities "{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="input-group input-group-outline my-3">
+                            <input type="number" placeholder="Số lượng mua tối thiểu" class="form-control mx-2" name="min_1" id="add-min-input-1" min="1">
+                            <input type="number" placeholder="Số lượng mua tối đa" class="form-control mx-2" name="max_1" id="add-max-input-1" min="2">
+                        </div>
+
+                        <div class="input-group input-group-outline my-3">
+                            <select class="form-control" name="necesstity_to_add_2">
+                                    <option id="opt_2" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm 2 cần thêm</option>
+                                {{#each necessities}}
+                                    <option {{#ifStr necessities "{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="input-group input-group-outline my-3">
+                            <input type="number" placeholder="Số lượng mua tối thiểu" class="form-control mx-2" name="min_2" id="add-min-input-2" min="1">
+                            <input type="number" placeholder="Số lượng mua tối đa" class="form-control mx-2" name="max_2" id="add-max-input-2" min="2">
+                        </div>
                     </form>
                     <p class="text-danger" id="add-noti-msg"></p>
                 </div> 
@@ -73,3 +182,97 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
+<script>
+    const validateAdd = () => {
+        const name_input = $('#add-name-input');
+        const sales_limit_input = $('#add-sales-limit-input');
+        const sales_cycle_input = $('#add-sales-cycle-input');
+        const min_limit_input_1 = $("#add-min-input-1");
+        const max_limit_input_1 = $("#add-max-input-1");
+        const min_limit_input_2 = $("#add-min-input-2");
+        const max_limit_input_2 = $("#add-max-input-2");
+        name_input.parent().removeClass("is-invalid");
+        sales_limit_input.parent().removeClass("is-invalid");
+        min_limit_input_1.parent().removeClass("is-invalid");
+        max_limit_input_1.parent().removeClass("is-invalid");
+        min_limit_input_2.parent().removeClass("is-invalid");
+        max_limit_input_2.parent().removeClass("is-invalid");
+        //sales_cycle_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập tên gói.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(sales_limit_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua giới hạn của gói.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if (document.getElementById('day').checked) {
+            sales_cycle_input.val("day");
+        }
+        else {
+            if (document.getElementById('week').checked) {
+                sales_cycle_input.val("week");
+            }
+            else
+            {
+                if (document.getElementById('month').checked) {
+                    sales_cycle_input.val("month");
+                }
+                else
+                {
+                    $('#add-noti-msg').html("Vui lòng chọn thời gian giới hạn mua.")
+                    //sales_cycle_input.parent().addClass("is-invalid");
+                    return false;
+                }
+            }
+        }
+
+        if (document.getElementById('opt_1').selected){
+             $('#add-noti-msg').html("Vui lòng chọn sản phẩm 1 để thêm vào gói.")
+            return false;
+        }
+
+        if (document.getElementById('opt_2').selected){
+             $('#add-noti-msg').html("Vui lòng chọn sản phẩm 2 để thêm vào gói.")
+            return false;
+        }
+
+        if(min_limit_input_1.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm 1.")
+            min_limit_input_1.parent().addClass("is-invalid");
+            return false;
+        }
+        if(max_limit_input_1.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm 1.")
+            max_limit_input_1.parent().addClass("is-invalid");
+            return false;
+        }
+        if(min_limit_input_2.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm 2.")
+            min_limit_input_2.parent().addClass("is-invalid");
+            return false;
+        }
+        if(max_limit_input_2.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm 2.")
+            max_limit_input_2.parent().addClass("is-invalid");
+            return false;
+        }
+        
+        if(min_limit_input_1.val() > max_limit_input_1.val())
+        {
+             $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa (1)")
+            return false;
+        }
+
+        if(min_limit_input_2.val() > max_limit_input_2.val())
+        {
+             $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa (2)")
+            return false;
+        }
+        return true;
+    }
+</script>
