@@ -1,0 +1,75 @@
+<!-- Add combos button -->
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#modalAdd">
+        Thêm gói nhu yếu phẩm
+    </button>
+</div>
+
+<!-- List of combos -->
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Danh sách các gói nhu yếu phẩm</h6>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <!-- Search -->
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
+                    <div class="input-group input-group-outline w-50 mt-1 me-4">
+                        <label class="form-label">Search...</label>
+                        <input type="text" class="form-control border-primary" id="search_input">
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>  
+    </div>
+</div>
+
+<!-- Modal add -->
+<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Thêm gói nhu yếu phẩm mới</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="">
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Tên gói</label>
+                            <input type="text" class="form-control" name="name" id="add-name-input">
+                        </div>
+
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Số gói giới hạn</label>
+                            <input type="number" class="form-control" name="limit" id="add-sales-limit-input" min="1">
+                        </div>
+
+                        <div class="input-group input-group-outline my-3 mx-2">
+                            <p>Thời gian giới hạn:</p>
+                            <input class="mx-2 my-2" type="radio" id="day" name="sales_cycle" value="day">
+                            <label class="mr-2 my-1" for="day">Ngày</label>
+                            <input class="mx-2 my-2" type="radio" id="week" name="sales_cycle" value="week">
+                            <label class="mr-2 my-1" for="week">Tuần</label>
+                            <input class="mx-2 my-2" type="radio" id="month" name="sales_cycle" value="month">
+                            <label class="mr-2 my-1" for="month">Tháng</label>
+                        </div>
+
+                        
+                    </form>
+                    <p class="text-danger" id="add-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="add-form">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
