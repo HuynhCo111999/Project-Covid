@@ -52,6 +52,32 @@
     </div>
 </div>
 
+<!-- Model remove -->
+<div class="modal fade" id="modalRemove" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Xóa nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="remove-form" method="post">
+                        <div class="input-group input-group-static my-3">
+                            <p class="text-dark">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này khỏi gói?</p>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="remove-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- List of necessities -->
 <div class="row">
     <div class="col-12">
@@ -103,8 +129,11 @@
                                     </div>
                                 </td>
                                 <td style="white-space: normal">
-                                    <button id="editBtn" class="btn btn-success my-1 mx-2">Chỉnh sửa</button>
-                                    <button id="deleteBtn" class="btn btn-danger my-1">Xóa</button>
+                                    <button id="editBtn_{{id}}" class="btn btn-success my-1 mx-2">Chỉnh sửa</button>
+                                    <button id="removeBtn_{{id}}" class="btn btn-danger my-1"
+                                            data-bs-toggle="modal" data-bs-target="#modalRemove"
+                                            data-id="{{id}}"
+                                    >Xóa</button>
                                     {{!-- <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#combo">Chi tiết gói</button> --}}
                                     <!-- Modal details -->
                                     {{!-- <div class="modal fade" id="combo" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
@@ -196,4 +225,19 @@
         }
         return true;
     }
+
+    //var modalRemove = $('#modalRemove');
+        //modalRemove.on('shown.bs.modal', function(e)
+        //{
+            //$('#remove-form').attr("action",`/moderator/remove-necessity-from-combo/${$(e.relatedTarget).attr("data-id")}`);
+        //});
+
+    $().ready(() =>
+    {
+        var modalRemove = $('#modalRemove');
+        modalRemove.on('shown.bs.modal', function(e)
+        {
+            $('#remove-form').attr("action",`/moderator/remove-necessity-from-combo/${$(e.relatedTarget).attr("data-id")}`);
+        })
+    })
 </script>

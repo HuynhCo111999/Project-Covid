@@ -78,10 +78,7 @@ exports.add = async (req, res) => {
 exports.getDetails = async (req, res) => {
     try
     {
-         //const combos = await covidNecessityCombo.findAll({ raw: true });
-
         const id_combo = req.params.id;
-        //console.log(id_combo);
         const necessities = await covidNecessity.findAll({ raw: true });
         const comboNecessities = await covidNecessityOfCombo.findAll({
             raw: true,
@@ -98,6 +95,7 @@ exports.getDetails = async (req, res) => {
                 }).then(
                 (instance) => {
                     const tempDetails = {
+                        id: necessity.id,
                         id_combo: necessity.id_combo,
                         id_necessity: necessity.id_necessity,
                         max_limit: necessity.max_limit,
@@ -130,10 +128,8 @@ exports.addDetails = async (req, res) => {
     try
     {   
         const id = parseInt(req.params.id);
-        console.log(id);
         var necessityInfo = req.body.necesstity_to_add;
         const id_necessity = parseInt(necessityInfo.split(".")[0].trim());
-        console.log(id_necessity);
         await covidNecessityOfCombo.create({
             id_necessity: id_necessity,
             id_combo: id,
@@ -141,6 +137,29 @@ exports.addDetails = async (req, res) => {
             max_limit: req.body.max,
         });
         res.redirect(`../necessities-combo-details/${id}`);
+    }
+    catch (error)
+    {
+        res.send(error);
+    }
+};
+
+exports.removeDetails = async (req, res) => {
+    try
+    {   
+        const id = parseInt(req.params.id);
+        const instance = await covidNecessityOfCombo.findOne({
+            where: {
+              id: id,
+            },
+        });
+        const id_combo = instance.id_combo;
+        await covidNecessityOfCombo.destroy({
+            where: {
+              id: id,
+            },
+        });
+        res.redirect(`../necessities-combo-details/${id_combo}`);
     }
     catch (error)
     {
