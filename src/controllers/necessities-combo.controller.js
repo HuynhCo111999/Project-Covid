@@ -10,6 +10,7 @@ exports.get = async (req, res) => {
                     layout: "moderator/main",
                     necessities: necessities,
                     combos: combos,
+                    function: "necessities-package",
                 });
 };
 
