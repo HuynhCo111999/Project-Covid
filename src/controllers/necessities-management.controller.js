@@ -8,7 +8,7 @@ exports.get = async (req, res) => {
   res.render("moderator/necessities-management", {
     layout: "moderator/main",
     necessities: necessities,
-    function: "necessities-produdct",
+    function: "necessities-product",
   });
 };
 
