@@ -29,7 +29,7 @@
                             <select class="form-control" name="necesstity_to_add">
                                 <option id="opt" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm cần thêm vào gói</option>
                                 {{#each necessities}}
-                                    <option {{#ifStr necessities "{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                    <option>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -73,6 +73,49 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn bg-gradient-primary" form="remove-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal update -->
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Cập nhật nhu yếu phẩm trong gói</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="update-form" action="/moderator/update-necessity-for-combo/{{comboId}}" method="post" onsubmit="return validateUpdate()">
+                        <div class="input-group input-group-static my-1 mx-2">
+                            <label>Chọn nhu yếu phẩm để cập nhật</label>
+                        </div>
+                        <div class="input-group input-group-outline">
+                            <select class="form-control" name="necesstity_to_update">
+                                <option id="update_opt" {{#if necessities}}{{else}}selected{{/if}} disabled>Cập nhật nhu yếu phẩm</option>
+                                {{#each necessities}}
+                                    <option id="update_opt_{{this.id}}">{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="input-group input-group-static my-3 mx-2">
+                            <label>Số lượng mua tối thiểu</label>
+                            <input type="number" class="form-control" name="min" id="update-min-input" min="1">
+                        </div>
+                        <div class="input-group input-group-static my-3 mx-2">
+                            <label>Số lượng mua tối đa</label>
+                            <input type="number" class="form-control" name="max" id="update-max-input" min="2">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="update-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="update-form">Cập nhật</button>
             </div>
         </div>
     </div>
@@ -129,7 +172,13 @@
                                     </div>
                                 </td>
                                 <td style="white-space: normal">
-                                    <button id="editBtn_{{id}}" class="btn btn-success my-1 mx-2">Chỉnh sửa</button>
+                                    <button id="editBtn_{{id}}" class="btn btn-success my-1 mx-2"
+                                            data-bs-toggle="modal" data-bs-target="#modalUpdate"
+                                            data-min="{{min_limit}}"
+                                            data-max="{{max_limit}}"
+                                            data-necessityid="{{id_necessity}}"
+                                            data-id="{{id}}"
+                                    >Chỉnh sửa</button>
                                     <button id="removeBtn_{{id}}" class="btn btn-danger my-1"
                                             data-bs-toggle="modal" data-bs-target="#modalRemove"
                                             data-id="{{id}}"
@@ -211,7 +260,6 @@
 
         const min = parseInt(min_limit_input.val());
         const max = parseInt(max_limit_input.val());
-        console.log(max);
         if(min > max)
         {
             $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa.")
@@ -219,18 +267,45 @@
             max_limit_input.parent().addClass("is-invalid");
             return false;
         }
-        else
-        {
-            return false;
-        }
+
         return true;
     }
 
-    //var modalRemove = $('#modalRemove');
-        //modalRemove.on('shown.bs.modal', function(e)
-        //{
-            //$('#remove-form').attr("action",`/moderator/remove-necessity-from-combo/${$(e.relatedTarget).attr("data-id")}`);
-        //});
+    const validateUpdate = () => {
+        const min_limit_input = $("#update-min-input");
+        const max_limit_input = $("#update-max-input");
+        min_limit_input.parent().removeClass("is-invalid");
+        max_limit_input.parent().removeClass("is-invalid");
+
+        if (document.getElementById('update_opt').selected){
+             $('#update-noti-msg').html("Vui lòng chọn sản phẩm để thêm vào gói.")
+            return false;
+        }
+
+        if(min_limit_input.val() === "") {
+            $('#update-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm.")
+            min_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        if(max_limit_input.val() === "") {
+            $('#update-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm.")
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        const min = parseInt(min_limit_input.val());
+        const max = parseInt(max_limit_input.val());
+        if(min > max)
+        {
+            $('#update-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa.")
+            min_limit_input.parent().addClass("is-invalid");
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        return true;
+    }
 
     $().ready(() =>
     {
@@ -239,5 +314,14 @@
         {
             $('#remove-form').attr("action",`/moderator/remove-necessity-from-combo/${$(e.relatedTarget).attr("data-id")}`);
         })
+
+        var modalUpdate = $('#modalUpdate');
+        modalUpdate.on('shown.bs.modal',function(e)
+        {
+            $('#update-min-input').val($(e.relatedTarget).attr("data-min"));
+            $('#update-max-input').val($(e.relatedTarget).attr("data-max"));
+            $(`#update_opt_${$(e.relatedTarget).attr("data-necessityid")}`).attr('selected','selected');
+            $('#update-form').attr("action",`/moderator/update-necessity-for-combo/${$(e.relatedTarget).attr("data-id")}`);
+        });
     })
 </script>

@@ -150,7 +150,7 @@
                             <select class="form-control" name="necesstity_to_add_1">
                                     <option id="opt_1" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm 1 cần thêm</option>
                                 {{#each necessities}}
-                                    <option {{#ifStr necessities "{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                    <option>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -164,7 +164,7 @@
                             <select class="form-control" name="necesstity_to_add_2">
                                     <option id="opt_2" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm 2 cần thêm</option>
                                 {{#each necessities}}
-                                    <option {{#ifStr necessities "{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                    <option>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
                                 {{/each}}
                             </select>
                         </div>

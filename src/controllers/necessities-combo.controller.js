@@ -166,3 +166,34 @@ exports.removeDetails = async (req, res) => {
         res.send(error);
     }
 };
+
+exports.updateDetails = async (req, res) => {
+    try
+    {   
+        const id = parseInt(req.params.id);
+        const instance = await covidNecessityOfCombo.findOne({
+            where: {
+              id: id,
+            },
+        });
+        const id_combo = instance.id_combo;
+        var necessityInfo = req.body.necesstity_to_update;
+        const id_necessity = parseInt(necessityInfo.split(".")[0].trim());
+        await covidNecessityOfCombo.update({
+                id_necessity: id_necessity,
+                id_combo: id_combo,
+                min_limit: req.body.min,
+                max_limit: req.body.max,
+            },   
+            {
+                where: {
+                id: id,
+            },
+        });
+        res.redirect(`../necessities-combo-details/${id_combo}`);
+    }
+    catch (error)
+    {
+        res.send(error);
+    }
+};
