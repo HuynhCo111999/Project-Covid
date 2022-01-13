@@ -1,61 +1,68 @@
-<!-- Add necessities button -->
-<div class="d-flex justify-content-end mb-3">
-  <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#modalAdd">
-    Thêm nhu yếu phẩm
-  </button>
-</div>
-
-<!-- List of necessities -->
+<!-- Filter bars -->
 <div class="row">
     <div class="col-12">
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Danh sách các nhu yếu phẩm</h6>
+                    <h5 class="text-white text-capitalize ps-3 text-center">Danh sách các nhu yếu phẩm</h5>
                 </div>
             </div>
             <div class="card-body px-0 pb-2">
-                <!-- Search -->
-                <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
-                    <div class="input-group input-group-outline w-50 mt-1 me-4">
-                        <label class="form-label">Search...</label>
-                        <input type="text" class="form-control border-primary" id="search_input">
+                <!-- Search bar -->
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-start mb-2">
+                    <div class="input-group input-group-outline w-40 mt-1" style="margin-left: 4rem">
+                        <label class="form-label">Tìm kiếm</label>
+                        <input type="text" class="form-control border-primary" id="searchInput">
+                    </div>
+                    <div style="position: absolute; right: 13.5rem">
+                      <button type="button" class="btn bg-gradient-primary btn-block m-0" onclick="sortProductByName()" id="arrange_name_btn">Sắp xếp theo tên &#9660</button>
+                      <button type="button" class="btn bg-gradient-primary btn-block m-0 ms-2" onclick="sortProductByPrice()" id="arrange_price_btn">Sắp xếp theo giá &#9660</button>
+                    </div>
+                    <!-- Add necessities button -->
+                    <div style="position: absolute; right: 2rem">
+                      <button type="button" class="btn bg-gradient-success btn-block m-0" data-bs-toggle="modal" data-bs-target="#modalAdd">
+                        Thêm nhu yếu phẩm
+                      </button>
                     </div>
                 </div>
-
+                
+                <!-- List of necessities -->
                 <div class="row justify-content-start mx-3">
-                    {{#each necessities}}
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            
-                            <img src="{{image_path}}" class="card-img-top" alt="Hình ảnh sản phẩm {{id}}">
-                            
-                            
-                            {{!-- <img src="/uploads/1/1.png" class="card-img-top" alt="Hình ảnh sản phẩm"> --}}
-                            
-                            <div class="card-body">
-                                <h4 class="card-title">{{name}}</h4>
-                                <p class="card-text font-weight-bold">{{price}} ₫/ {{unit_of_measurement}}</p>
-                            </div>
-                            <div class="card-body">
-                                <button type="button" class="btn btn-lg bg-transparent border border-white text-success"
-                                        data-bs-toggle="modal" data-bs-target="#modalEdit"
-                                        data-name="{{name}}"
-                                        data-price="{{price}}"
-                                        data-unit="{{unit_of_measurement}}"
-                                        data-id="{{id}}"
-                                        data-path="{{image_path}}">
-                                        Chỉnh sửa
-                                </button>
-                                <button type="button" class="btn btn-lg bg-transparent border border-white text-danger"
-                                        data-bs-toggle="modal" data-bs-target="#modalDelete"
-                                        data-id="{{id}}">
-                                        Xóa
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    {{/each}}
+                    <table id="userTable">
+                        <tbody id="tableBody">
+                            {{#each necessities}}
+                            <tr style="display: inline">
+                                <td>
+                                    <div class="col-md-auto m-3">
+                                        <div class="card" style="width: 18rem;">                                            
+                                            <img src="{{image_path}}" class="card-img-top" alt="Hình ảnh sản phẩm {{id}}">
+                                            <div class="card-body" class="cardContent">
+                                                <h4 class="card-title">{{name}}</h4>
+                                                <p class="card-text font-weight-bold">{{price}} ₫/{{unit_of_measurement}}</p>
+                                            </div>
+                                            <div class="card-body">
+                                                <button type="button" class="btn btn-lg bg-transparent border border-white text-success"
+                                                        data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                                        data-name="{{name}}"
+                                                        data-price="{{price}}"
+                                                        data-unit="{{unit_of_measurement}}"
+                                                        data-id="{{id}}"
+                                                        data-path="{{image_path}}">
+                                                        Chỉnh sửa
+                                                </button>
+                                                <button type="button" class="btn btn-lg bg-transparent border border-white text-danger"
+                                                        data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                        data-id="{{id}}">
+                                                        Xóa
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
                 </div>    
             </div>
         </div>  
@@ -76,7 +83,6 @@
                 <div class="card-body pb-3">
                     <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="return validateAdd()"
                           enctype="multipart/form-data">
-                        
                         <main class="main_full">
                             <div class="container">
                                 <div class="panel">
@@ -95,7 +101,6 @@
                                 </div>
 						    </div>
                         </main>
-
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" name="name" id="add-name-input">
@@ -133,7 +138,6 @@
                 <div class="card-body pb-3">
                     <form role="form tex-left" id="edit-form" method="post" onsubmit="return validateEdit()"
                           enctype="multipart/form-data">
-
                         <main class="main_full">
                             <div class="container">
                                 <div class="panel">
@@ -153,7 +157,6 @@
                                 </div>
 						    </div>
                         </main>
-
                         <div class="input-group input-group-static my-3">
                             <label>Tên sản phẩm</label>
                             <input type="text" class="form-control" name="name" id="edit-name-input">
@@ -191,7 +194,7 @@
                 <div class="card-body pb-3">
                     <form role="form tex-left" id="delete-form" method="post">
                         <div class="input-group input-group-static my-3">
-                            <label>Bạn xác nhận XÓA nhu yếu phẩm này?</label>
+                            <p class="text-dark">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này?</p>
                         </div>
                     </form>
                 </div> 
@@ -231,6 +234,12 @@
             unit_input.parent().addClass("is-invalid");
             return false;
         }
+        const image_uploaded = $("#uploaded_view_0").find("img");
+        if (image_uploaded.length == 0)
+        {
+            $('#error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+            return false;
+        }
         var ext = image_input.val().split('.').pop().toLowerCase();
         if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
 			$('#error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
@@ -238,26 +247,6 @@
 		}
         return true;
     }
-
-    var modalEdit = $('#modalEdit');
-    modalEdit.on('shown.bs.modal',function(e){
-        $('#edit-name-input').val($(e.relatedTarget).attr("data-name"));
-        $('#edit-price-input').val($(e.relatedTarget).attr("data-price"));
-        $('#edit-unit-input').val($(e.relatedTarget).attr("data-unit"));
-        $('#edit-form').attr("action",`/moderator/update-necessity/${$(e.relatedTarget).attr("data-id")}`);
-
-        var btnOuter = $(`#edit_button_outer_0`);
-        var btnUpload = $(`#editupload_file_0`);
-        btnOuter.addClass("file_uploading");
-		btnOuter.addClass("file_uploaded");
-        btnUpload.removeClass("show");
-        $(`#edit_uploaded_view_0`).append(`<img src="${$(e.relatedTarget).attr("data-path")}" />`).addClass("show");
-    })
-
-    modalEdit.on('hidden.bs.modal',function(e){
-        $(`#edit_uploaded_view_0`).find("img").remove();
-        $('#edit_error_msg_0').text("");
-    })
 
     const validateEdit = () => {
         const name_input = $('#edit-name-input');
@@ -282,16 +271,52 @@
             unit_input.parent().addClass("is-invalid");
             return false;
         }
+        
         var ext = image_input.val().split('.').pop().toLowerCase();
-        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
-			$('#edit_error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
-            return false;
-		}
+        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1)
+        {
+            const image_uploaded = $("#edit_image");
+            if (image_uploaded.length == 0)
+            {
+                $('#edit_error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+                console.log("false");
+                return false;
+            }
+        } 
         return true;
     }
+
+    $().ready(() =>
+    {
+        var modalEdit = $('#modalEdit');
+        modalEdit.on('shown.bs.modal',function(e)
+        {
+            $('#edit-name-input').val($(e.relatedTarget).attr("data-name"));
+            $('#edit-price-input').val($(e.relatedTarget).attr("data-price"));
+            $('#edit-unit-input').val($(e.relatedTarget).attr("data-unit"));
+            $('#edit-form').attr("action",`/moderator/update-necessity/${$(e.relatedTarget).attr("data-id")}`);
+
+            var btnOuter = $(`#edit_button_outer_0`);
+            var btnUpload = $(`#editupload_file_0`);
+            btnOuter.addClass("file_uploading");
+            btnOuter.addClass("file_uploaded");
+            btnUpload.removeClass("show");
+            $(`#edit_uploaded_view_0`).append(`<img src="${$(e.relatedTarget).attr("data-path")}" />`).addClass("show");
+        })
+
+
+        modalEdit.on('hidden.bs.modal',function(e)
+        {
+            $(`#edit_uploaded_view_0`).find("img").remove();
+            $('#edit_error_msg_0').text("");
+        })
+        
     
-    var modalDelete = $('#modalDelete');
-    modalDelete.on('shown.bs.modal',function(e){
-        $('#delete-form').attr("action",`/moderator/delete-necessity/${$(e.relatedTarget).attr("data-id")}`);
+        var modalDelete = $('#modalDelete');
+        modalDelete.on('shown.bs.modal',function(e)
+        {
+            $('#delete-form').attr("action",`/moderator/delete-necessity/${$(e.relatedTarget).attr("data-id")}`);
+        })
     })
+    
 </script>
