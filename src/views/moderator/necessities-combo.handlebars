@@ -45,7 +45,7 @@
                             {{#each combos}}
                             <tr>
                                 <td>
-                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                    <div class="d-flex px-4 py-1 justify-content-center">
                                         <h6 class="mb-0 text-md">{{name}}</h6>
                                     </div>
                                 </td>
@@ -60,7 +60,8 @@
                                     </div>
                                 </td>
                                 <td style="white-space: normal">
-                                    <a class="btn btn-primary my-1" type="button" href="/moderator/necessities-combo-details/1">Chi tiết gói</a>
+                                    <a class="btn btn-primary my-1" type="button" href="/moderator/necessities-combo-details/{{id}}"
+                                    data-id="{{id}}">Chi tiết gói</a>
                                     {{!-- <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#combo">Chi tiết gói</button> --}}
                                     <!-- Modal details -->
                                     {{!-- <div class="modal fade" id="combo" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
@@ -241,36 +242,40 @@
             return false;
         }
 
-        if(min_limit_input_1.val() === "") {
+        if (min_limit_input_1.val() === "") {
             $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm 1.")
             min_limit_input_1.parent().addClass("is-invalid");
             return false;
         }
-        if(max_limit_input_1.val() === "") {
+        if (max_limit_input_1.val() === "") {
             $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm 1.")
             max_limit_input_1.parent().addClass("is-invalid");
             return false;
         }
-        if(min_limit_input_2.val() === "") {
+        if (min_limit_input_2.val() === "") {
             $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm 2.")
             min_limit_input_2.parent().addClass("is-invalid");
             return false;
         }
-        if(max_limit_input_2.val() === "") {
+        if (max_limit_input_2.val() === "") {
             $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm 2.")
             max_limit_input_2.parent().addClass("is-invalid");
             return false;
         }
         
-        if(min_limit_input_1.val() > max_limit_input_1.val())
+        if (parseInt(min_limit_input_1.val()) > parseInt(max_limit_input_1.val()))
         {
-             $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa (1)")
+            $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa (1)");
+            min_limit_input_1.parent().addClass("is-invalid");
+            max_limit_input_1.parent().addClass("is-invalid");
             return false;
         }
 
-        if(min_limit_input_2.val() > max_limit_input_2.val())
+        if (parseInt(min_limit_input_2.val()) > parseInt(max_limit_input_2.val()))
         {
-             $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa (2)")
+            $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa (2)");
+            min_limit_input_2.parent().addClass("is-invalid");
+            max_limit_input_2.parent().addClass("is-invalid");
             return false;
         }
         return true;

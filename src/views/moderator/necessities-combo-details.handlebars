@@ -24,12 +24,12 @@
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
-                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity-to-combo" method="post" onsubmit="">
+                    <form role="form text-left" id="add-form" action="/moderator/add-necessity-to-combo/{{comboId}}" method="post" onsubmit="return validateAdd()">
                         <div class="input-group input-group-outline my-3">
-                            <select class="form-control" name="necesstities_to_add">
-                                <option {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yêu phẩm cần thêm</option>
+                            <select class="form-control" name="necesstity_to_add">
+                                <option id="opt" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm cần thêm vào gói</option>
                                 {{#each necessities}}
-                                    <option {{#ifStr necessities "{{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}"}}selected{{/ifStr}}>{{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                    <option {{#ifStr necessities "{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -65,7 +65,7 @@
                     <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25 table-header" onclick="">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-30 table-header" onclick="">
                                     Tên sản phẩm &#9650</th>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="">
                                     Giá/ Định lượng &#9650</th>
@@ -77,26 +77,29 @@
                             </tr>
                         </thead>
                         <tbody id="tableBody">
-                            {{!-- {{#each users}} --}}
+                            
+                            {{#each listNecessities}}
                             <tr>
                                 <td>
-                                    <div class="d-flex px-4 py-1 justify-content-start">
-                                        <h6 class="mb-0 text-md">Bánh mì</h6>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{name}}</h6>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex px-4 py-1 justify-content-center">
-                                        <h6 class="mb-0 text-md">10000 đ/Ổ</h6>
+                                        <h6 class="mb-0 text-md">
+                                            {{price}} ₫/{{unit_of_measurement}}
+                                        </h6>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex px-4 py-1 justify-content-center">
-                                        <h6 class="mb-0 text-md">2</h6>
+                                        <h6 class="mb-0 text-md">{{min_limit}}</h6>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex px-4 py-1 justify-content-center">
-                                        <h6 class="mb-0 text-md">5</h6>
+                                        <h6 class="mb-0 text-md">{{max_limit}}</h6>
                                     </div>
                                 </td>
                                 <td style="white-space: normal">
@@ -144,10 +147,53 @@
                                     </div> --}}
                                 </td>
                             </tr>
-                            {{!-- {{/each}} --}}
+                            {{/each}}
                         </tbody>
                     </table>
                 </div>
         </div>  
     </div>
 </div>
+
+<script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    const validateAdd = () => {
+        const min_limit_input = $("#add-min-input");
+        const max_limit_input = $("#add-max-input");
+        min_limit_input.parent().removeClass("is-invalid");
+        max_limit_input.parent().removeClass("is-invalid");
+
+        if (document.getElementById('opt').selected){
+             $('#add-noti-msg').html("Vui lòng chọn sản phẩm để thêm vào gói.")
+            return false;
+        }
+
+        if(min_limit_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm.")
+            min_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        if(max_limit_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm.")
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        const min = parseInt(min_limit_input.val());
+        const max = parseInt(max_limit_input.val());
+        console.log(max);
+        if(min > max)
+        {
+            $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa.")
+            min_limit_input.parent().addClass("is-invalid");
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+        return true;
+    }
+</script>

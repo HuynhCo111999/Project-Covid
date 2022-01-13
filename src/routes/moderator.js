@@ -11,12 +11,13 @@ router.get("/", moderatorController.getIndex);
 router.get("/add-user", moderatorController.getAddUser);
 router.get("/necessities", necessitiesController.get);
 router.get("/necessities-combo", necessitiesComboController.get);
-router.get('/necessities-combo-details/1',necessitiesComboController.getDetails);
+router.get("/necessities-combo-details/:id",necessitiesComboController.getDetails);
 router.post("/add-necessity", upload.single('upload'), necessitiesController.add);
 router.post('/update-necessity/:id', upload.single('edit_upload'), necessitiesController.update);
 router.post('/delete-necessity/:id', necessitiesController.delete);
 router.post("/add-necessity-combo",necessitiesComboController.add);
-router.post("/add-necessity-to-combo", necessitiesComboController.addDetails);
+router.post("/add-necessity-to-combo/:id", necessitiesComboController.addDetails);
+
 
 router.post(
   "/add-user",

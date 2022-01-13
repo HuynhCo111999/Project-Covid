@@ -76,25 +76,71 @@ exports.add = async (req, res) => {
 };
 
 exports.getDetails = async (req, res) => {
-    //const combos = await covidNecessityCombo.findAll({ raw: true });
-    const necessities = await covidNecessity.findAll({ raw: true });
-    return res.render("moderator/necessities-combo-details",
-                {
-                    layout: "moderator/main",
-                    necessities: necessities,
-                });
-};
-
-exports.addDetails = (req, res) => {
     try
     {
-        // await covidNecessity.create({
-        //     name: req.body.name,
-        //     price: req.body.price,
-        //     unit_of_measurement: req.body.unit,
-        //     image_path: `/uploads/` + req.file.filename,
-        // });
-        res.redirect('./necessities-combo-details/1');
+         //const combos = await covidNecessityCombo.findAll({ raw: true });
+
+        const id_combo = req.params.id;
+        //console.log(id_combo);
+        const necessities = await covidNecessity.findAll({ raw: true });
+        const comboNecessities = await covidNecessityOfCombo.findAll({
+            raw: true,
+            where: {
+                id_combo: id_combo,
+            },
+        });
+        var listNecessities = [];
+        comboNecessities.forEach( necessity => {
+            covidNecessity.findOne(
+                {
+                    where: { id: necessity.id_necessity },
+
+                }).then(
+                (instance) => {
+                    const tempDetails = {
+                        id_combo: necessity.id_combo,
+                        id_necessity: necessity.id_necessity,
+                        max_limit: necessity.max_limit,
+                        min_limit: necessity.min_limit,
+                        name: instance.name,
+                        price: instance.price,
+                        unit_of_measurement: instance.unit_of_measurement,
+                    }
+                    listNecessities.push(tempDetails);
+                }
+            );
+        });
+        
+        return res.render("moderator/necessities-combo-details",
+                    {
+                        layout: "moderator/main",
+                        necessities: necessities,
+                        comboNecessities: comboNecessities,
+                        listNecessities: listNecessities,
+                        comboId: id_combo,
+                    });
+    }
+    catch(error)
+    {
+        return res.send(error);
+    }
+};
+
+exports.addDetails = async (req, res) => {
+    try
+    {   
+        const id = parseInt(req.params.id);
+        console.log(id);
+        var necessityInfo = req.body.necesstity_to_add;
+        const id_necessity = parseInt(necessityInfo.split(".")[0].trim());
+        console.log(id_necessity);
+        await covidNecessityOfCombo.create({
+            id_necessity: id_necessity,
+            id_combo: id,
+            min_limit: req.body.min,
+            max_limit: req.body.max,
+        });
+        res.redirect(`../necessities-combo-details/${id}`);
     }
     catch (error)
     {
