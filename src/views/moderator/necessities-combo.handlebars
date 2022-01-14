@@ -15,29 +15,21 @@
                 </div>
             </div>
             <div class="card-body px-0 pb-2">
-                <!-- Search -->
-                <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
-                    <div class="input-group input-group-outline w-50 mt-1 me-4">
-                        <label class="form-label">Search...</label>
-                        <input type="text" class="form-control border-primary" id="search_input">
-                    </div>
-                </div>
-            </div>
-            <div class="table-responsive p-0">
-                    {{!-- <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
+                <div class="table-responsive p-0">
+                    <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
                         <div class="input-group input-group-outline w-50 mt-1 me-4">
                             <label class="form-label">Tìm kiếm</label>
                             <input type="text" class="form-control border-primary" id="searchInput">
                         </div>   
-                    </div> --}}
+                    </div>
                     <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-50 table-header" onclick="">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-50 table-header" onclick="sortTable(0)">
                                     Tên gói &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(1)">
                                     Số lượng giới hạn &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(2)">
                                     Thời gian giới hạn &#9650</th>
                             </tr>
                         </thead>
@@ -68,6 +60,7 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
         </div>  
     </div>
 </div>
@@ -117,7 +110,7 @@
 
                         <div class="input-group input-group-outline my-3">
                             <input type="number" placeholder="Số lượng mua tối thiểu" class="form-control mx-2" name="min_1" id="add-min-input-1" min="1">
-                            <input type="number" placeholder="Số lượng mua tối đa" class="form-control mx-2" name="max_1" id="add-max-input-1" min="2">
+                            <input type="number" placeholder="Số lượng mua tối đa" class="form-control mx-2" name="max_1" id="add-max-input-1" min="1">
                         </div>
 
                         <div class="input-group input-group-outline my-3">
@@ -131,7 +124,7 @@
 
                         <div class="input-group input-group-outline my-3">
                             <input type="number" placeholder="Số lượng mua tối thiểu" class="form-control mx-2" name="min_2" id="add-min-input-2" min="1">
-                            <input type="number" placeholder="Số lượng mua tối đa" class="form-control mx-2" name="max_2" id="add-max-input-2" min="2">
+                            <input type="number" placeholder="Số lượng mua tối đa" class="form-control mx-2" name="max_2" id="add-max-input-2" min="1">
                         </div>
                     </form>
                     <p class="text-danger" id="add-noti-msg"></p>
