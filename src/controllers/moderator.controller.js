@@ -1,6 +1,7 @@
 const covidUser = require("../models/index").covidUser;
 const User = require("../models/index").user;
 const treatmentLocation = require("../models/index").treatmentLocation;
+const StatusCovid = require("../models/index").statusCovidUser;
 const { validationResult } = require("express-validator");
 
 exports.getIndex = async (req, res) => {
@@ -21,11 +22,15 @@ exports.getAddUser = async (req, res) => {
   const location = await treatmentLocation.findAll({
     raw: true,
   });
+  const statusCovid = await StatusCovid.findAll({
+    raw: true,
+  });
 
   res.render("moderator/add-user", {
     layout: "moderator/main",
     related_persons: users,
     location: location,
+    statusCovid: statusCovid,
     function: "add-user",
   });
 };
@@ -36,6 +41,9 @@ exports.postAddUser = async (req, res) => {
     raw: true,
   });
   const location = await treatmentLocation.findAll({
+    raw: true,
+  });
+  const statusCovid = await StatusCovid.findAll({
     raw: true,
   });
 
@@ -59,6 +67,7 @@ exports.postAddUser = async (req, res) => {
       errorMessage: errors.array(),
       related_persons: users,
       location: location,
+      statusCovid: statusCovid,
       name: req.body.name,
       card: req.body.card,
       yob: req.body.yob,

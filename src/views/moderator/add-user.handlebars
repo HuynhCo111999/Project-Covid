@@ -1,109 +1,117 @@
 <div class="card z-index-0 fadeIn3 fadeInBottom">
-<h3 class='text-center my-3'>THÊM THÔNG TIN NGƯỜI LIÊN QUAN ĐẾN COVID-19</h3>
-{{#if successMessage}}
+    <h3 class='text-center my-3'>THÊM THÔNG TIN NGƯỜI LIÊN QUAN ĐẾN COVID-19</h3>
+    {{#if successMessage}}
     <h5 class="text-center mb-3 text-success">{{successMessage}}</h5>
-{{/if}}
-<div class="container-fluid w-75">
-    <form role="form" method="post" action="/moderator/add-user">
-        <div class="row mb-3">
-            <div class="col">
-                <div class="input-group input-group-outline mt-3 {{#if name}}focused is-focused{{/if}}">
-                    <label class="form-label">Họ tên</label>
-                    <input type="text" class="form-control" name="name" value="{{#if name}}{{name}}{{/if}}">
+    {{/if}}
+    <div class="container-fluid w-75">
+        <form role="form" method="post" action="/moderator/add-user">
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="input-group input-group-outline mt-3 {{#if name}}focused is-focused{{/if}}">
+                        <label class="form-label">Họ tên</label>
+                        <input type="text" class="form-control" name="name" value="{{#if name}}{{name}}{{/if}}">
+                    </div>
+                    {{#each errorMessage}}
+                    {{#ifStr this.param "name"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                    {{/each}}
                 </div>
+                <div class="col-4">
+                    <div class="input-group input-group-outline mt-3 {{#if card}}focused is-focused{{/if}}">
+                        <label class="form-label">CMND/CCCD</label>
+                        <input type="number" class="form-control" name="card" value={{#if card}}{{card}}{{/if}}>
+                    </div>
+                    {{#each errorMessage}}
+                    {{#ifStr this.param "card"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                    {{/each}}
+                </div>
+                <div class="col-2">
+                    <div class="input-group input-group-outline mt-3 {{#if yob}}focused is-focused{{/if}}">
+                        <label class="form-label">Năm sinh</label>
+                        <input type="number" class="form-control" name="yob" min="1900" max="2022" value={{#if
+                            yob}}{{yob}}{{/if}}>
+                    </div>
+                    {{#each errorMessage}}
+                    {{#ifStr this.param "yob"}}<div class=" err-msg">{{this.msg}}</div>{{/ifStr}}
+                    {{/each}}
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="input-group input-group-outline mt-3 {{#if province}}focused is-focused{{/if}}">
+                        <label class="form-label">Tỉnh/Thành phố</label>
+                        <input type="text" class="form-control" name="province"
+                            value="{{#if province}}{{province}}{{/if}}">
+                    </div>
+                    {{#each errorMessage}}
+                    {{#ifStr this.param "province"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                    {{/each}}
+                </div>
+                <div class="col">
+                    <div class="input-group input-group-outline mt-3 {{#if district}}focused is-focused{{/if}}">
+                        <label class="form-label">Quận/Huyện</label>
+                        <input type="text" class="form-control" name="district"
+                            value="{{#if district}}{{district}}{{/if}}">
+                    </div>
+                    {{#each errorMessage}}
+                    {{#ifStr this.param "district"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                    {{/each}}
+                </div>
+                <div class="col">
+                    <div class="input-group input-group-outline mt-3 {{#if ward}}focused is-focused{{/if}}">
+                        <label class="form-label">Phường/Xã</label>
+                        <input type="text" class="form-control" name="ward" value="{{#if ward}}{{ward}}{{/if}}">
+                    </div>
+                    {{#each errorMessage}}
+                    {{#ifStr this.param "ward"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                    {{/each}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <div class="input-group input-group-outline mt-3 col">
+                        <select class="form-control status-select" name="status" onclick="highlightStatus()">
+                            
+
+                            <option {{#if status}}{{else}}selected{{/if}} disabled>Trạng thái bệnh nhân</option>
+                            {{#each statusCovid}}
+                            <option {{#ifStr status "{{this.status}}" }}selected{{/ifStr}}>{{this.status}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group input-group-outline mt-3">
+                        <select class="form-control person-select" name="related_person" onchange="highlightPerson()">
+                            <option {{#if related_person}}{{else}}selected{{/if}} disabled>Người liên quan</option>
+                            {{#each related_persons}}
+                            <option {{#ifStr
+                                related_person "{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"
+                                }}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.yob}},
+                                {{this.ward}}-{{this.district}}-{{this.province}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group input-group-outline mt-4">
+                <select class="form-control place-select w-100" name="place" onchange="highlightPlace()">
+                    <option {{#if place}}{{else}}selected{{/if}} disabled>Nơi điều trị/cách ly</option>
+                    {{#each location}}
+                    <option {{#ifStr place "{{this.name}}" }}selected{{/ifStr}}>{{this.name}}</option>
+                    {{/each}}
+
+                </select>
+
                 {{#each errorMessage}}
-                {{#ifStr this.param "name"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-                {{/each}}
-            </div>       
-            <div class="col-4">
-                <div class="input-group input-group-outline mt-3 {{#if card}}focused is-focused{{/if}}">
-                    <label class="form-label">CMND/CCCD</label>
-                    <input type="number" class="form-control" name="card" value={{#if card}}{{card}}{{/if}}>
-                </div>
-                {{#each errorMessage}}
-                {{#ifStr this.param "card"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-                {{/each}}
-            </div>
-            <div class="col-2">
-                <div class="input-group input-group-outline mt-3 {{#if yob}}focused is-focused{{/if}}">
-                    <label class="form-label">Năm sinh</label>
-                    <input type="number" class="form-control" name="yob" min="1900" max="2022" value={{#if yob}}{{yob}}{{/if}}>
-                </div>
-                {{#each errorMessage}}
-                {{#ifStr this.param "yob"}}<div class=" err-msg">{{this.msg}}</div>{{/ifStr}}
-                {{/each}}
-            </div>
-        </div>
-        <div class="row">
-            
-        </div>
-        <div class="row mb-3">
-            <div class="col">
-                <div class="input-group input-group-outline mt-3 {{#if province}}focused is-focused{{/if}}">
-                    <label class="form-label">Tỉnh/Thành phố</label>
-                    <input type="text" class="form-control" name="province" value="{{#if province}}{{province}}{{/if}}">
-                </div>
-                {{#each errorMessage}}
-                {{#ifStr this.param "province"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-                {{/each}}
-            </div>
-            <div class="col">
-                <div class="input-group input-group-outline mt-3 {{#if district}}focused is-focused{{/if}}">
-                    <label class="form-label">Quận/Huyện</label>
-                    <input type="text" class="form-control" name="district" value="{{#if district}}{{district}}{{/if}}">
-                </div>
-                {{#each errorMessage}}
-                {{#ifStr this.param "district"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-                {{/each}}
-            </div>
-            <div class="col">
-                <div class="input-group input-group-outline mt-3 {{#if ward}}focused is-focused{{/if}}">
-                    <label class="form-label">Phường/Xã</label>
-                    <input type="text" class="form-control" name="ward" value="{{#if ward}}{{ward}}{{/if}}">
-                </div>
-                {{#each errorMessage}}
-                {{#ifStr this.param "ward"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-                {{/each}}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-2">
-                <div class="input-group input-group-outline mt-3 col">
-                    <select class="form-control status-select" name="status" onclick="highlightStatus()">
-                        <option {{#ifStr status "F0"}}selected{{/ifStr}}>F0</option>         
-                        <option {{#ifStr status "F1"}}selected{{/ifStr}}>F1</option>
-                        <option {{#ifStr status "F2"}}selected{{/ifStr}}>F2</option>
-                        <option {{#ifStr status "F3"}}selected{{/ifStr}}>F3</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group input-group-outline mt-3">
-                    <select class="form-control person-select" name="related_person" onchange="highlightPerson()">
-                        <option {{#if related_person}}{{else}}selected{{/if}} disabled>Người liên quan</option>
-                        {{#each related_persons}}
-                            <option {{#ifStr related_person "{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-            </div>
-        </div> 
-        <div class="input-group input-group-outline mt-4">
-            <select class="form-control place-select w-100" name="place" onchange="highlightPlace()">
-                <option {{#if place}}{{else}}selected{{/if}} disabled>Nơi điều trị/cách ly</option>
-                {{#each location}}
-                    <option {{#ifStr place "{{this.name}}"}}selected{{/ifStr}}>{{this.name}}</option>
-                {{/each}}
-                
-            </select>
-            
-            {{#each errorMessage}}
                 {{#ifStr this.param "place"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-            {{/each}}
-        </div>
-        <div class="text-center mb-5">
-            <button type="submit" class="btn bg-gradient-primary w-25 my-4 mb-2">THÊM</button>
-        </div>
-    </form>
-</div>
+                {{/each}}
+            </div>
+            <div class="text-center mb-5">
+                <button type="submit" class="btn bg-gradient-primary w-25 my-4 mb-2">THÊM</button>
+            </div>
+        </form>
+    </div>
 </div>
