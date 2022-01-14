@@ -73,10 +73,12 @@
                 <div class="col-2">
                     <div class="input-group input-group-outline mt-3 col">
                         <select class="form-control border-primary border-2" name="status">
-                            <option {{#ifStr status "F0" }}selected{{/ifStr}}>F0</option>
-                            <option {{#ifStr status "F1" }}selected{{/ifStr}}>F1</option>
-                            <option {{#ifStr status "F2" }}selected{{/ifStr}}>F2</option>
-                            <option {{#ifStr status "F3" }}selected{{/ifStr}}>F3</option>
+                            <option {{#if status}}{{else}}selected{{/if}} disabled>Trạng thái bệnh nhân</option>
+                            {{#each statusCovid}}
+                            <option {{#ifStr status "{{this.id}}" }}selected{{/ifStr}} value="{{this.id}}" {{#gt this.id status}}
+                                disable
+                            {{/gt}}>{{this.status}}</option>
+                            {{/each}}
                         </select>
                     </div>
                 </div>

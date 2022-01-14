@@ -25,7 +25,7 @@ db.treatmentLocation = require("../models/treatmentLocation.model")(sequelize, S
 db.histories = require("../models/histories.model")(sequelize, Sequelize);
 db.covidUser = require("../models/covid-user.model.js")(sequelize, Sequelize);
 db.statusCovidUser = require("../models/status-covid-user.model.js")(sequelize, Sequelize);
-
+db.history_user_status = require("../models/history-user-status.model.js")(sequelize, Sequelize);
 
 
 db.role.belongsToMany(db.user, {
@@ -43,10 +43,10 @@ db.histories.belongsTo(db.user, {
   foreignKey: "userId",
 })
 db.covidUser.belongsToMany(db.statusCovidUser,{
-  through: "history_user_status",
+  through: db.history_user_status,
 });
 db.statusCovidUser.belongsToMany(db.covidUser, {
-  through: "history_user_status",
+  through: db.history_user_status,
 });
 
 db.ROLES = ["user", "admin", "moderator"];

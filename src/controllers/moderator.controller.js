@@ -2,6 +2,7 @@ const covidUser = require("../models/index").covidUser;
 const User = require("../models/index").user;
 const treatmentLocation = require("../models/index").treatmentLocation;
 const StatusCovid = require("../models/index").statusCovidUser;
+const HistoryStatus = require("../models/index").history_user_status;
 const { validationResult } = require("express-validator");
 
 exports.getIndex = async (req, res) => {
@@ -93,6 +94,13 @@ exports.postAddUser = async (req, res) => {
       related_person: req.body.related_person,
       treatment_place: req.body.place,
     })
+    .then(result => {
+      console.log(req.body.status);
+      return HistoryStatus.create({
+        covidUserId: result.id,
+        statusCovidUserId: req.body.status,
+      });
+    })
     .then(() => {
       return User.create({
         username: req.body.card.toString(),
@@ -106,11 +114,14 @@ exports.postAddUser = async (req, res) => {
       const location = await treatmentLocation.findAll({
         raw: true,
       });
-
+      const statusCovid = await StatusCovid.findAll({
+        raw: true,
+      });
       return res.render("moderator/add-user", {
         layout: "moderator/main",
         related_persons: users,
         location: location,
+        statusCovid: statusCovid,
         successMessage: "Thêm thành công",
         function: "add-user",
       });
@@ -175,6 +186,9 @@ exports.getEditUser = async (req, res) => {
   const location = await treatmentLocation.findAll({
     raw: true,
   });
+  const statusCovid = await StatusCovid.findAll({
+    raw: true,
+  });
 
   return res.render("moderator/edit-user", {
     layout: "moderator/main",
@@ -182,6 +196,7 @@ exports.getEditUser = async (req, res) => {
     name: user.name,
     related_persons: users,
     location: location,
+    statusCovid: statusCovid,
     card: user.identity_card,
     province: user.province,
     district: user.district,
@@ -204,7 +219,9 @@ exports.editUser = async (req, res) => {
   const location = await treatmentLocation.findAll({
     raw: true,
   });
-
+  const statusCovid = await StatusCovid.findAll({
+    raw: true,
+  });
   let hasUser = false;
   for (let user of users) {
     if (
@@ -230,6 +247,7 @@ exports.editUser = async (req, res) => {
       userId: userId,
       related_persons: users,
       location: location,
+      statusCovid: statusCovid,
       name: req.body.name,
       card: req.body.card,
       yob: req.body.yob,
