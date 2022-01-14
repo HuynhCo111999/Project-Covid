@@ -71,6 +71,71 @@ exports.add = async (req, res) => {
     }
 };
 
+exports.update = async (req, res) => {
+    try
+    {
+        const id = req.params.id;
+        var sales_cycle;
+        if (req.body.cycle == "day") {
+            sales_cycle = null;
+        }
+        else
+        {
+            if(req.body.cycle == "week")
+            {
+                sales_cycle = false;
+            }
+            else //month
+            {
+                sales_cycle = true;
+            }
+        }
+
+        await covidNecessityCombo.update({
+            name: req.body.name,
+            sales_limit: req.body.limit,
+            sales_cycle: sales_cycle,
+        },
+            {
+                where:
+                {
+                    id: id,
+                },
+            },
+        );
+
+        res.redirect(`../necessities-combo-details/${id}`);
+    }
+    catch (error)
+    {
+        res.send(error);
+    }
+}
+
+exports.delete = async (req, res) => {
+    try
+    {
+        const id = req.params.id;
+        await covidNecessityOfCombo.destroy({
+            where:
+            {
+                id_combo: id,
+            },
+        });
+        await covidNecessityCombo.destroy({
+            where:
+            {
+                id: id,
+            },
+        });
+        res.redirect("../necessities-combo");
+    }
+    catch(error)
+    {
+        res.send(error);
+    }
+}
+
 exports.getDetails = async (req, res) => {
     try
     {
@@ -82,6 +147,7 @@ exports.getDetails = async (req, res) => {
                 id_combo: id_combo,
             },
         });
+        const comboInstance = await covidNecessityCombo.findByPk(id_combo);
         var listNecessities = [];
         comboNecessities.forEach( necessity => {
             covidNecessity.findOne(
@@ -112,6 +178,9 @@ exports.getDetails = async (req, res) => {
                         comboNecessities: comboNecessities,
                         listNecessities: listNecessities,
                         comboId: id_combo,
+                        comboName: comboInstance.name,
+                        comboSalesLimit: comboInstance.sales_limit,
+                        comboSalesCycle: comboInstance.sales_cycle,
                     });
     }
     catch(error)

@@ -16,6 +16,8 @@ router.post("/add-necessity", upload.single('upload'), necessitiesController.add
 router.post('/update-necessity/:id', upload.single('edit_upload'), necessitiesController.update);
 router.post('/delete-necessity/:id', necessitiesController.delete);
 router.post("/add-necessity-combo",necessitiesComboController.add);
+router.post("/update-necessity-combo/:id",necessitiesComboController.update);
+router.post("/delete-necessity-combo/:id",necessitiesComboController.delete);
 router.post("/add-necessity-to-combo/:id", necessitiesComboController.addDetails);
 router.post('/remove-necessity-from-combo/:id', necessitiesComboController.removeDetails);
 router.post('/update-necessity-for-combo/:id', necessitiesComboController.updateDetails);

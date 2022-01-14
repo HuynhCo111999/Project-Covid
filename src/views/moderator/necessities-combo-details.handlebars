@@ -1,9 +1,3 @@
-{{!-- <div class="d-flex justify-content-start mb-3">
-    <a type="button" class="btn bg-gradient-primary btn-block" href="/moderator/necessities-combo">
-        Quay lại
-    </a>
-</div> --}}
-
 <!-- Controller bars -->
 <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-start mb-2">
     {{!-- Back button --}}
@@ -13,8 +7,15 @@
         </a>
     </div>
     <div style="position: absolute; right: 17rem">
-        <button type="button" class="btn bg-gradient-success btn-block m-0" onclick="" id="arrange_name_btn">Chỉnh sửa thông tin gói</button>
-        <button type="button" class="btn bg-gradient-danger btn-block m-0 ms-2" onclick="" id="arrange_price_btn">Xóa gói</button>
+        <button type="button" class="btn bg-gradient-success btn-block m-0" onclick="" data-bs-toggle="modal" data-bs-target="#modalUpdateInfo"
+                data-name="{{comboName}}"
+                data-limit="{{comboSalesLimit}}"
+                data-cycle="{{comboSalesCycle}}"
+                data-id="{{comboId}}"
+                >Chỉnh sửa thông tin gói</button>
+        <button type="button" class="btn bg-gradient-danger btn-block m-0 ms-2" onclick="" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                data-id="{{comboId}}"
+                >Xóa gói</button>
     </div>
     <!-- Add necessities to combo button -->
     <div style="position: absolute; right: 2rem">
@@ -38,13 +39,6 @@
     </button>
 </div>
 {{/if}}
-
-
-{{!-- <div class="d-flex justify-content-end mb-3">
-    <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#modalAdd">
-        Thêm nhu yếu phẩm vào gói
-    </button>
-</div> --}}
 
 <!-- Modal add -->
 <div class="modal fade" id="modalAdd" tabindex="-1" role="dialog">
@@ -91,7 +85,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title font-weight-normal">Xóa nhu yếu phẩm</h6>
+                <h6 class="modal-title font-weight-normal">Xóa nhu yếu phẩm khỏi gói</h6>
                 <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
                     <span aria-hidden="true" class="text-primary">X</span>
                 </button>
@@ -99,8 +93,8 @@
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
                     <form role="form text-left" id="remove-form" method="post">
-                        <div class="input-group input-group-static my-3">
-                            <p class="text-dark">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này khỏi gói?</p>
+                        <div class="input-group input-group-static my-3 row">
+                            <p class="text-dark text-lg">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này khỏi gói?</p>
                             <p class="text-dark">Nếu gói hiện tại còn <strong style="color: green">ít nhất hơn hai</strong> sản phẩm trong gói, gói sẽ bị <strong style="color: red">XÓA</strong>!</p>
                         </div>
                     </form>
@@ -113,7 +107,7 @@
     </div>
 </div>
 
-<!-- Modal update -->
+<!-- Modal update necessities -->
 <div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -156,6 +150,77 @@
     </div>
 </div>
 
+<!-- Modal update combo -->
+<div class="modal fade" id="modalUpdateInfo" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Sửa thông tin gói nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="update-info-form" action="/moderator/update-necessity-combo/{{comboId}}" method="post" onsubmit="return validateUpdateInfo()">
+                        <div class="input-group input-group-static my-3 mx-2">
+                            <label>Tên gói</label>
+                            <input type="text" class="form-control" name="name" id="updateInfo-name-input">
+                        </div>
+
+                        <div class="input-group input-group-static my-3 mx-2">
+                            <label>Số lượng giới hạn</label>
+                            <input type="number" class="form-control" name="limit" id="updateInfo-sales-limit-input" min="1">
+                        </div>
+
+                        <div class="input-group input-group-outline my-3 mx-2">
+                            <p>Thời gian giới hạn:</p>
+                            <input class="form-control" type="text" name="cycle" id="updateInfo-sales-cycle-input" hidden>
+                            <input class="mx-2 my-2" type="radio" id="day" name="sales_cycle" value="day">
+                            <label class="mr-2 my-1" for="day">Ngày</label>
+                            <input class="mx-2 my-2" type="radio" id="week" name="sales_cycle" value="week">
+                            <label class="mr-2 my-1" for="week">Tuần</label>
+                            <input class="mx-2 my-2" type="radio" id="month" name="sales_cycle" value="month">
+                            <label class="mr-2 my-1" for="month">Tháng</label>
+                        </div>
+                    </form>
+                    <p class="text-danger" id="updateInfo-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="update-info-form">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model delete combo -->
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Xóa gói</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="delete-form" action="/moderator/delete-necessity-combo/{{comboId}}" method="post">
+                        <div class="input-group input-group-static my-3 row">
+                            <p class="text-dark text-lg">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này khỏi gói?</p>
+                            <p class="text-dark">Toàn bộ thông tin của gói sẽ bị <strong style="color: red">XÓA</strong>!</p>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="delete-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- List of necessities -->
 <div class="row">
     <div class="col-12">
@@ -176,8 +241,7 @@
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="">
                                     Số lượng mua tối thiểu &#9650</th>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="">
-                                    Số lượng mua tối đa &#9650</th>
-                                
+                                    Số lượng mua tối đa &#9650</th>  
                             </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -218,46 +282,6 @@
                                             data-bs-toggle="modal" data-bs-target="#modalRemove"
                                             data-id="{{id}}"
                                     >Xóa</button>
-                                    {{!-- <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#combo">Chi tiết gói</button> --}}
-                                    <!-- Modal details -->
-                                    {{!-- <div class="modal fade" id="combo" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">'
-                                            <div class="modal-content">
-                                                <div class="modal-header bg-primary">
-                                                    <h5 class="modal-title text-white" id="detailModalLabel">Các sản phẩm trong gói</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-                                    {{!-- <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Xem chi tiết</button> --}}
-                                    {{!-- <div class="modal fade" id="user{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header bg-primary">
-                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin chi tiết</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p style="font-weight: 400; color: black"><strong>Họ và tên:  </strong> {{this.name}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>CMND/CCCD:  </strong> {{this.identity_card}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Năm sinh:  </strong> {{this.yob}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Địa chỉ:  </strong> {{this.ward}} - {{this.district}} - {{this.province}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Trạng thái hiện tại:  </strong> {{this.status}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Nơi đang điều trị/cách ly:  </strong> {{this.treatment_place}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Người liên quan Covid-19:  </strong>{{#if this.related_person}}{{#getName this.related_person}}{{/getName}} <a style="cursor: pointer; color: #e91e63" data-bs-toggle="modal" data-bs-target="#user{{#getId this.related_person}}{{/getId}}">(Xem chi tiết thông tin)</a>{{else}}Không có{{/if}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Lịch sử quá trình quản lý ....</strong></p>
-                                                </div>
-                                                <div class="modal-footer d-flex justify-content-between">
-                                                    <div>
-                                                        <a href="/moderator/delete-user/{{this.id}}" stype="button" class="btn btn-danger px-3 py-2 me-1"><i class="fas fa-trash-alt"></i> Xóa</a>
-                                                        <a href="/moderator/edit-user/{{this.id}}" type="button" class="btn btn-secondary px-3 py-2"><i class="far fa-edit"></i> Sửa</a>
-                                                    </div>
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
                                 </td>
                             </tr>
                             {{/each}}
@@ -303,6 +327,44 @@
             return false;
         }
 
+        return true;
+    }
+
+    const validateUpdateInfo = () => {
+        const name_input = $('#updateInfo-name-input');
+        const sales_limit_input = $('#updateInfo-sales-limit-input');
+        const sales_cycle_input = $('#updateInfo-sales-cycle-input');
+        name_input.parent().removeClass("is-invalid");
+        sales_limit_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#updateInfo-noti-msg').html("Vui lòng nhập tên gói.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(sales_limit_input.val() === "") {
+            $('#updateInfo-noti-msg').html("Vui lòng nhập số lượng mua giới hạn của gói.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if (document.getElementById('day').checked) {
+            sales_cycle_input.val("day");
+        }
+        else {
+            if (document.getElementById('week').checked) {
+                sales_cycle_input.val("week");
+            }
+            else
+            {
+                if (document.getElementById('month').checked) {
+                    sales_cycle_input.val("month");
+                }
+                else
+                {
+                    $('#updateInfo-noti-msg').html("Vui lòng chọn thời gian giới hạn mua.")
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -357,6 +419,33 @@
             $('#update-max-input').val($(e.relatedTarget).attr("data-max"));
             $(`#update_opt_${$(e.relatedTarget).attr("data-necessityid")}`).attr('selected','selected');
             $('#update-form').attr("action",`/moderator/update-necessity-for-combo/${$(e.relatedTarget).attr("data-id")}`);
+        });
+
+        var modalUpdateInfo = $('#modalUpdateInfo');
+        modalUpdateInfo.on('shown.bs.modal',function(e)
+        {
+            $('#updateInfo-name-input').val($(e.relatedTarget).attr("data-name"));
+            $('#updateInfo-sales-limit-input').val($(e.relatedTarget).attr("data-limit"));
+            const cycleVal = $(e.relatedTarget).attr("data-cycle");
+            const sales_cycle_input = $('#updateInfo-sales-cycle-input');
+            if(cycleVal == "false")
+            {
+                $('#week').attr('checked', true);
+                sales_cycle_input.val("week");
+            }
+            else
+            {
+                if(cycleVal == "true")
+                {
+                    $('#month').attr('checked', true);
+                    sales_cycle_input.val("month");
+                }
+                else
+                {
+                    $('#day').attr('checked', true);
+                    sales_cycle_input.val("day");
+                }
+            }
         });
     })
 </script>
