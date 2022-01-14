@@ -1,16 +1,50 @@
-<!-- Back button -->
-<div class="d-flex justify-content-start mb-3">
+{{!-- <div class="d-flex justify-content-start mb-3">
     <a type="button" class="btn bg-gradient-primary btn-block" href="/moderator/necessities-combo">
         Quay lại
     </a>
+</div> --}}
+
+<!-- Controller bars -->
+<div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-start mb-2">
+    {{!-- Back button --}}
+    <div class="input-group input-group-outline w-30 mt-1">
+        <a type="button" class="btn bg-gradient-primary btn-block" href="/moderator/necessities-combo">
+            Quay lại
+        </a>
+    </div>
+    <div style="position: absolute; right: 17rem">
+        <button type="button" class="btn bg-gradient-success btn-block m-0" onclick="" id="arrange_name_btn">Chỉnh sửa thông tin gói</button>
+        <button type="button" class="btn bg-gradient-danger btn-block m-0 ms-2" onclick="" id="arrange_price_btn">Xóa gói</button>
+    </div>
+    <!-- Add necessities to combo button -->
+    <div style="position: absolute; right: 2rem">
+        <button type="button" class="btn bg-gradient-primary btn-block m-0" data-bs-toggle="modal" data-bs-target="#modalAdd">
+        Thêm nhu yếu phẩm vào gói
+        </button>
+    </div>
 </div>
 
-<!-- Add necessities button -->
-<div class="d-flex justify-content-end mb-3">
+{{!-- Alert Message --}}
+{{#if alertOn}}
+<div class="alert alert-{{alertColor}} alert-dismissible fade show" role="alert">
+    <span class="alert-icon align-middle">
+        <span class="material-icons text-md text-white">
+        thumb_up_off_alt
+        </span>
+    </span>
+    <span class="alert-text text-white"><strong>Thông báo!</strong>{{alertMessage}}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{{/if}}
+
+
+{{!-- <div class="d-flex justify-content-end mb-3">
     <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#modalAdd">
         Thêm nhu yếu phẩm vào gói
     </button>
-</div>
+</div> --}}
 
 <!-- Modal add -->
 <div class="modal fade" id="modalAdd" tabindex="-1" role="dialog">

@@ -25,6 +25,21 @@
                       </button>
                     </div>
                 </div>
+
+                {{!-- Alert Message --}}
+                {{#if alertOn}}
+                <div class="alert alert-{{alertColor}} alert-dismissible fade show" role="alert">
+                    <span class="alert-icon align-middle">
+                        <span class="material-icons text-md text-white">
+                        thumb_up_off_alt
+                        </span>
+                    </span>
+                    <span class="alert-text text-white"><strong>Thông báo!</strong>{{alertMessage}}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{/if}}
                 
                 <!-- List of necessities -->
                 <div class="row justify-content-start mx-3">
@@ -194,7 +209,8 @@
                 <div class="card-body pb-3">
                     <form role="form text-left" id="delete-form" method="post">
                         <div class="input-group input-group-static my-3">
-                            <p class="text-dark">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này?</p>
+                            <p class="text-dark text-lg">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này?</p>
+                            <p class="text-dark">Các gói nhu yếu phẩm có sản phẩm này nhưng có <strong style="color: green">ít nhất hơn hai</strong> sản phẩm trong gói sẽ bị <strong style="color: red">XÓA</strong>!</p>
                         </div>
                     </form>
                 </div> 

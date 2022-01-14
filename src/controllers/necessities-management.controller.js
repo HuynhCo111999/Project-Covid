@@ -1,6 +1,9 @@
 const covidNecessity = require("../models/index").covidNecessity;
+const covidNecessityOfCombo = require("../models/index").covidNecessityOfCombo;
+const covidNecessityCombo = require("../models/index").covidNecessityCombo;
 const fs = require("fs");
 const path = require("path");
+const MIN_COMBO_LENGTH = 2;
 
 exports.get = async (req, res) => {
   const necessities = await covidNecessity.findAll({ raw: true });
@@ -77,21 +80,65 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const instance = await covidNecessity.findOne({
+    const _instance = await covidNecessityOfCombo.findAll({
+      where: {
+        id_necessity: id,
+      },
+    });
+    _instance.forEach(i => {
+      const comboId = i.id_combo;
+      covidNecessityOfCombo.destroy({
+        where: {
+          id_combo: comboId,
+          id_necessity: id,
+        },
+      }).then(
+        () => {
+          covidNecessityOfCombo.findAll({
+            where: {
+              id_combo: comboId,
+            },
+          }).then(
+            (comboInstance) => {
+              if(comboInstance.length < MIN_COMBO_LENGTH)
+              {
+                covidNecessityOfCombo.destroy({
+                  where: {
+                    id_combo: comboId,
+                  },
+                }).then(
+                  () => {
+                    covidNecessityCombo.destroy({
+                      where: {
+                        id: comboId,
+                      },
+                    });
+                  }
+                );
+              }
+            }
+          );
+        }
+      );
+    });
+    covidNecessity.findOne({
       where: {
         id: id,
       },
-    });
-    var image_path = path.join(__dirname, `../public/${instance.image_path}`);
-    fs.unlink(image_path, async (error) => {
-      if (error) throw error;
-      await covidNecessity.destroy({
-        where: {
-          id: id,
-        },
-      });
-      res.redirect("../necessities");
-    });
+    }).then(
+      (instance) => {
+        var image_path = path.join(__dirname, `../public/${instance.image_path}`);
+        fs.unlink(image_path, async (error) => {
+          if (error) throw error;
+          await covidNecessity.destroy({
+            where: {
+              id: id,
+            },
+          });
+          res.redirect("../necessities");
+        });
+      }
+    );
   } catch (error) {
     res.send(error);
   }

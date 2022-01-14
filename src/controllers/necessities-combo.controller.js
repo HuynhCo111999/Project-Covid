@@ -1,6 +1,7 @@
 const covidNecessityCombo = require("../models/index").covidNecessityCombo;
 const covidNecessity = require("../models/index").covidNecessity;
 const covidNecessityOfCombo = require("../models/index").covidNecessityOfCombo;
+const MIN_COMBO_LENGTH = 2;
 
 exports.get = async (req, res) => {
     const combos = await covidNecessityCombo.findAll({ raw: true });
@@ -43,11 +44,6 @@ exports.add = async (req, res) => {
                 });
             }
         }
-        // const comboInstance = await covidNecessityCombo.create({
-        //                 name: req.body.name,
-        //                 sales_limit: req.body.limit,
-        //                 sales_cycle: req.body.cycle,
-        //             });
         
         var necessityInfo_1 = req.body.necesstity_to_add_1;
         var necessityInfo_2 = req.body.necesstity_to_add_2;
@@ -159,7 +155,32 @@ exports.removeDetails = async (req, res) => {
               id: id,
             },
         });
-        res.redirect(`../necessities-combo-details/${id_combo}`);
+        const comboInstance = await covidNecessityOfCombo.findAll({
+            where: {
+              id_combo: id_combo,
+            },
+        });
+        if( comboInstance.length < MIN_COMBO_LENGTH )
+        {
+            covidNecessityOfCombo.destroy({
+                where: {
+                  id_combo: id_combo,
+                },
+              }).then(
+                () => {
+                  covidNecessityCombo.destroy({
+                    where: {
+                      id: id_combo,
+                    },
+                  });
+                }
+              );
+            res.redirect("../necessities-combo");
+        }
+        else
+        {
+            res.redirect(`../necessities-combo-details/${id_combo}`);
+        }
     }
     catch (error)
     {
