@@ -10,9 +10,7 @@ const { Op } = require("sequelize");
 
 exports.getIndex = async (req, res) => {
   const users = await covidUser.findAll({
-    // attributes: [ [sequelize.fn('DISTINCT', sequelize.col('table1.table3Id')), 'c.id'] ],
     include: [{
-      // limit: 1,
       model: HistoryStatus,
       include: [{
         model: StatusCovid,
@@ -25,6 +23,10 @@ exports.getIndex = async (req, res) => {
         attributes: ['name'],
       }],
     }],
+    order: [
+      [ HistoryStatus, 'id', 'ASC' ],
+      [ HistoryLocation, 'id', 'ASC' ],
+    ],
     nest: true,
   });
   const obj= JSON.parse(JSON.stringify(users))
@@ -38,6 +40,7 @@ exports.getIndex = async (req, res) => {
 
 exports.getAddUser = async (req, res) => {
   const users = await covidUser.findAll({
+    order: [['id', 'ASC']],
     raw: true,
   });
   const location = await treatmentLocation.findAll({
@@ -110,12 +113,9 @@ exports.postAddUser = async (req, res) => {
       province: req.body.province,
       district: req.body.district,
       ward: req.body.ward,
-      status: req.body.status,
       related_person: req.body.related_person,
-      treatment_place: req.body.place,
     })
     .then(result => {
-      console.log(req.body.status);
       HistoryStatus.create({
         covidUserId: result.id,
         statusCovidUserId: req.body.status,
@@ -195,12 +195,32 @@ exports.getIndexFromEdit = (req, res) => {
 exports.getEditUser = async (req, res) => {
   const userId = req.params.id;
 
-  const user = await covidUser.findByPk(userId, {
-    raw: true,
+  const rs = await covidUser.findByPk(userId, {
+    include: [{
+      // limit: 1,
+      model: HistoryStatus,
+      include: [{
+        model: StatusCovid,
+        attributes: ['status'],
+      }],
+    },{
+      model: HistoryLocation,
+      include: [{
+        model: treatmentLocation,
+        attributes: ['name'],
+      }],
+    }],
+    order: [
+      [ HistoryStatus, 'id', 'ASC' ],
+      [ HistoryLocation, 'id', 'ASC' ],
+    ],
+    nest: true,
   });
-
+  const user = JSON.parse(JSON.stringify(rs));
   if (!user) return res.redirect("/moderator");
-
+  const statusId = user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId;
+  const locationId = user.histoty_user_locations[user.histoty_user_locations.length - 1].treatmentLocationId;
+  
   let users = await covidUser.findAll({
     raw: true,
   });
@@ -213,7 +233,7 @@ exports.getEditUser = async (req, res) => {
   const statusCovid = await StatusCovid.findAll({
     where:{
       id: {
-        [Op.lte]: parseInt(user.status),
+        [Op.lte]: statusId,
       }
     },
     raw: true,
@@ -230,9 +250,9 @@ exports.getEditUser = async (req, res) => {
     district: user.district,
     ward: user.ward,
     yob: user.yob,
-    status: parseInt(user.status),
+    status: statusId,
     related_person: user.related_person,
-    place: user.treatment_place,
+    place: locationId,
     function: "list",
   });
 };
@@ -301,9 +321,7 @@ exports.editUser = async (req, res) => {
       user.province = req.body.province;
       user.district = req.body.district;
       user.ward = req.body.ward;
-      user.status = req.body.status;
       user.related_person = req.body.related_person;
-      user.treatment_place = req.body.place;
       return user.save();
     })
     .then(async () => {
@@ -321,20 +339,43 @@ exports.editUser = async (req, res) => {
       //       id: person.id,
       //     },
       //   });
-        HistoryStatus.create({
+        await HistoryStatus.create({
           covidUserId: userId,
           statusCovidUserId: req.body.status,
+        });
+        await HistoryLocation.create({
+          covidUserId: userId,
+          treatmentLocationId: req.body.place,
         });
       // });
     })
     .then(async () => {
-      const updated = await covidUser.findAll({
-        raw: true,
+      const users = await covidUser.findAll({
+        include: [{
+          // limit: 1,
+          model: HistoryStatus,
+          include: [{
+            model: StatusCovid,
+            attributes: ['status'],
+          }],
+        },{
+          model: HistoryLocation,
+          include: [{
+            model: treatmentLocation,
+            attributes: ['name'],
+          }],
+        }],
+        order: [
+          [ HistoryStatus, 'id', 'ASC' ],
+          [ HistoryLocation, 'id', 'ASC' ],
+        ],
+        nest: true,
       });
+      const obj= JSON.parse(JSON.stringify(users))
       res.render("moderator/main", {
         layout: "moderator/main",
         function: "list",
-        users: updated,
+        users: obj,
         successMessage: "Sửa thành công",
       });
     })

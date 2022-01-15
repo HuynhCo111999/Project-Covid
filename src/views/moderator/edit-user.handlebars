@@ -95,7 +95,7 @@
                 <select class="form-control border-primary border-2 w-100" name="place">
                     <option {{#if place}}{{else}}selected{{/if}} disabled>Nơi điều trị/cách ly</option>
                     {{#each location}}
-                    <option {{#ifStr place "{{this.name}}" }}selected{{/ifStr}} value="{{this.id}}">{{this.name}}</option>
+                    <option {{#ifStr place "{{this.id}}" }}selected{{/ifStr}} value="{{this.id}}">{{this.name}} ({{this.current}}/{{this.capacity}})</option>
                     {{/each}}
                 </select>
                 {{#each errorMessage}}
