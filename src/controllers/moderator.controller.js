@@ -3,16 +3,36 @@ const User = require("../models/index").user;
 const treatmentLocation = require("../models/index").treatmentLocation;
 const StatusCovid = require("../models/index").statusCovidUser;
 const HistoryStatus = require("../models/index").history_user_status;
+const HistoryLocation = require("../models/index").history_user_location;
+
 const { validationResult } = require("express-validator");
+const { Op } = require("sequelize");
 
 exports.getIndex = async (req, res) => {
   const users = await covidUser.findAll({
-    raw: true,
+    // attributes: [ [sequelize.fn('DISTINCT', sequelize.col('table1.table3Id')), 'c.id'] ],
+    include: [{
+      // limit: 1,
+      model: HistoryStatus,
+      include: [{
+        model: StatusCovid,
+        attributes: ['status'],
+      }],
+    },{
+      model: HistoryLocation,
+      include: [{
+        model: treatmentLocation,
+        attributes: ['name'],
+      }],
+    }],
+    nest: true,
   });
+  const obj= JSON.parse(JSON.stringify(users))
+  // console.log(obj[0]);
   res.render("moderator/main", {
     layout: "moderator/main",
     function: "list",
-    users: users,
+    users: obj,
   });
 };
 
@@ -96,9 +116,13 @@ exports.postAddUser = async (req, res) => {
     })
     .then(result => {
       console.log(req.body.status);
-      return HistoryStatus.create({
+      HistoryStatus.create({
         covidUserId: result.id,
         statusCovidUserId: req.body.status,
+      });
+      HistoryLocation.create({
+        covidUserId: result.id,
+        treatmentLocationId: req.body.place,
       });
     })
     .then(() => {
@@ -187,9 +211,13 @@ exports.getEditUser = async (req, res) => {
     raw: true,
   });
   const statusCovid = await StatusCovid.findAll({
+    where:{
+      id: {
+        [Op.lte]: parseInt(user.status),
+      }
+    },
     raw: true,
   });
-
   return res.render("moderator/edit-user", {
     layout: "moderator/main",
     userId: userId,
@@ -202,7 +230,7 @@ exports.getEditUser = async (req, res) => {
     district: user.district,
     ward: user.ward,
     yob: user.yob,
-    status: user.status,
+    status: parseInt(user.status),
     related_person: user.related_person,
     place: user.treatment_place,
     function: "list",
@@ -211,6 +239,9 @@ exports.getEditUser = async (req, res) => {
 
 exports.editUser = async (req, res) => {
   const userId = req.body.userId;
+  const user = await covidUser.findByPk(userId, {
+    raw: true,
+  });
   const errors = validationResult(req);
 
   const users = await covidUser.findAll({
@@ -274,6 +305,27 @@ exports.editUser = async (req, res) => {
       user.related_person = req.body.related_person;
       user.treatment_place = req.body.place;
       return user.save();
+    })
+    .then(async () => {
+      // const related_people = await covidUser.findAll({
+      //   where: {
+      //     related_person: {
+      //       [Op.eq]: userId,
+      //     }
+      //   },
+      //   raw: true,
+      // });
+      // related_people.forEach(async (person) => {
+      //   await covidUser.updated({status: '3'},{
+      //     where: {
+      //       id: person.id,
+      //     },
+      //   });
+        HistoryStatus.create({
+          covidUserId: userId,
+          statusCovidUserId: req.body.status,
+        });
+      // });
     })
     .then(async () => {
       const updated = await covidUser.findAll({

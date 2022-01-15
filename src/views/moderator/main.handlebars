@@ -8,7 +8,7 @@
                 {{#if successMessage}}
                 <h5 class="text-center mt-4 mb-0 text-success">{{successMessage}}</h5>
                 {{/if}}
-                
+
             </div>
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive p-0">
@@ -18,21 +18,26 @@
                         <div class="input-group input-group-outline w-50 mt-1 me-4">
                             <label class="form-label">Tìm kiếm</label>
                             <input type="text" class="form-control border-primary" id="searchInput">
-                        </div>   
+                        </div>
                     </div>
                     {{/if}}
                     <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(0)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header"
+                                    onclick="sortTable(0)">
                                     Họ tên &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(1)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header"
+                                    onclick="sortTable(1)">
                                     CMND/CCCD &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(2)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header"
+                                    onclick="sortTable(2)">
                                     Năm sinh &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25 table-header" onclick="sortTable(3)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25 table-header"
+                                    onclick="sortTable(3)">
                                     Địa chỉ &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(4)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header"
+                                    onclick="sortTable(4)">
                                     Trạng thái &#9650</th>
                                 <th></th>
                             </tr>
@@ -57,44 +62,76 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <h6 class="mb-0 text-md">{{this.ward}} - {{this.district}} - {{this.province}}</h6>
+                                        <h6 class="mb-0 text-md">{{this.ward}} - {{this.district}} - {{this.province}}
+                                        </h6>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex px-4 py-1 justify-content-center">
-                                        <h6 class="mb-0 text-md">{{#switch this.status}}
-                                            {{#case '1'}}F0{{/case}}
-                                            {{#case '2'}}F1{{/case}}
-                                            {{#case '3'}}F2{{/case}}
-                                            {{#case '4'}}F3{{/case}}
-                                        {{/switch}}</h6>
+                                        <h6 class="mb-0 text-md">{{#each this.histoty_user_statuses}}
+                                            {{#if @last}}{{this.statusCovidUser.status}}{{/if}}
+                                            {{/each}}</h6>
                                     </div>
                                 </td>
                                 <td style="white-space: normal">
-                                    <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Xem chi tiết</button>
-                                    <div class="modal fade" id="user{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <button class="btn btn-primary my-1" data-bs-toggle="modal"
+                                        data-bs-target="#user{{this.id}}">Xem chi tiết</button>
+                                    <div class="modal fade" id="user{{this.id}}" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header bg-primary">
-                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin chi tiết</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin
+                                                        chi tiết</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p style="font-weight: 400; color: black"><strong>Họ và tên:  </strong> {{this.name}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>CMND/CCCD:  </strong> {{this.identity_card}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Năm sinh:  </strong> {{this.yob}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Địa chỉ:  </strong> {{this.ward}} - {{this.district}} - {{this.province}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Trạng thái hiện tại:  </strong> {{this.status}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Nơi đang điều trị/cách ly:  </strong> {{this.treatment_place}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Người liên quan Covid-19:  </strong>{{#if this.related_person}}{{#getName this.related_person}}{{/getName}} <a style="cursor: pointer; color: #e91e63" data-bs-toggle="modal" data-bs-target="#user{{#getId this.related_person}}{{/getId}}">(Xem chi tiết thông tin)</a>{{else}}Không có{{/if}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Lịch sử quá trình quản lý ....</strong></p>
+                                                    <p style="font-weight: 400; color: black"><strong>Họ và tên:</strong> {{this.name}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>CMND/CCCD:</strong> {{this.identity_card}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Năm sinh:</strong> {{this.yob}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Địa chỉ: </strong>{{this.ward}} - {{this.district}} - {{this.province}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Trạng thái hiệntại: </strong> 
+                                                        {{#each this.histoty_user_statuses}}
+                                                        {{#if @last}}{{this.statusCovidUser.status}}{{/if}}
+                                                        {{/each}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Nơi đang điều trị/cách ly: </strong> 
+                                                        {{#each this.histoty_user_locations}}
+                                                        {{#if @last}}{{this.treatmentLocation.name}}{{/if}}
+                                                        {{/each}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Người liên quan
+                                                            Covid-19: </strong>{{#if this.related_person}}{{#getName
+                                                        this.related_person}}{{/getName}} <a
+                                                            style="cursor: pointer; color: #e91e63"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#user{{#getId this.related_person}}{{/getId}}">(Xem
+                                                            chi tiết thông tin)</a>{{else}}Không có{{/if}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Lịch sử thay đổi trạng thái:</strong>
+                                                    <ul>
+                                                        {{#each this.histoty_user_statuses}}
+                                                            <li><strong>Ngày {{this.createdAt}}: </strong>{{this.statusCovidUser.status}}</li>
+                                                        {{/each}}
+                                                    </ul>
+                                                    </p>
+                                                    <p style="font-weight: 400; color: black"><strong>Lịch sử thay đổi nơi điều trị:</strong>
+                                                    <ul>
+                                                        {{#each this.histoty_user_locations}}
+                                                            <li><strong>Ngày {{this.createdAt}}: </strong>{{this.treatmentLocation.name}}</li>
+                                                        {{/each}}
+                                                    </ul>
+                                                    </p>
                                                 </div>
                                                 <div class="modal-footer d-flex justify-content-between">
                                                     <div>
-                                                        <a href="/moderator/delete-user/{{this.id}}" stype="button" class="btn btn-danger px-3 py-2 me-1"><i class="fas fa-trash-alt"></i> Xóa</a>
-                                                        <a href="/moderator/edit-user/{{this.id}}" type="button" class="btn btn-secondary px-3 py-2"><i class="far fa-edit"></i> Sửa</a>
+                                                        <a href="/moderator/delete-user/{{this.id}}" stype="button"
+                                                            class="btn btn-danger px-3 py-2 me-1"><i
+                                                                class="fas fa-trash-alt"></i> Xóa</a>
+                                                        <a href="/moderator/edit-user/{{this.id}}" type="button"
+                                                            class="btn btn-secondary px-3 py-2"><i
+                                                                class="far fa-edit"></i> Sửa</a>
                                                     </div>
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary"
+                                                        data-bs-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
                                         </div>
