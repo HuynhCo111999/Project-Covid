@@ -5,9 +5,10 @@ const expressHbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const session = require('express-session');
 require("dotenv").config();
 //set port local
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -20,14 +21,29 @@ app.use(cookieParser());
 const db = require("./models");
 const init = require("./middleware/init-table");
 // db.sequelize.sync();
-db.sequelize.sync({ force: false, alter: true }).then(() => {
-  // init.initial();
+db.sequelize.sync({ force: true, alter: true }).then(() => {
+  init.initial();
 });
+app.use(session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: true,
+}));
 
 const hbs = expressHbs.create({
-  helpers: {
-    ifStr(s1, s2, options) {
-      return s1 === s2 ? options.fn(this) : options.inverse(this);
+    helpers: {
+        ifStr(s1, s2, options) {
+            return s1 === s2 ? options.fn(this) : options.inverse(this);
+        },
+        getName(s) {
+            return s.split(".")[1].split(",")[0];
+        },
+        getId(s) {
+            return s.split(".")[0].trim();
+        },
+        sum: (a, b) => {
+            return a + b;
+        },
     },
     getName(s) {
       return s.split(".")[1].split(",")[0];
@@ -49,7 +65,8 @@ const hbs = expressHbs.create({
 	    return (a > b) ? next.fn(this) : next.inverse(this);
     }
   },
-});
+);
+
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "views"));
@@ -62,7 +79,9 @@ require("./routes/auth.routes")(app);
 require("./routes/user.routes")(app);
 
 app.use("/moderator", require("./routes/moderator"));
+app.use("/user", require("./routes/user"));
+
 
 app.listen(port, () => {
-  console.log(`Server started on port: ${port}`);
+    console.log(`Server started on port: ${port}`);
 });

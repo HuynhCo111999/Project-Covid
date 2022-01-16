@@ -1,0 +1,189 @@
+<div class="d-flex justify-content-end mb-3">
+    <a href="/user/buy-necessity-combo" type="button" class="btn bg-gradient-primary btn-block">Tiếp tục mua hàng</a>
+</div>
+
+
+<form method="POST" action="/user/order" name="formCart">
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 text-center">
+                    <h5 class="text-white text-capitalize pt-2">DANH SÁCH CÁC GÓI NHU YẾU PHẨM</h5>
+                </div>
+                {{#if failureMessage}}
+                <h5 class="text-center mt-4 mb-0 text-danger">{{failureMessage}}</h5>
+                {{/if}}    
+                {{#if failureMessage2}}
+                <h5 class="text-center mt-4 mt-0 text-danger">{{failureMessage2}}</h5>
+                {{/if}} 
+                {{#each failureMessageString}}  
+                <h5 class="text-center mt-4 mt-0 text-danger">{{this}}</h5>
+                {{/each}}     
+            </div>
+            {{#if failureMessage2}}
+            {{else}}
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header">
+                                    STT &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-20 table-header" onclick="sortTable(1)">
+                                    Tên gói nhu yếu phẩm &#9650</th> 
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25 table-header" onclick="sortTable(2)">
+                                    Mô tả &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-10 table-header" onclick="sortTable(3)">
+                                    Đơn giá &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-15 table-header" onclick="sortTable(4)">
+                                    Số lượng &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-12 table-header" onclick="sortTable(5)">
+                                    Thành tiền &#9650</th>
+								<th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="necessityCarts">
+                            {{#each carts}}   
+                            <tr class="necessityCart">
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md" style="white-space: normal;">{{sum @index 1}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md" style="white-space: normal;">{{this.name}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{#each this.necessities}}                                   
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md" style="white-space: normal;">{{this.quantity_necessity}} {{this.unit_of_measurement}} {{this.name_necessity}}</h6>
+                                    </div>    
+                                    {{/each}}  
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md mx-auto priceCombo" id="{{this.price}}" style="white-space: normal;">{{this.price}}đ</h6>
+                                    </div>
+                                </td>
+                                <td> 
+                                    <div class="d-flex px-4 py-1 justify-content-start">   
+                                        <h6 class="mb-0 text-md mx-auto">
+                                            <form id="formIncrese">
+                                                <div class="value-button" id="decrease" onclick="decreaseValue('number-{{this.idCombo}}')" value="Decrease Value">-</div>
+                                                <input type="number" id="number" readonly class="number-{{this.idCombo}}" value="{{this.quantity}}"/>
+                                                <div class="value-button" id="increase" onclick="increaseValue('number-{{this.idCombo}}', {{this.sales_limit}})" value="Increase Value">+</div>
+                                            </form>
+                                            <input type="hidden" class="inputHidden" value="{{this.quantity}}" name="combo-{{this.idCombo}}"/>
+                                        </h6>
+                                    </div>    
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md mx-auto amountCombo" style="white-space: normal;">{{this.amount}}đ</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="/user/cart/delete/{{this.idCombo}}" class="btn btn-danger px-3 py-2 me-1 btn-del mx-3"><i class="fas fa-trash-alt"></i> Xóa</a>
+                                </td>
+                            </tr>
+                            {{/each}} 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+{{#if failureMessage2}}
+{{else}}
+<div class="d-flex justify-content-end mb-3">
+    <p class="btn bg-gradient-secondary btn-block amountAllCombo mx-3">Tổng tiền thanh toán: {{totalAmount}}đ</p>
+</div>
+<div class="d-flex justify-content-end mb-3">
+    <button type="submit" class="btn bg-gradient-primary btn-block mx-3">
+        Đặt hàng
+    </button>
+</div>
+{{/if}}
+</form>
+
+<script>
+        function getParent(element, selector) {
+            while (element.parentElement) {
+                if (element.parentElement.matches(selector)) {
+                    return element.parentElement;
+                }
+                element = element.parentElement;
+            }
+        }
+
+        function increaseValue(idNumber, sales_limit) {
+            let inputElement = document.querySelector(`.${idNumber}`);
+            let trElement = getParent(inputElement, ".necessityCart");
+            let amountElement = trElement.querySelector(".amountCombo");
+            let priceElement = trElement.querySelector(".priceCombo");
+            let value = parseInt(inputElement.value, 10);
+
+            value = isNaN(value) ? 1 : value;
+            let maxSales = parseInt(sales_limit) - 1;
+            value > maxSales ? value = maxSales : '';
+            value++;
+            let newAmount = parseInt(priceElement.id) * value;
+            inputElement.value = value;
+            amountElement.innerHTML = `${newAmount}đ`;
+
+            let h6Element = getParent(inputElement, "h6");
+            let inputHidden = h6Element.querySelector(".inputHidden");
+            inputElement.setAttribute("value", value);
+            document.forms['formCart'][inputHidden.name].value = value;
+
+            let necessityCarts = document.querySelectorAll(".necessityCart");
+            let amountAllCombo = document.querySelector(".amountAllCombo");
+
+            let totalAmount = 0;
+            Array.from(necessityCarts).forEach(function(necessityCart) {
+                let priceCombo =  parseInt(necessityCart.querySelector(".priceCombo").id);
+                let quantity = parseInt(necessityCart.querySelector('input').value);
+                totalAmount += priceCombo * quantity;             
+            });
+            
+            amountAllCombo.innerHTML = `Tổng tiền thanh toán: ${totalAmount}đ`;
+        }         
+        
+        function decreaseValue(idNumber) {
+            let inputElement = document.querySelector(`.${idNumber}`);
+            let trElement = getParent(inputElement, ".necessityCart");
+            let amountElement = trElement.querySelector(".amountCombo");
+            let priceElement = trElement.querySelector(".priceCombo");
+            let value = parseInt(inputElement.value, 10);
+
+            value = isNaN(value) ? 1 : value;
+            value < 2 ? value = 2 : '';
+            value--;
+            let newAmount = parseInt(priceElement.id) * value;
+            inputElement.value = value;
+            amountElement.innerHTML = `${newAmount}đ`;
+
+            let h6Element = getParent(inputElement, "h6");
+            let inputHidden = h6Element.querySelector(".inputHidden");
+            inputElement.setAttribute("value", value);
+            document.forms['formCart'][inputHidden.name].value = value;
+            
+            let necessityCarts = document.querySelectorAll(".necessityCart");
+            let amountAllCombo = document.querySelector(".amountAllCombo");
+
+            let totalAmount = 0;
+            Array.from(necessityCarts).forEach(function(necessityCart) {
+                let priceCombo =  parseInt(necessityCart.querySelector(".priceCombo").id);
+                let quantity = parseInt(necessityCart.querySelector('input').value);
+                totalAmount += priceCombo * quantity;
+            });
+            
+            amountAllCombo.innerHTML = `Tổng tiền thanh toán: ${totalAmount}đ`;
+        }
+</script> 

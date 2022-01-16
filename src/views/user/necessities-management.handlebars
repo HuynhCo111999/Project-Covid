@@ -1,0 +1,219 @@
+<div class="d-flex justify-content-end mb-3">
+    <a href="/user/cart" type="button" class="btn bg-gradient-primary btn-block">Giỏ hàng</a>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 text-center">
+                    <h5 class="text-white text-capitalize pt-2">DANH SÁCH CÁC GÓI NHU YẾU PHẨM</h5>
+                </div>
+                {{#if successMessage}}
+                <h5 class="text-center mt-4 mb-0 text-success">{{successMessage}}</h5>
+                {{/if}}  
+                {{#if failtureMessage}}
+                <h5 class="text-center mt-4 mb-0 text-success">{{successMessage}}</h5>
+                {{/if}}    
+            </div>
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    {{#if successMessage}}
+                    {{else}}
+                    <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
+                        <div class="input-group input-group-outline w-50 mt-1 me-4">
+                            <label class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control border-primary" id="searchInput">
+                        </div>   
+                    </div>
+                    {{/if}}
+                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header">
+                                    STT &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-35 table-header" onclick="sortTable(1)">
+                                    Tên gói nhu yếu phẩm &#9650</th> 
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-40 table-header" onclick="sortTable(2)">
+                                    Mô tả &#9650</th>
+								<th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="necessityCombos">
+                            {{#each necessityCombos}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{sum @index 1}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md">{{this.name}}</h6>
+                                    </div>
+                                </td>
+                                <td> 
+                                    {{#each this.necessities}}                                   
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md">{{sum @index 1}}. {{this.name_necessity}} ({{this.price_necessity}}đ/{{this.unit_of_measurement}})</h6>
+                                    </div>    
+                                    {{/each}}                                       
+                                </td>
+                                <td style="white-space: normal">
+                                    <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Mua hàng</button>
+                                    <div class="modal fade" id="user{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">                                     
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary">
+                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin chi tiết</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="/user/cart/add/{{this.name}}" method="post" class="form-submit-combo">
+                                                    <div class="modal-body necessity-combo">                                                     
+                                                        <p style="font-weight: 400; color: black"><strong>Tên gói nhu yếu phẩm:  </strong> {{this.name}}</p>													
+                                                        {{#each this.necessities}}
+                                                        <div class="input-group input-group-static my-3">
+                                                            <label style="font-size: 1rem; font-weight: bold; color: black">{{sum @index 1}}. {{this.name_necessity}} ({{this.price_necessity}}đ/{{this.unit_of_measurement}})</label>
+                                                            <input type="number" class="form-control" id="{{../this.id}}-{{../this.amount}}" name="currentInput" value="{{this.min_limit}}" placeholder="Nhập số lượng">
+                                                            <input type="hidden" class="form-control" name="dataHide" value="{{this.id_necessity}}-{{this.price_necessity}}-{{this.min_limit}}-{{this.max_limit}}">
+                                                            <div class="err-msg mt-3"></div>   
+                                                        </div>    
+                                                        {{/each}}       
+                                                        <input type="hidden" class="form-control" name="dataHide2" value="{{this.id}}">                                                 
+                                                        <p style="font-weight: 400; color: black" class="my-3 amountCombo"><strong>Thành tiền:  </strong> {{this.amount}}đ</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn bg-gradient-primary">Thêm</button>
+                                                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>  
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        function validate(inputElements){
+            Array.from(inputElements).forEach(function(inputElement) {
+                let dataNecessityCombo = inputElement.id.split("-");
+                let idCombo = parseInt(dataNecessityCombo[0]);
+                let amount = parseInt(dataNecessityCombo[1]);
+                let valueProduct = inputElement.value;
+                
+                if (inputElement) {
+                    let hideInput = inputElement.parentElement.querySelector('input[name="dataHide"]');
+                    let errorElement = inputElement.parentElement.querySelector(".err-msg");
+
+                    let dataNecessity = hideInput.value.split("-");
+                    let id_necessity = parseInt(dataNecessity[0]);
+                    let price_necessity = parseInt(dataNecessity[1]);
+                    let min_limit = parseInt(dataNecessity[2]);
+                    let max_limit = parseInt(dataNecessity[3]);
+
+                    //Xử lí trường hợp blur khỏi input
+                    inputElement.onblur = function() {
+                        let valueInput = inputElement.value;
+                        let formElement = getParent(inputElement, ".form-submit-combo");
+                        
+                        if (!isNaN(parseFloat(valueInput)) && !isNaN(valueInput - 0)) {
+                            if (parseFloat(valueInput) < 0) {
+                                errorElement.innerText = "Giá trị nhập vào phải lớn hơn 0";
+                                errorElement.setAttribute("Display", "block");
+                            }
+                            else if (parseFloat(valueInput) < min_limit || parseFloat(valueInput) > max_limit) {
+                                errorElement.innerText = `Giá trị nhập vào phải nằm trong khoảng từ ${min_limit} đến ${max_limit}`;
+                                errorElement.setAttribute("Display", "block");
+                            }
+                            else {
+                                amount += (valueInput - valueProduct) * price_necessity;
+                                let newComboElement = inputElement.parentElement.parentElement;
+                                let newInputElements = newComboElement.querySelectorAll('input[name="currentInput"]');      
+                                let newAmount = 0;
+                                
+                                Array.from(newInputElements).forEach(function(newInputElement) {                            
+                                    let newHideInput = newInputElement.parentElement.querySelector('input[name="dataHide"]');
+                                    let newDataNecessity = newHideInput.value.split("-");
+                                    let new_price_necessity = parseInt(newDataNecessity[1]);
+                                    newAmount += new_price_necessity * newInputElement.value;
+                                }); 
+
+                                let amountComboElement = newComboElement.querySelector(".amountCombo");       
+                                amountComboElement.innerHTML = `<strong>Thành tiền:  </strong> ${newAmount}đ`;
+                            }
+                        }
+                        else {
+                            errorElement.innerText = "Giá trị nhập vào không phải là số";
+                            errorElement.setAttribute("display", "block");
+                        }
+
+                        let necessity_combo = getParent(inputElement, ".necessity-combo");
+                        let inputGroup  = necessity_combo.querySelectorAll('input[name="currentInput"]');
+                        let flag = true;
+
+                        Array.from(inputGroup).forEach(function(inputE) {
+                            let hideInputE = inputE.parentElement.querySelector('input[name="dataHide"]');
+                            let dataNecessityE = hideInputE.value.split("-");
+                            let quantityOrder = parseInt(inputE.value);
+                            let min_limitE = parseInt(dataNecessityE[2]);
+                            let max_limitE = parseInt(dataNecessityE[3]);
+
+                            if (!isNaN(parseFloat(quantityOrder)) && !isNaN(quantityOrder - 0))
+                            {
+                                if (quantityOrder < min_limitE || quantityOrder > max_limitE) {
+                                    flag = false;
+                                }
+                            }
+                            else {
+                                flag = false;
+                            }
+                        });
+
+
+                        if (flag == true) {
+                            formElement.onsubmit = function(e) {
+                            }
+                        }
+                        else {
+                            formElement.onsubmit = function(e) {
+                                e.preventDefault();
+                            }
+                        }
+
+                    }
+                    inputElement.oninput = function() {
+                        errorElement.innerText = "";
+                        errorElement.setAttribute("display", "none");
+                    }
+                }
+            });
+        }
+
+        function getParent(element, selector) {
+            while (element.parentElement) {
+                if (element.parentElement.matches(selector)) {
+                    return element.parentElement;
+                }
+                element = element.parentElement;
+            }
+        }
+
+        let tableNecessity = document.querySelector(".necessityCombos");
+        let necessityCombos = tableNecessity.querySelectorAll(".necessity-combo");
+        Array.from(necessityCombos).forEach(function(necessityCombo) {
+            inputElements = necessityCombo.querySelectorAll('input[name="currentInput"]');
+            validate(inputElements);
+        });
+    });
+</script>

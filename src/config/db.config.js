@@ -1,4 +1,5 @@
 module.exports = {
+<<<<<<< HEAD
     HOST: "localhost",
     USER: "postgres",
     PASSWORD: "depzp",
@@ -23,3 +24,40 @@ module.exports = {
   //   idle: 10000,
   // },
 // };
+=======
+    //   HOST: "localhost",
+    //   USER: "postgres",
+    //   PASSWORD: "082323092015",
+    //   DB: "qlcovid19",
+    //   dialect: "postgres",
+    //   pool: {
+    //     max: 5,
+    //     min: 0,
+    //     acquire: 30000,
+    //     idle: 10000
+    //   }
+    // };
+    // HOST: "localhost",
+    // USER: "postgres",
+    // PASSWORD: "minh15102001",
+    // DB: "Covid Management",
+    // dialect: "postgres",
+    // pool: {
+    //   max: 5,
+    //   min: 0,
+    //   acquire: 30000,
+    //   idle: 10000,
+    // },
+    HOST: "localhost",
+    USER: "postgres",
+    PASSWORD: "27121977",
+    DB: "Covid Management",
+    dialect: "postgres",
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000,
+    },
+};
+>>>>>>> origin/1.4.3
