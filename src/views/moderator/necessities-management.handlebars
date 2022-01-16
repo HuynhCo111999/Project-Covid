@@ -14,6 +14,24 @@
                         <label class="form-label">Tìm kiếm</label>
                         <input type="text" class="form-control border-primary" id="searchInput">
                     </div>
+                    <div style="position: absolute; right: 36.5rem">
+                        <div class="dropdown">
+                            <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="navbarDropdownMenuLink2">
+                                Lọc
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                                <div class="dropdown-item d-flex justify-content-center">
+                                    <div class="row m-1">
+                                        <p>
+                                            <label for="amount">Giá sản phẩm:</label>
+                                            <input type="text" id="amount" readonly style="border:0; color:#107ee6; font-weight:bold;">
+                                        </p>
+                                    <div id="slider-range"></div>
+                                </div>  
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
                     <div style="position: absolute; right: 13.5rem">
                       <button type="button" class="btn bg-gradient-primary btn-block m-0" onclick="sortProductByName()" id="arrange_name_btn">Sắp xếp theo tên &#9660</button>
                       <button type="button" class="btn bg-gradient-primary btn-block m-0 ms-2" onclick="sortProductByPrice()" id="arrange_price_btn">Sắp xếp theo giá &#9660</button>
@@ -46,7 +64,7 @@
                     <table id="userTable">
                         <tbody id="tableBody">
                             {{#each necessities}}
-                            <tr style="display: inline">
+                            <tr style="display: inline" id="rows_{{id}}">
                                 <td>
                                     <div class="col-md-auto m-3">
                                         <div class="card" style="width: 18rem;">                                            
@@ -335,4 +353,35 @@
         })
     })
     
+    $( function() {
+    $("#slider-range").slider({
+        range: true,
+        min: 0,
+        max: 1000000,
+        values: [ 0, 1000000 ],
+        slide: function(event, ui) {
+            $("#amount").val("₫ " + ui.values[0] + " - ₫ " + ui.values[1]);
+            const table = document.getElementById("userTable");
+            var rows = table.rows;
+            console.log(rows.length);
+            for (i = 0; i < rows.length; i++)
+            {
+                var rowsItem = rows[i].getElementsByTagName("p");
+                var rowsVal = parseInt(rowsItem[0].innerHTML.toLowerCase().split(" ")[0]);
+                if (rowsVal >= ui.values[0]
+                    && rowsVal <= ui.values[1]
+                   )
+                   {
+                        rows[i].style.display = "inline";
+                   }
+                else
+                {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    });
+    $("#amount").val("₫ " + $("#slider-range").slider("values", 0) +
+      " - ₫ " + $("#slider-range").slider("values", 1) );
+  } );
 </script>
