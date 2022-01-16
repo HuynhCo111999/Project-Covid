@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="./img/favicon.png">
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
 
 
     <title>Project Covid</title>
@@ -29,7 +30,7 @@
 <body class="g-sidenav-show bg-gray-200">
     {{> user/sidebar}}
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        {{> user/navbar passThisToView=someData}}
+        {{> user/navbar passThisToView=someData passThisToView2=someData2}}
         <div class="container-fluid py-4">
             {{{body}}}
             {{> footer}}
