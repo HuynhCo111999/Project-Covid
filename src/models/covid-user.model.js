@@ -24,16 +24,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    status: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
     related_person: {
       type: Sequelize.STRING,
-    },
-    treatment_place: {
-      type: Sequelize.STRING,
-      allowNull: false,
     },
   });
 

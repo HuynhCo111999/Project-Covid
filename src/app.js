@@ -20,8 +20,8 @@ app.use(cookieParser());
 const db = require("./models");
 const init = require("./middleware/init-table");
 // db.sequelize.sync();
-db.sequelize.sync({ force: true, alter: true }).then(() => {
-  init.initial();
+db.sequelize.sync({ force: false, alter: true }).then(() => {
+  // init.initial();
 });
 
 const hbs = expressHbs.create({
@@ -35,6 +35,19 @@ const hbs = expressHbs.create({
     getId(s) {
       return s.split(".")[0].trim();
     },
+    switch(value, options){
+      this.switch_value = value;
+      return options.fn(this);
+    },
+    case(value, options){
+      if (value == this.switch_value) {
+        return options.fn(this);
+      }
+    },
+    gt(a,b) {
+      var next =  arguments[arguments.length-1];
+	    return (a > b) ? next.fn(this) : next.inverse(this);
+    }
   },
 });
 app.engine("handlebars", hbs.engine);
