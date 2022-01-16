@@ -137,7 +137,7 @@ exports.deleteUser = async (req, res) => {
             u.related_person = null;
             u.save();
           }
-        }     
+        }
       }
       return res.redirect("/moderator");
     })

@@ -7,6 +7,15 @@ function highlightPerson() {
 function highlightPlace() {
   $(".place-select").addClass("border-primary border-2");
 }
+function highlightProvince() {
+  $("#province").addClass("border-primary border-2");
+}
+function highlightDistrict() {
+  $("#district").addClass("border-primary border-2");
+}
+function highlightWard() {
+  $("#ward").addClass("border-primary border-2");
+}
 function sortTable(n) {
   let i,
     shouldSwitch,
