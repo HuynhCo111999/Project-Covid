@@ -24,17 +24,14 @@ db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.treatmentLocation = require("../models/treatmentLocation.model")(sequelize, Sequelize);
 db.histories = require("../models/histories.model")(sequelize, Sequelize);
 db.covidUser = require("../models/covid-user.model.js")(sequelize, Sequelize);
-<<<<<<< HEAD
 db.statusCovidUser = require("../models/status-covid-user.model.js")(sequelize, Sequelize);
 db.history_user_status = require("../models/history-user-status.model.js")(sequelize, Sequelize);
 db.history_user_location = require("../models/history-user-treatmentLocation.model.js")(sequelize, Sequelize);
-=======
 db.covidNecessity = require("../models/covid-necessity.model")(sequelize, Sequelize);
 db.covidNecessityCombo = require("../models/covid-necessity-combo.model")(sequelize, Sequelize);
 db.covidNecessityOfCombo = require("../models/covid-necessitiy-of-combo.model")(sequelize, Sequelize);
 db.order = require("../models/order.model")(sequelize, Sequelize);
 db.orderDetail = require("../models/order-detail.model")(sequelize, Sequelize);
->>>>>>> origin/1.4.3
 
 
 db.role.belongsToMany(db.user, {
