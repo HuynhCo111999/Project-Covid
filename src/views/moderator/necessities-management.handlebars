@@ -16,10 +16,10 @@
                     </div>
                     <div style="position: absolute; right: 36.5rem">
                         <div class="dropdown">
-                            <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="navbarDropdownMenuLink2">
+                            <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="filterDropdownMenuLink">
                                 Lọc
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                            <ul class="dropdown-menu" aria-labelledby="filterDropdownMenuLink">
                                 <div class="dropdown-item d-flex justify-content-center">
                                     <div class="row m-1">
                                         <p>
@@ -357,13 +357,12 @@
     $("#slider-range").slider({
         range: true,
         min: 0,
-        max: 100000000,
+        max: 2000000,
         values: [ 0, 1000000 ],
         slide: function(event, ui) {
             $("#amount").val("₫ " + ui.values[0] + " - ₫ " + ui.values[1]);
             const table = document.getElementById("userTable");
             var rows = table.rows;
-            console.log(rows.length);
             for (i = 0; i < rows.length; i++)
             {
                 var rowsItem = rows[i].getElementsByTagName("p");
