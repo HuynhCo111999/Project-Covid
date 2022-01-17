@@ -35,6 +35,7 @@
                     {{/each}}
                 </div>
             </div>
+<<<<<<< HEAD
             <div class="row">
 
             </div>
@@ -58,6 +59,50 @@
                     {{#each errorMessage}}
                     {{#ifStr this.param "district"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
                     {{/each}}
+=======
+        </div>
+        <div class="row">
+            
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <div class="input-group input-group-outline mt-3">
+                    <select id="province" class="form-control {{#if province}}border-primary border-2{{/if}}" name="province" onchange="highlightProvince();displayDistrict()">
+                        {{#if province}}
+                        <option value="{{province}}" selected>{{province}}</option>
+                        {{else}}
+                        <option value="" disabled selected>Tỉnh/Thành phố</option>
+                        {{/if}}
+                    </select>
+                </div>
+                {{#each errorMessage}}
+                {{#ifStr this.param "province"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                {{/each}}
+            </div>
+            <div class="col">
+                <div class="input-group input-group-outline mt-3">
+                    <select id="district" class="form-control {{#if district}}border-primary border-2{{/if}}" name="district" onchange="highlightDistrict();displayWard()">
+                        {{#if district}}
+                        <option value="{{district}}" selected>{{district}}</option>
+                        {{else}}
+                        <option value="" disabled selected>Quận/Huyện</option>
+                        {{/if}}
+                    </select>
+                </div>
+                {{#each errorMessage}}
+                {{#ifStr this.param "district"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                {{/each}}
+            </div>
+            <div class="col">
+                <div class="input-group input-group-outline mt-3">
+                    <select id="ward" class="form-control {{#if ward}}border-primary border-2{{/if}}" name="ward" onchange="highlightWard()">
+                        {{#if ward}}
+                        <option value="{{ward}}" selected>{{ward}}</option>
+                        {{else}}
+                        <option value="" disabled selected>Phường/Xã</option>
+                        {{/if}}
+                    </select>
+>>>>>>> origin/1.2.1
                 </div>
                 <div class="col">
                     <div class="input-group input-group-outline mt-3 {{#if ward}}focused is-focused{{/if}}">
