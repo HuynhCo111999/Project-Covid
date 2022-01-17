@@ -12,6 +12,7 @@ router.get("/add-user", moderatorController.getAddUser);
 router.get("/necessities", necessitiesController.get);
 router.get("/necessities-combo", necessitiesComboController.get);
 router.get("/necessities-combo-details/:id",necessitiesComboController.getDetails);
+router.get('/necessity-details/:id', necessitiesController.getDetails);
 router.post("/add-necessity", upload.single('upload'), necessitiesController.add);
 router.post('/update-necessity/:id', upload.single('edit_upload'), necessitiesController.update);
 router.post('/delete-necessity/:id', necessitiesController.delete);
@@ -21,6 +22,8 @@ router.post("/delete-necessity-combo/:id",necessitiesComboController.delete);
 router.post("/add-necessity-to-combo/:id", necessitiesComboController.addDetails);
 router.post('/remove-necessity-from-combo/:id', necessitiesComboController.removeDetails);
 router.post('/update-necessity-for-combo/:id', necessitiesComboController.updateDetails);
+router.post('/add-image-to-necessity/:id', upload.single('upload'), necessitiesController.addImages);
+router.post('/remove-image-from-necessity/:id',necessitiesController.removeImages);
 
 router.post(
   "/add-user",

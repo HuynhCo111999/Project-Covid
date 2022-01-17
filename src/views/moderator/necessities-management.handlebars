@@ -74,7 +74,7 @@
                                                 <p class="card-text font-weight-bold">{{price}} ₫/{{unit_of_measurement}}</p>
                                             </div>
                                             <div class="card-body">
-                                                <button type="button" class="btn btn-lg bg-transparent border border-white text-success"
+                                                {{!-- <button type="button" class="btn btn-lg bg-transparent border border-white text-success"
                                                         data-bs-toggle="modal" data-bs-target="#modalEdit"
                                                         data-name="{{name}}"
                                                         data-price="{{price}}"
@@ -87,7 +87,9 @@
                                                         data-bs-toggle="modal" data-bs-target="#modalDelete"
                                                         data-id="{{id}}">
                                                         Xóa
-                                                </button>
+                                                </button> --}}
+                                                <a class="btn btn-primary my-1" type="button" href="/moderator/necessity-details/{{id}}"
+                                                   data-id="{{id}}">Xem chi tiết</a>
                                             </div>
                                         </div>
                                     </div>
@@ -158,7 +160,7 @@
 </div>
 
 <!-- Modal edit -->
-<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog">
+{{!-- <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -211,10 +213,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <!-- Model delete -->
-<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog">
+{{!-- <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -238,7 +240,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <!-- Scripts -->
 <script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
@@ -320,6 +322,7 @@
         return true;
     }
 
+    /*
     $().ready(() =>
     {
         var modalEdit = $('#modalEdit');
@@ -352,6 +355,7 @@
             $('#delete-form').attr("action",`/moderator/delete-necessity/${$(e.relatedTarget).attr("data-id")}`);
         })
     })
+    */
     
     $( function() {
     $("#slider-range").slider({

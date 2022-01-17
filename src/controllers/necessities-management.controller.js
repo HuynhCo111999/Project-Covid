@@ -1,6 +1,7 @@
 const covidNecessity = require("../models/index").covidNecessity;
 const covidNecessityOfCombo = require("../models/index").covidNecessityOfCombo;
 const covidNecessityCombo = require("../models/index").covidNecessityCombo;
+const covidImagesofNecessity = require("../models/index").covidNecessityImages;
 const fs = require("fs");
 const path = require("path");
 const MIN_COMBO_LENGTH = 2;
@@ -55,7 +56,7 @@ exports.update = async (req, res) => {
             },
           }
         );
-        res.redirect("../necessities");
+        res.redirect(`../necessity-details/${id}`);
       });
     } else {
       await covidNecessity.update(
@@ -70,7 +71,7 @@ exports.update = async (req, res) => {
           },
         }
       );
-      res.redirect("../necessities");
+      res.redirect(`../necessity-details/${id}`);
     }
   } catch (error) {
     res.send(error);
@@ -121,6 +122,24 @@ exports.delete = async (req, res) => {
         }
       );
     });
+    const imagesInstance = await covidImagesofNecessity.findAll(
+      {
+        where: {
+          id_necessity: id,
+        },
+      }
+    );
+    imagesInstance.forEach(i => {
+      var image_path = path.join(__dirname, `../public/${i.image_path}`);
+      fs.unlink(image_path, async (error) => {
+        if (error) throw error;
+      });
+    });
+    await covidImagesofNecessity.destroy({
+      where: {
+        id_necessity: id,
+      },
+    });
     covidNecessity.findOne({
       where: {
         id: id,
@@ -143,3 +162,71 @@ exports.delete = async (req, res) => {
     res.send(error);
   }
 };
+
+exports.getDetails = async (req, res) => {
+  try
+  {
+    const id_necessity = req.params.id;
+    const images = await covidImagesofNecessity.findAll({
+      raw: true,
+      where: {
+        id_necessity: id_necessity,
+      },
+    });
+    const necessityInstance = await covidNecessity.findByPk(id_necessity);
+    return res.render("moderator/necessities-details",
+    {
+        layout: "moderator/main",
+        images: images,
+        productId: id_necessity,
+        productName: necessityInstance.name,
+        productUnit: necessityInstance.unit_of_measurement,
+        productPrice: necessityInstance.price,
+        productPath: necessityInstance.image_path,
+    });
+  }
+  catch(error)
+  {
+    return res.send(error);
+  }
+}
+
+
+exports.addImages = async (req, res) => {
+  try
+  {
+    const id = req.params.id;
+    await covidImagesofNecessity.create({
+      id_necessity: id,
+      image_path: `/uploads/` + req.file.filename,
+    });
+    res.redirect(`../necessity-details/${id}`);
+  }
+  catch(error)
+  {
+    res.send(error);
+  }
+}
+
+exports.removeImages = async (req, res) => {
+  try
+  {
+    const id = req.params.id;
+    const instance = await covidImagesofNecessity.findByPk(id);
+    const id_necessity = instance.id_necessity;
+    var image_path = path.join(__dirname, `../public/${instance.image_path}`);
+    fs.unlink(image_path, async (error) => {
+      if (error) throw error;
+      await covidImagesofNecessity.destroy({
+        where: {
+          id: id,
+        },
+      });
+      res.redirect(`../necessity-details/${id_necessity}`);
+    });
+  }
+  catch(error)
+  {
+    res.send(error);
+  }
+} 

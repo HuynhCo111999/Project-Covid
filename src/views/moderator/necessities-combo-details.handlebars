@@ -1,3 +1,17 @@
+<!-- Details Card -->
+<article class="postcard light">
+    <div class="postcard__text">
+        <h1 class="postcard__title"><a href="#">{{comboName}}</a></h1>
+        <div class="postcard__subtitle small">
+            <span class="text-dark text-md">
+                <i class="fas fa-clock mr-2"></i> {{#parseTimeLimit comboSalesCycle}}{{/parseTimeLimit}}
+            </span>
+        </div>
+        <div class="postcard__bar bg-gradient-primary"></div>
+        <div class="postcard__preview-txt text-dark">{{comboSalesLimit}} gói</div>
+    </div>
+</article>
+
 <!-- Controller bars -->
 <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-start mb-2">
     {{!-- Back button --}}
