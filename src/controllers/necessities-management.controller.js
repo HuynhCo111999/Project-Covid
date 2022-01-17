@@ -7,6 +7,15 @@ const path = require("path");
 const MIN_COMBO_LENGTH = 2;
 
 exports.get = async (req, res) => {
+  const upload_path = path.join(__dirname, `../public/uploads`);
+    if (fs.existsSync(upload_path)) {
+        //Do nothing
+      } else {
+        fs.mkdir(upload_path, (error) => {
+          if (error) throw error;
+        });
+    }
+
   const necessities = await covidNecessity.findAll({ raw: true });
 
   res.render("moderator/necessities-management", {
