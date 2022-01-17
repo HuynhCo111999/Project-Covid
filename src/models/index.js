@@ -30,6 +30,7 @@ db.history_user_location = require("../models/history-user-treatmentLocation.mod
 db.covidNecessity = require("../models/covid-necessity.model")(sequelize, Sequelize);
 db.covidNecessityCombo = require("../models/covid-necessity-combo.model")(sequelize, Sequelize);
 db.covidNecessityOfCombo = require("../models/covid-necessitiy-of-combo.model")(sequelize, Sequelize);
+db.covidNecessityImages = require("../models/covid-necessity-images.model")(sequelize, Sequelize);
 db.order = require("../models/order.model")(sequelize, Sequelize);
 db.orderDetail = require("../models/order-detail.model")(sequelize, Sequelize);
 
@@ -69,6 +70,7 @@ db.order.belongsToMany(db.covidNecessityCombo, {
     foreignKey: "id_order",
     otherKey: "id_combo",
 });
+
 db.covidNecessityCombo.belongsToMany(db.order, {
     through: "orderDetails",
     foreignKey: "id_combo",

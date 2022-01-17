@@ -21,7 +21,7 @@ app.use(cookieParser());
 const db = require("./models");
 const init = require("./middleware/init-table");
 // db.sequelize.sync();
-db.sequelize.sync({ force: false, alter: true }).then(() => {
+db.sequelize.sync({ force: true, alter: true }).then(() => {
   init.initial();
 });
 app.use(
