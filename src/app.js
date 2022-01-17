@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 require("dotenv").config();
 //set port local
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -46,6 +46,26 @@ const hbs = expressHbs.create({
     sum: (a, b) => {
       return a + b;
     },
+    parseTimeLimit(b) {
+      if (b == null) {
+        return "Ngày";
+      } else {
+        if (!b) {
+          return "Tuần";
+        } else {
+          return "Tháng";
+        }
+      }
+    },
+  },
+  getName(s) {
+    return s.split(".")[1].split(",")[0];
+  },
+  getId(s) {
+    return s.split(".")[0].trim();
+  },
+  sum: (a, b) => {
+    return a + b;
   },
   getName(s) {
     return s.split(".")[1].split(",")[0];

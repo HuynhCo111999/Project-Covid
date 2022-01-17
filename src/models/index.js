@@ -49,16 +49,16 @@ db.histories.belongsTo(db.user, {
     foreignKey: "userId",
 });
 
-db.covidNecessity.belongsToMany(db.covidNecessityCombo, {
-    through: "covid-necessities-of-combo",
-    foreignKey: "id_necessity",
-    otherKey: "id_combo",
-});
-db.covidNecessityCombo.belongsToMany(db.covidNecessity, {
-    through: "covid-necessities-of-combo",
-    foreignKey: "id_combo",
-    otherKey: "id_necessity",
-});
+// db.covidNecessity.belongsToMany(db.covidNecessityCombo, {
+//     through: "covid-necessities-of-combo",
+//     foreignKey: "id_necessity",
+//     otherKey: "id_combo",
+// });
+// db.covidNecessityCombo.belongsToMany(db.covidNecessity, {
+//     through: "covid-necessities-of-combo",
+//     foreignKey: "id_combo",
+//     otherKey: "id_necessity",
+// });
 
 db.order.belongsTo(db.user, {
     foreignKey: "userId",

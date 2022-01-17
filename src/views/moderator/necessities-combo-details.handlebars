@@ -1,0 +1,465 @@
+<!-- Details Card -->
+<article class="postcard light">
+    <div class="postcard__text">
+        <h1 class="postcard__title"><a href="#">{{comboName}}</a></h1>
+        <div class="postcard__subtitle small">
+            <span class="text-dark text-md">
+                <i class="fas fa-clock mr-2"></i> {{#parseTimeLimit comboSalesCycle}}{{/parseTimeLimit}}
+            </span>
+        </div>
+        <div class="postcard__bar bg-gradient-primary"></div>
+        <div class="postcard__preview-txt text-dark">{{comboSalesLimit}} gói</div>
+    </div>
+</article>
+
+<!-- Controller bars -->
+<div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-start mb-2">
+    {{!-- Back button --}}
+    <div class="input-group input-group-outline w-30 mt-1">
+        <a type="button" class="btn bg-gradient-primary btn-block" href="/moderator/necessities-combo">
+            Quay lại
+        </a>
+    </div>
+    <div style="position: absolute; right: 17rem">
+        <button type="button" class="btn bg-gradient-success btn-block m-0" onclick="" data-bs-toggle="modal" data-bs-target="#modalUpdateInfo"
+                data-name="{{comboName}}"
+                data-limit="{{comboSalesLimit}}"
+                data-cycle="{{comboSalesCycle}}"
+                data-id="{{comboId}}"
+                >Chỉnh sửa thông tin gói</button>
+        <button type="button" class="btn bg-gradient-danger btn-block m-0 ms-2" onclick="" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                data-id="{{comboId}}"
+                >Xóa gói</button>
+    </div>
+    <!-- Add necessities to combo button -->
+    <div style="position: absolute; right: 2rem">
+        <button type="button" class="btn bg-gradient-primary btn-block m-0" data-bs-toggle="modal" data-bs-target="#modalAdd">
+        Thêm nhu yếu phẩm vào gói
+        </button>
+    </div>
+</div>
+
+{{!-- Alert Message --}}
+{{#if alertOn}}
+<div class="alert alert-{{alertColor}} alert-dismissible fade show" role="alert">
+    <span class="alert-icon align-middle">
+        <span class="material-icons text-md text-white">
+        thumb_up_off_alt
+        </span>
+    </span>
+    <span class="alert-text text-white"><strong>Thông báo!</strong>{{alertMessage}}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{{/if}}
+
+<!-- Modal add -->
+<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Chọn nhu yếu phẩm để thêm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="add-form" action="/moderator/add-necessity-to-combo/{{comboId}}" method="post" onsubmit="return validateAdd()">
+                        <div class="input-group input-group-outline my-3">
+                            <select class="form-control" name="necesstity_to_add">
+                                <option id="opt" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm cần thêm vào gói</option>
+                                {{#each necessities}}
+                                    <option>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Số lượng mua tối thiểu</label>
+                            <input type="number" class="form-control" name="min" id="add-min-input" min="1">
+                        </div>
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Số lượng mua tối đa</label>
+                            <input type="number" class="form-control" name="max" id="add-max-input" min="1">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="add-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="add-form">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model remove -->
+<div class="modal fade" id="modalRemove" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Xóa nhu yếu phẩm khỏi gói</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="remove-form" method="post">
+                        <div class="input-group input-group-static my-3 row">
+                            <p class="text-dark text-lg">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này khỏi gói?</p>
+                            <p class="text-dark">Nếu số lượng nhu yếu phẩm trong gói <strong style="color: green">ít hơn hai</strong>, gói sẽ bị <strong style="color: red">XÓA</strong>!</p>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="remove-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal update necessities -->
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Cập nhật nhu yếu phẩm trong gói</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="update-form" action="/moderator/update-necessity-for-combo/{{comboId}}" method="post" onsubmit="return validateUpdate()">
+                        <div class="input-group input-group-static my-1 mx-2">
+                            <label>Chọn nhu yếu phẩm để cập nhật</label>
+                        </div>
+                        <div class="input-group input-group-outline">
+                            <select class="form-control" name="necesstity_to_update">
+                                <option id="update_opt" {{#if necessities}}{{else}}selected{{/if}} disabled>Cập nhật nhu yếu phẩm</option>
+                                {{#each necessities}}
+                                    <option id="update_opt_{{this.id}}">{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="input-group input-group-static my-3 mx-2">
+                            <label>Số lượng mua tối thiểu</label>
+                            <input type="number" class="form-control" name="min" id="update-min-input" min="1">
+                        </div>
+                        <div class="input-group input-group-static my-3 mx-2">
+                            <label>Số lượng mua tối đa</label>
+                            <input type="number" class="form-control" name="max" id="update-max-input" min="1">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="update-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="update-form">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal update combo -->
+<div class="modal fade" id="modalUpdateInfo" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Sửa thông tin gói nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="update-info-form" action="/moderator/update-necessity-combo/{{comboId}}" method="post" onsubmit="return validateUpdateInfo()">
+                        <div class="input-group input-group-static my-3 mx-2">
+                            <label>Tên gói</label>
+                            <input type="text" class="form-control" name="name" id="updateInfo-name-input">
+                        </div>
+
+                        <div class="input-group input-group-static my-3 mx-2">
+                            <label>Số lượng giới hạn</label>
+                            <input type="number" class="form-control" name="limit" id="updateInfo-sales-limit-input" min="1">
+                        </div>
+
+                        <div class="input-group input-group-outline my-3 mx-2">
+                            <p>Thời gian giới hạn:</p>
+                            <input class="form-control" type="text" name="cycle" id="updateInfo-sales-cycle-input" hidden>
+                            <input class="mx-2 my-2" type="radio" id="day" name="sales_cycle" value="day">
+                            <label class="mr-2 my-1" for="day">Ngày</label>
+                            <input class="mx-2 my-2" type="radio" id="week" name="sales_cycle" value="week">
+                            <label class="mr-2 my-1" for="week">Tuần</label>
+                            <input class="mx-2 my-2" type="radio" id="month" name="sales_cycle" value="month">
+                            <label class="mr-2 my-1" for="month">Tháng</label>
+                        </div>
+                    </form>
+                    <p class="text-danger" id="updateInfo-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="update-info-form">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model delete combo -->
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Xóa gói</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="delete-form" action="/moderator/delete-necessity-combo/{{comboId}}" method="post">
+                        <div class="input-group input-group-static my-3 row">
+                            <p class="text-dark text-lg">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này khỏi gói?</p>
+                            <p class="text-dark">Toàn bộ thông tin của gói sẽ bị <strong style="color: red">XÓA</strong>!</p>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="delete-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- List of necessities -->
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Danh sách các nhu yếu phẩm trong gói</h6>
+                </div>
+            </div>
+            <div class="table-responsive p-0">
+                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-30 table-header" onclick="sortTable(0)">
+                                    Tên sản phẩm &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(1)">
+                                    Giá/ Định lượng &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(2)">
+                                    Số lượng mua tối thiểu &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(3)">
+                                    Số lượng mua tối đa &#9650</th>  
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            
+                            {{#each listNecessities}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{name}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">
+                                            {{price}} ₫/{{unit_of_measurement}}
+                                        </h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{min_limit}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md">{{max_limit}}</h6>
+                                    </div>
+                                </td>
+                                <td style="white-space: normal">
+                                    <button id="editBtn_{{id}}" class="btn btn-success my-1 mx-2"
+                                            data-bs-toggle="modal" data-bs-target="#modalUpdate"
+                                            data-min="{{min_limit}}"
+                                            data-max="{{max_limit}}"
+                                            data-necessityid="{{id_necessity}}"
+                                            data-id="{{id}}"
+                                    >Chỉnh sửa</button>
+                                    <button id="removeBtn_{{id}}" class="btn btn-danger my-1"
+                                            data-bs-toggle="modal" data-bs-target="#modalRemove"
+                                            data-id="{{id}}"
+                                    >Xóa</button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+        </div>  
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    const validateAdd = () => {
+        const min_limit_input = $("#add-min-input");
+        const max_limit_input = $("#add-max-input");
+        min_limit_input.parent().removeClass("is-invalid");
+        max_limit_input.parent().removeClass("is-invalid");
+
+        if (document.getElementById('opt').selected){
+             $('#add-noti-msg').html("Vui lòng chọn sản phẩm để thêm vào gói.")
+            return false;
+        }
+
+        if(min_limit_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm.")
+            min_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        if(max_limit_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm.")
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        const min = parseInt(min_limit_input.val());
+        const max = parseInt(max_limit_input.val());
+        if(min > max)
+        {
+            $('#add-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa.")
+            min_limit_input.parent().addClass("is-invalid");
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        return true;
+    }
+
+    const validateUpdateInfo = () => {
+        const name_input = $('#updateInfo-name-input');
+        const sales_limit_input = $('#updateInfo-sales-limit-input');
+        const sales_cycle_input = $('#updateInfo-sales-cycle-input');
+        name_input.parent().removeClass("is-invalid");
+        sales_limit_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#updateInfo-noti-msg').html("Vui lòng nhập tên gói.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(sales_limit_input.val() === "") {
+            $('#updateInfo-noti-msg').html("Vui lòng nhập số lượng mua giới hạn của gói.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if (document.getElementById('day').checked) {
+            sales_cycle_input.val("day");
+        }
+        else {
+            if (document.getElementById('week').checked) {
+                sales_cycle_input.val("week");
+            }
+            else
+            {
+                if (document.getElementById('month').checked) {
+                    sales_cycle_input.val("month");
+                }
+                else
+                {
+                    $('#updateInfo-noti-msg').html("Vui lòng chọn thời gian giới hạn mua.")
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    const validateUpdate = () => {
+        const min_limit_input = $("#update-min-input");
+        const max_limit_input = $("#update-max-input");
+        min_limit_input.parent().removeClass("is-invalid");
+        max_limit_input.parent().removeClass("is-invalid");
+
+        if (document.getElementById('update_opt').selected){
+             $('#update-noti-msg').html("Vui lòng chọn sản phẩm để thêm vào gói.")
+            return false;
+        }
+
+        if(min_limit_input.val() === "") {
+            $('#update-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm.")
+            min_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        if(max_limit_input.val() === "") {
+            $('#update-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm.")
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        const min = parseInt(min_limit_input.val());
+        const max = parseInt(max_limit_input.val());
+        if(min > max)
+        {
+            $('#update-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa.")
+            min_limit_input.parent().addClass("is-invalid");
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        return true;
+    }
+
+    $().ready(() =>
+    {
+        var modalRemove = $('#modalRemove');
+        modalRemove.on('shown.bs.modal', function(e)
+        {
+            $('#remove-form').attr("action",`/moderator/remove-necessity-from-combo/${$(e.relatedTarget).attr("data-id")}`);
+        })
+
+        var modalUpdate = $('#modalUpdate');
+        modalUpdate.on('shown.bs.modal',function(e)
+        {
+            $('#update-min-input').val($(e.relatedTarget).attr("data-min"));
+            $('#update-max-input').val($(e.relatedTarget).attr("data-max"));
+            $(`#update_opt_${$(e.relatedTarget).attr("data-necessityid")}`).attr('selected','selected');
+            $('#update-form').attr("action",`/moderator/update-necessity-for-combo/${$(e.relatedTarget).attr("data-id")}`);
+        });
+
+        var modalUpdateInfo = $('#modalUpdateInfo');
+        modalUpdateInfo.on('shown.bs.modal',function(e)
+        {
+            $('#updateInfo-name-input').val($(e.relatedTarget).attr("data-name"));
+            $('#updateInfo-sales-limit-input').val($(e.relatedTarget).attr("data-limit"));
+            const cycleVal = $(e.relatedTarget).attr("data-cycle");
+            const sales_cycle_input = $('#updateInfo-sales-cycle-input');
+            if(cycleVal == "false")
+            {
+                $('#week').attr('checked', true);
+                sales_cycle_input.val("week");
+            }
+            else
+            {
+                if(cycleVal == "true")
+                {
+                    $('#month').attr('checked', true);
+                    sales_cycle_input.val("month");
+                }
+                else
+                {
+                    $('#day').attr('checked', true);
+                    sales_cycle_input.val("day");
+                }
+            }
+        });
+    })
+</script>
