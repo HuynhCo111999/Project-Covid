@@ -6,33 +6,47 @@ const HistoryStatus = require("../models/index").history_user_status;
 const HistoryLocation = require("../models/index").history_user_location;
 const Sequelize = require("sequelize");
 
-
 const { validationResult } = require("express-validator");
 const { Op } = require("sequelize");
 
 exports.getIndex = async (req, res) => {
   const users = await covidUser.findAll({
-    include: [{
-      model: HistoryStatus,
-      include: [{
-        model: StatusCovid,
-        attributes: ['status'],
-      }],
-    },{
-      model: HistoryLocation,
-      include: [{
-        model: treatmentLocation,
-        attributes: ['name'],
-      }],
-    }],
+    include: [
+      {
+        model: HistoryStatus,
+        include: [
+          {
+            model: StatusCovid,
+            attributes: ["status"],
+          },
+        ],
+      },
+      {
+        model: HistoryLocation,
+        include: [
+          {
+            model: treatmentLocation,
+            attributes: ["name"],
+          },
+        ],
+      },
+    ],
     order: [
-      [ HistoryStatus, 'id', 'ASC' ],
-      [ HistoryLocation, 'id', 'ASC' ],
+      [HistoryStatus, "id", "ASC"],
+      [HistoryLocation, "id", "ASC"],
     ],
     nest: true,
   });
-  const obj= JSON.parse(JSON.stringify(users))
-  // console.log(obj[0]);
+  const obj = JSON.parse(JSON.stringify(users));
+
+  for (let o of obj) {
+    for (let h of o.histoty_user_statuses) {
+      h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+    }
+    for (let h of o.histoty_user_locations) {
+      h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+    }
+  }
   res.render("moderator/main", {
     layout: "moderator/main",
     function: "list",
@@ -42,16 +56,16 @@ exports.getIndex = async (req, res) => {
 
 exports.getAddUser = async (req, res) => {
   const users = await covidUser.findAll({
-    order: [['id', 'ASC']],
+    order: [["id", "ASC"]],
     raw: true,
   });
   const location = await treatmentLocation.findAll({
     where: {
       current: {
-        [Op.lt]: Sequelize.col('capacity'),
-      }
+        [Op.lt]: Sequelize.col("capacity"),
+      },
     },
-    order: [['id', 'ASC']],
+    order: [["id", "ASC"]],
     raw: true,
   });
   const statusCovid = await StatusCovid.findAll({
@@ -68,6 +82,7 @@ exports.getAddUser = async (req, res) => {
 };
 
 exports.postAddUser = async (req, res) => {
+  console.log(req.body.status);
   const errors = validationResult(req);
   const users = await covidUser.findAll({
     raw: true,
@@ -75,10 +90,10 @@ exports.postAddUser = async (req, res) => {
   const location = await treatmentLocation.findAll({
     where: {
       current: {
-        [Op.lt]: Sequelize.col('capacity'),
-      }
+        [Op.lt]: Sequelize.col("capacity"),
+      },
     },
-    order: [['id', 'ASC']],
+    order: [["id", "ASC"]],
     raw: true,
   });
   const statusCovid = await StatusCovid.findAll({
@@ -147,9 +162,12 @@ exports.postAddUser = async (req, res) => {
         console.log(error);
       }
     })
-    .then(async() => {
+    .then(async () => {
       try {
-        await treatmentLocation.increment({current: 1}, { where: { id: parseInt(req.body.place)} }); 
+        await treatmentLocation.increment(
+          { current: 1 },
+          { where: { id: parseInt(req.body.place) } }
+        );
       } catch (error) {
         console.log(error);
       }
@@ -184,39 +202,6 @@ exports.postAddUser = async (req, res) => {
     });
 };
 
-exports.deleteUser = async (req, res) => {
-  const userId = req.params.id;
-  console.log(userId);
-
-  const user = await covidUser.findByPk(userId, { raw: true });
-  const account = await User.findOne({
-    username: user.identity_card.toString(),
-  });
-
-  covidUser
-    .findByPk(userId)
-    .then((user) => {
-      account.destroy();
-      return user.destroy();
-    })
-    .then(async () => {
-      const users = await covidUser.findAll({
-        raw: true,
-      });
-      for (let user of users) {
-        if (user.related_person) {
-          if (user.related_person.toString().split(".")[0] === userId) {
-            const u = await covidUser.findByPk(user.id);
-            u.related_person = null;
-            u.save();
-          }
-        }
-      }
-      return res.redirect("/moderator");
-    })
-    .catch((err) => console.log(err));
-};
-
 exports.getIndexFromEdit = (req, res) => {
   res.redirect("/moderator");
 };
@@ -225,31 +210,42 @@ exports.getEditUser = async (req, res) => {
   const userId = req.params.id;
 
   const rs = await covidUser.findByPk(userId, {
-    include: [{
-      // limit: 1,
-      model: HistoryStatus,
-      include: [{
-        model: StatusCovid,
-        attributes: ['status'],
-      }],
-    },{
-      model: HistoryLocation,
-      include: [{
-        model: treatmentLocation,
-        attributes: ['name'],
-      }],
-    }],
+    include: [
+      {
+        // limit: 1,
+        model: HistoryStatus,
+        include: [
+          {
+            model: StatusCovid,
+            attributes: ["status"],
+          },
+        ],
+      },
+      {
+        model: HistoryLocation,
+        include: [
+          {
+            model: treatmentLocation,
+            attributes: ["name"],
+          },
+        ],
+      },
+    ],
     order: [
-      [ HistoryStatus, 'id', 'ASC' ],
-      [ HistoryLocation, 'id', 'ASC' ],
+      [HistoryStatus, "id", "ASC"],
+      [HistoryLocation, "id", "ASC"],
     ],
     nest: true,
   });
   const user = JSON.parse(JSON.stringify(rs));
   if (!user) return res.redirect("/moderator");
-  const statusId = user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId;
-  const locationId = user.histoty_user_locations[user.histoty_user_locations.length - 1].treatmentLocationId;
-  
+  const statusId =
+    user.histoty_user_statuses[user.histoty_user_statuses.length - 1]
+      .statusCovidUserId;
+  const locationId =
+    user.histoty_user_locations[user.histoty_user_locations.length - 1]
+      .treatmentLocationId;
+
   let users = await covidUser.findAll({
     raw: true,
   });
@@ -259,17 +255,17 @@ exports.getEditUser = async (req, res) => {
   const location = await treatmentLocation.findAll({
     where: {
       current: {
-        [Op.lt]: Sequelize.col('capacity'),
-      }
+        [Op.lt]: Sequelize.col("capacity"),
+      },
     },
-    order: [['id', 'ASC']],
+    order: [["id", "ASC"]],
     raw: true,
   });
   const statusCovid = await StatusCovid.findAll({
-    where:{
+    where: {
       id: {
         [Op.lte]: statusId,
-      }
+      },
     },
     raw: true,
   });
@@ -295,29 +291,40 @@ exports.getEditUser = async (req, res) => {
 exports.editUser = async (req, res) => {
   const userId = req.body.userId;
   const rs = await covidUser.findByPk(userId, {
-    include: [{
-      // limit: 1,
-      model: HistoryStatus,
-      include: [{
-        model: StatusCovid,
-        attributes: ['status'],
-      }],
-    },{
-      model: HistoryLocation,
-      include: [{
-        model: treatmentLocation,
-        attributes: ['name'],
-      }],
-    }],
+    include: [
+      {
+        // limit: 1,
+        model: HistoryStatus,
+        include: [
+          {
+            model: StatusCovid,
+            attributes: ["status"],
+          },
+        ],
+      },
+      {
+        model: HistoryLocation,
+        include: [
+          {
+            model: treatmentLocation,
+            attributes: ["name"],
+          },
+        ],
+      },
+    ],
     order: [
-      [ HistoryStatus, 'id', 'ASC' ],
-      [ HistoryLocation, 'id', 'ASC' ],
+      [HistoryStatus, "id", "ASC"],
+      [HistoryLocation, "id", "ASC"],
     ],
     nest: true,
   });
   const user = JSON.parse(JSON.stringify(rs));
-  const statusId = user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId;
-  const locationId = user.histoty_user_locations[user.histoty_user_locations.length - 1].treatmentLocationId;  
+  const statusId =
+    user.histoty_user_statuses[user.histoty_user_statuses.length - 1]
+      .statusCovidUserId;
+  const locationId =
+    user.histoty_user_locations[user.histoty_user_locations.length - 1]
+      .treatmentLocationId;
 
   const errors = validationResult(req);
 
@@ -328,17 +335,17 @@ exports.editUser = async (req, res) => {
   const location = await treatmentLocation.findAll({
     where: {
       current: {
-        [Op.lt]: Sequelize.col('capacity'),
-      }
+        [Op.lt]: Sequelize.col("capacity"),
+      },
     },
-    order: [['id', 'ASC']],
+    order: [["id", "ASC"]],
     raw: true,
   });
   const statusCovid = await StatusCovid.findAll({
-    where:{
+    where: {
       id: {
         [Op.lte]: statusId,
-      }
+      },
     },
     raw: true,
   });
@@ -380,8 +387,8 @@ exports.editUser = async (req, res) => {
       function: "list",
     });
   }
-  let isChangeStatus = (statusId != parseInt(req.body.status)) ? true : false;
-  let isChangeLocation = (locationId != parseInt(req.body.place)) ? true : false;
+  let isChangeStatus = statusId != parseInt(req.body.status) ? true : false;
+  let isChangeLocation = locationId != parseInt(req.body.place) ? true : false;
 
   covidUser
     .findByPk(userId)
@@ -410,7 +417,7 @@ exports.editUser = async (req, res) => {
       //       id: person.id,
       //     },
       //   });
-      if(isChangeStatus){
+      if (isChangeStatus) {
         try {
           await HistoryStatus.create({
             covidUserId: userId,
@@ -420,44 +427,56 @@ exports.editUser = async (req, res) => {
           console.log(error);
         }
       }
-      if(isChangeLocation) {
+      if (isChangeLocation) {
         try {
           await HistoryLocation.create({
             covidUserId: userId,
             treatmentLocationId: req.body.place,
           });
-          await treatmentLocation.increment({current: 1}, { where: { id: parseInt(req.body.place)} });
-          await treatmentLocation.increment({current: -1}, { where: { id: locationId} });
+          await treatmentLocation.increment(
+            { current: 1 },
+            { where: { id: parseInt(req.body.place) } }
+          );
+          await treatmentLocation.increment(
+            { current: -1 },
+            { where: { id: locationId } }
+          );
         } catch (error) {
           console.log(error);
         }
-
-      }  
+      }
       // });
     })
     .then(async () => {
       const users = await covidUser.findAll({
-        include: [{
-          // limit: 1,
-          model: HistoryStatus,
-          include: [{
-            model: StatusCovid,
-            attributes: ['status'],
-          }],
-        },{
-          model: HistoryLocation,
-          include: [{
-            model: treatmentLocation,
-            attributes: ['name'],
-          }],
-        }],
+        include: [
+          {
+            // limit: 1,
+            model: HistoryStatus,
+            include: [
+              {
+                model: StatusCovid,
+                attributes: ["status"],
+              },
+            ],
+          },
+          {
+            model: HistoryLocation,
+            include: [
+              {
+                model: treatmentLocation,
+                attributes: ["name"],
+              },
+            ],
+          },
+        ],
         order: [
-          [ HistoryStatus, 'id', 'ASC' ],
-          [ HistoryLocation, 'id', 'ASC' ],
+          [HistoryStatus, "id", "ASC"],
+          [HistoryLocation, "id", "ASC"],
         ],
         nest: true,
       });
-      const obj= JSON.parse(JSON.stringify(users))
+      const obj = JSON.parse(JSON.stringify(users));
       res.render("moderator/main", {
         layout: "moderator/main",
         function: "list",

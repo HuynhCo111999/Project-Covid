@@ -33,12 +33,7 @@
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header"
                                     onclick="sortTable(2)">
                                     Năm sinh &#9650</th>
-<<<<<<< HEAD
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25 table-header"
-                                    onclick="sortTable(3)">
-=======
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" style="width: 35%" onclick="sortTable(3)">
->>>>>>> origin/1.2.1
                                     Địa chỉ &#9650</th>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header"
                                     onclick="sortTable(4)">
@@ -95,7 +90,7 @@
                                                     <p style="font-weight: 400; color: black"><strong>CMND/CCCD:</strong> {{this.identity_card}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Năm sinh:</strong> {{this.yob}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Địa chỉ: </strong>{{this.ward}} - {{this.district}} - {{this.province}}</p>
-                                                    <p style="font-weight: 400; color: black"><strong>Trạng thái hiệntại: </strong> 
+                                                    <p style="font-weight: 400; color: black"><strong>Trạng thái hiện tại: </strong> 
                                                         {{#each this.histoty_user_statuses}}
                                                         {{#if @last}}{{this.statusCovidUser.status}}{{/if}}
                                                         {{/each}}</p>
@@ -127,9 +122,6 @@
                                                 </div>
                                                 <div class="modal-footer d-flex justify-content-between">
                                                     <div>
-                                                        <a href="/moderator/delete-user/{{this.id}}" stype="button"
-                                                            class="btn btn-danger px-3 py-2 me-1"><i
-                                                                class="fas fa-trash-alt"></i> Xóa</a>
                                                         <a href="/moderator/edit-user/{{this.id}}" type="button"
                                                             class="btn btn-secondary px-3 py-2"><i
                                                                 class="far fa-edit"></i> Sửa</a>

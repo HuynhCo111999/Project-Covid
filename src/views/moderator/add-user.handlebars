@@ -27,43 +27,13 @@
                 <div class="col-2">
                     <div class="input-group input-group-outline mt-3 {{#if yob}}focused is-focused{{/if}}">
                         <label class="form-label">Năm sinh</label>
-                        <input type="number" class="form-control" name="yob" min="1900" max="2022" value={{#if
-                            yob}}{{yob}}{{/if}}>
+                        <input type="number" class="form-control" name="yob" min="1900" max="2022" value={{#if yob}}{{yob}}{{/if}}>
                     </div>
                     {{#each errorMessage}}
                     {{#ifStr this.param "yob"}}<div class=" err-msg">{{this.msg}}</div>{{/ifStr}}
                     {{/each}}
                 </div>
             </div>
-<<<<<<< HEAD
-            <div class="row">
-
-            </div>
-            <div class="row mb-3">
-                <div class="col">
-                    <div class="input-group input-group-outline mt-3 {{#if province}}focused is-focused{{/if}}">
-                        <label class="form-label">Tỉnh/Thành phố</label>
-                        <input type="text" class="form-control" name="province"
-                            value="{{#if province}}{{province}}{{/if}}">
-                    </div>
-                    {{#each errorMessage}}
-                    {{#ifStr this.param "province"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-                    {{/each}}
-                </div>
-                <div class="col">
-                    <div class="input-group input-group-outline mt-3 {{#if district}}focused is-focused{{/if}}">
-                        <label class="form-label">Quận/Huyện</label>
-                        <input type="text" class="form-control" name="district"
-                            value="{{#if district}}{{district}}{{/if}}">
-                    </div>
-                    {{#each errorMessage}}
-                    {{#ifStr this.param "district"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-                    {{/each}}
-=======
-        </div>
-        <div class="row">
-            
-        </div>
         <div class="row mb-3">
             <div class="col">
                 <div class="input-group input-group-outline mt-3">
@@ -102,39 +72,31 @@
                         <option value="" disabled selected>Phường/Xã</option>
                         {{/if}}
                     </select>
->>>>>>> origin/1.2.1
                 </div>
-                <div class="col">
-                    <div class="input-group input-group-outline mt-3 {{#if ward}}focused is-focused{{/if}}">
-                        <label class="form-label">Phường/Xã</label>
-                        <input type="text" class="form-control" name="ward" value="{{#if ward}}{{ward}}{{/if}}">
-                    </div>
-                    {{#each errorMessage}}
-                    {{#ifStr this.param "ward"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
-                    {{/each}}
-                </div>
+                {{#each errorMessage}}
+                {{#ifStr this.param "ward"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                {{/each}}
             </div>
             <div class="row">
-                <div class="col-2">
+                <div class="col-3">
                     <div class="input-group input-group-outline mt-3 col">
-                        <select class="form-control status-select" name="status" onclick="highlightStatus()">
-                            
-                            <option {{#if status}}{{else}}selected{{/if}} disabled>Trạng thái bệnh nhân</option>
+                        <select class="form-control status-select" name="status" onclick="highlightStatus()">                      
+                            <option {{#if status}}{{else}}selected{{/if}} value="" disabled>Trạng thái bệnh nhân</option>
                             {{#each statusCovid}}
-                            <option {{#ifStr status "{{this.status}}" }}selected{{/ifStr}} value="{{this.id}}">{{this.status}}</option>
+                            <option {{#ifStr status "{{this.id}}"}}selected{{/ifStr}} value="{{this.id}}">{{this.status}}</option>
                             {{/each}}
                         </select>
                     </div>
+                    {{#each errorMessage}}
+                    {{#ifStr this.param "status"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
+                    {{/each}}
                 </div>
                 <div class="col">
                     <div class="input-group input-group-outline mt-3">
                         <select class="form-control person-select" name="related_person" onchange="highlightPerson()">
                             <option {{#if related_person}}{{else}}selected{{/if}} disabled>Người liên quan</option>
                             {{#each related_persons}}
-                            <option {{#ifStr
-                                related_person "{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"
-                                }}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.yob}},
-                                {{this.ward}}-{{this.district}}-{{this.province}}</option>
+                            <option {{#ifStr related_person "{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -146,9 +108,7 @@
                     {{#each location}}
                     <option {{#ifStr place "{{this.name}}" }}selected{{/ifStr}} value="{{this.id}}">{{this.name}} ({{this.current}}/{{this.capacity}})</option>
                     {{/each}}
-
                 </select>
-
                 {{#each errorMessage}}
                 {{#ifStr this.param "place"}}<div class="err-msg">{{this.msg}}</div>{{/ifStr}}
                 {{/each}}
