@@ -1,6 +1,8 @@
 const covidNecessityCombo = require("../models/index").covidNecessityCombo;
 const covidNecessity = require("../models/index").covidNecessity;
 const covidNecessityOfCombo = require("../models/index").covidNecessityOfCombo;
+const fs = require("fs");
+const path = require("path");
 const MIN_COMBO_LENGTH = 2;
 
 exports.get = async (req, res) => {
@@ -251,10 +253,13 @@ exports.removeDetails = async (req, res) => {
                     where: {
                       id: id_combo,
                     },
-                  });
+                  }).then(
+                      () => {
+                        res.redirect("../necessities-combo");
+                      }
+                  );
                 }
               );
-            res.redirect("../necessities-combo");
         }
         else
         {

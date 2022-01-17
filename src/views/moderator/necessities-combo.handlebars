@@ -108,7 +108,7 @@
                         </div>
 
                         <div class="input-group input-group-outline my-3">
-                            <select class="form-control" name="necesstity_to_add_1">
+                            <select class="form-control" name="necesstity_to_add_1" id="necesstity_to_add_1">
                                     <option id="opt_1" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm 1 cần thêm</option>
                                 {{#each necessities}}
                                     <option>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
@@ -122,7 +122,7 @@
                         </div>
 
                         <div class="input-group input-group-outline my-3">
-                            <select class="form-control" name="necesstity_to_add_2">
+                            <select class="form-control" name="necesstity_to_add_2" id="necesstity_to_add_2">
                                     <option id="opt_2" {{#if necessities}}{{else}}selected{{/if}} disabled>Nhu yếu phẩm 2 cần thêm</option>
                                 {{#each necessities}}
                                     <option>{{this.id}}. {{this.name}}, {{this.price}} ₫/{{this.unit_of_measurement}}</option>
@@ -200,6 +200,11 @@
 
         if (document.getElementById('opt_2').selected){
              $('#add-noti-msg').html("Vui lòng chọn sản phẩm 2 để thêm vào gói.")
+            return false;
+        }
+
+        if ($('#necesstity_to_add_1').val() === $('#necesstity_to_add_2').val()){
+             $('#add-noti-msg').html("Vui lòng chọn 2 sản phẩm khác nhau.")
             return false;
         }
 

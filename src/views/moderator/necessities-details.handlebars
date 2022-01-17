@@ -244,44 +244,6 @@
         return true;
     }
 
-    const validateUpdateInfo = () => {
-        const name_input = $('#updateInfo-name-input');
-        const sales_limit_input = $('#updateInfo-sales-limit-input');
-        const sales_cycle_input = $('#updateInfo-sales-cycle-input');
-        name_input.parent().removeClass("is-invalid");
-        sales_limit_input.parent().removeClass("is-invalid");
-        if(name_input.val() === "") {
-            $('#updateInfo-noti-msg').html("Vui lòng nhập tên gói.")
-            name_input.parent().addClass("is-invalid");
-            return false;
-        }
-        if(sales_limit_input.val() === "") {
-            $('#updateInfo-noti-msg').html("Vui lòng nhập số lượng mua giới hạn của gói.")
-            price_input.parent().addClass("is-invalid");
-            return false;
-        }
-        if (document.getElementById('day').checked) {
-            sales_cycle_input.val("day");
-        }
-        else {
-            if (document.getElementById('week').checked) {
-                sales_cycle_input.val("week");
-            }
-            else
-            {
-                if (document.getElementById('month').checked) {
-                    sales_cycle_input.val("month");
-                }
-                else
-                {
-                    $('#updateInfo-noti-msg').html("Vui lòng chọn thời gian giới hạn mua.")
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     const validateEdit = () => {
         const name_input = $('#edit-name-input');
         const price_input = $('#edit-price-input');
