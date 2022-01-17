@@ -1,7 +1,93 @@
-<div class="d-flex justify-content-end mb-3">
-  <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#modalAdd">
-    Thêm nhu yếu phẩm
-  </button>
+<!-- Filter bars -->
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h5 class="text-white text-capitalize ps-3 text-center">Danh sách các nhu yếu phẩm</h5>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <!-- Search bar -->
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-start mb-2">
+                    <div class="input-group input-group-outline w-40 mt-1" style="margin-left: 4rem">
+                        <label class="form-label">Tìm kiếm</label>
+                        <input type="text" class="form-control border-primary" id="searchInput">
+                    </div>
+                    <div style="position: absolute; right: 36.5rem">
+                        <div class="dropdown">
+                            <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="filterDropdownMenuLink">
+                                Lọc
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="filterDropdownMenuLink">
+                                <div class="dropdown-item d-flex justify-content-center">
+                                    <div class="row m-1">
+                                        <p>
+                                            <label for="amount">Giá sản phẩm:</label>
+                                            <input type="text" id="amount" readonly style="border:0; color:#107ee6; font-weight:bold;">
+                                        </p>
+                                    <div id="slider-range"></div>
+                                </div>  
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="position: absolute; right: 13.5rem">
+                      <button type="button" class="btn bg-gradient-primary btn-block m-0" onclick="sortProductByName()" id="arrange_name_btn">Sắp xếp theo tên &#9660</button>
+                      <button type="button" class="btn bg-gradient-primary btn-block m-0 ms-2" onclick="sortProductByPrice()" id="arrange_price_btn">Sắp xếp theo giá &#9660</button>
+                    </div>
+                    <!-- Add necessities button -->
+                    <div style="position: absolute; right: 2rem">
+                      <button type="button" class="btn bg-gradient-success btn-block m-0" data-bs-toggle="modal" data-bs-target="#modalAdd">
+                        Thêm nhu yếu phẩm
+                      </button>
+                    </div>
+                </div>
+
+                {{!-- Alert Message --}}
+                {{#if alertOn}}
+                <div class="alert alert-{{alertColor}} alert-dismissible fade show" role="alert">
+                    <span class="alert-icon align-middle">
+                        <span class="material-icons text-md text-white">
+                        thumb_up_off_alt
+                        </span>
+                    </span>
+                    <span class="alert-text text-white"><strong>Thông báo!</strong>{{alertMessage}}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{/if}}
+                
+                <!-- List of necessities -->
+                <div class="row justify-content-start mx-3">
+                    <table id="userTable">
+                        <tbody id="tableBody">
+                            {{#each necessities}}
+                            <tr style="display: inline">
+                                <td>
+                                    <div class="col-md-auto m-3">
+                                        <div class="card" style="width: 18rem;">                                            
+                                            <img src="{{image_path}}" class="card-img-top" alt="Hình ảnh sản phẩm {{id}}">
+                                            <div class="card-body" class="cardContent">
+                                                <h4 class="card-title">{{name}}</h4>
+                                                <p class="card-text font-weight-bold">{{price}} ₫/{{unit_of_measurement}}</p>
+                                            </div>
+                                            <div class="card-body d-flex justify-content-center">
+                                                <a class="btn btn-primary my-1" type="button" href="/moderator/necessity-details/{{id}}"
+                                                   data-id="{{id}}">Xem chi tiết</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>    
+            </div>
+        </div>  
+    </div>
 </div>
 
 <!-- Modal add -->
@@ -16,21 +102,40 @@
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
-                    <form role="form tex-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="return ">
+                    <form role="form text-left" id="add-form" action="/moderator/add-necessity" method="post" onsubmit="return validateAdd()"
+                          enctype="multipart/form-data">
+                        <main class="main_full">
+                            <div class="container">
+                                <div class="panel">
+                                    <div class="button_outer" id="button_outer_0">
+                                        <div class="btn_upload">
+                                            <input type="file" id="upload_file_0" name="upload">
+                                            Thêm ảnh
+                                        </div>
+                                        <div class="processing_bar"></div>
+                                        <div class="success_box"></div>
+                                    </div>
+                                </div>
+                                <div class="error_msg" id="error_msg_0"></div>
+                                <div class="uploaded_file_view" id="uploaded_view_0">
+                                    <span class="file_remove" id="file_remove_0">X</span>
+                                </div>
+						    </div>
+                        </main>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" name="name" id="add-name-input">
                         </div>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Giá sản phẩm</label>
-                            <input type="number" class="form-control" name="price" id="add-price-input">
+                            <input type="number" class="form-control" name="price" id="add-price-input" min="0">
                         </div>
                         <div class="input-group input-group-outline my-3">
                             <label class="form-label">Đơn vị định lượng</label>
-                            <input type="text" class="form-control" name="unit-of-measurement" id="add-unit-input">
+                            <input type="text" class="form-control" name="unit" id="add-unit-input">
                         </div>
                     </form>
-                    <p class="text-danger" id="error-msg"></p>
+                    <p class="text-danger" id="add-noti-msg"></p>
                 </div> 
             </div>
             <div class="modal-footer">
@@ -40,110 +145,231 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card my-4">
-            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Danh sách các nhu yếu phẩm</h6>
-                </div>
+<!-- Modal edit -->
+{{!-- <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Chỉnh sửa thông tin nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
             </div>
-            <div class="card-body px-0 pb-2">
-                <div class="row justify-content-start mx-3">
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link text-success">Chỉnh sửa</a>
-                                <a href="#" class="card-link text-danger">Xóa</a>
-                            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="edit-form" method="post" onsubmit="return validateEdit()"
+                          enctype="multipart/form-data">
+                        <main class="main_full">
+                            <div class="container">
+                                <div class="panel">
+                                    <div class="button_outer" id="edit_button_outer_0">
+                                        <div class="btn_upload">
+                                            <input type="file" id="edit_upload_file_0" name="edit_upload">
+                                            Thêm ảnh 
+                                        </div>
+                                        <div class="processing_bar"></div>
+                                        <div class="success_box"></div>
+                                    </div>
+                                </div>
+                                <div class="error_msg" id="edit_error_msg_0"></div>
+                                <div class="uploaded_file_view" id="edit_uploaded_view_0">
+                                    <span class="file_remove" id="edit_file_remove_0">X</span>
+                                    <img id="edit_image">
+                                </div>
+						    </div>
+                        </main>
+                        <div class="input-group input-group-static my-3">
+                            <label>Tên sản phẩm</label>
+                            <input type="text" class="form-control" name="name" id="edit-name-input">
                         </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Giá sản phẩm</label>
+                            <input type="number" class="form-control" name="price" id="edit-price-input" min="0">
                         </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Đơn vị định lượng</label>
+                            <input type="text" class="form-control" name="unit" id="edit-unit-input">
                         </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-auto m-3">
-                        <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="Hình ảnh sản phẩm">
-                            <div class="card-body">
-                                <h5 class="card-title">Tên sản phẩm</h5>
-                                <p class="card-text">Giá tiền/ Đơn vị định lượng</p>
-                            </div>
-                            <div class="card-body">
-                                <a href="#" class="card-link">Chỉnh sửa</a>
-                                <a href="#" class="card-link">Xóa</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>    
+                    </form>
+                    <p class="text-danger" id="edit-noti-msg"></p>
+                </div> 
             </div>
-        </div>  
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="edit-form">Cập nhật</button>
+            </div>
+        </div>
     </div>
-</div>
+</div> --}}
 
+<!-- Model delete -->
+{{!-- <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Xóa nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="delete-form" method="post">
+                        <div class="input-group input-group-static my-3 row">
+                            <p class="text-dark text-lg">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này?</p>
+                            <p class="text-dark">Xóa nhu yếu phẩm này sẽ khiến các gói nhu yếu phẩm còn <strong style="color: green">ít hơn hai</strong> sản phẩm bị <strong style="color: red">XÓA</strong>!</p>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="delete-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div> --}}
+
+<!-- Scripts -->
+<script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="/js/upload-file-script.js"></script>
+<script type="text/javascript">
+    const validateAdd = () => {
+        const name_input = $('#add-name-input');
+        const price_input = $('#add-price-input');
+        const unit_input = $('#add-unit-input');
+        const image_input = $('#upload_file_0');
+        name_input.parent().removeClass("is-invalid");
+        price_input.parent().removeClass("is-invalid");
+        unit_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập tên sản phẩm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(price_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập giá sản phẩm.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(unit_input.val() === "") {
+            $('#add-noti-msg').html("Vui lòng nhập đơn vị định lượng.")
+            unit_input.parent().addClass("is-invalid");
+            return false;
+        }
+        const image_uploaded = $("#uploaded_view_0").find("img");
+        if (image_uploaded.length == 0)
+        {
+            $('#error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+            return false;
+        }
+        var ext = image_input.val().split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+			$('#error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+            return false;
+		}
+        return true;
+    }
+
+    const validateEdit = () => {
+        const name_input = $('#edit-name-input');
+        const price_input = $('#edit-price-input');
+        const unit_input = $('#edit-unit-input');
+        const image_input = $('#edit_upload_file_0');
+        name_input.parent().removeClass("is-invalid");
+        price_input.parent().removeClass("is-invalid");
+        unit_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập tên sản phẩm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(price_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập giá sản phẩm.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(unit_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập đơn vị định lượng.")
+            unit_input.parent().addClass("is-invalid");
+            return false;
+        }
+        
+        var ext = image_input.val().split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1)
+        {
+            const image_uploaded = $("#edit_image");
+            if (image_uploaded.length == 0)
+            {
+                $('#edit_error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+                console.log("false");
+                return false;
+            }
+        } 
+        return true;
+    }
+
+    /*
+    $().ready(() =>
+    {
+        var modalEdit = $('#modalEdit');
+        modalEdit.on('shown.bs.modal',function(e)
+        {
+            $('#edit-name-input').val($(e.relatedTarget).attr("data-name"));
+            $('#edit-price-input').val($(e.relatedTarget).attr("data-price"));
+            $('#edit-unit-input').val($(e.relatedTarget).attr("data-unit"));
+            $('#edit-form').attr("action",`/moderator/update-necessity/${$(e.relatedTarget).attr("data-id")}`);
+
+            var btnOuter = $(`#edit_button_outer_0`);
+            var btnUpload = $(`#editupload_file_0`);
+            btnOuter.addClass("file_uploading");
+            btnOuter.addClass("file_uploaded");
+            btnUpload.removeClass("show");
+            $(`#edit_uploaded_view_0`).append(`<img src="${$(e.relatedTarget).attr("data-path")}" />`).addClass("show");
+        })
+
+
+        modalEdit.on('hidden.bs.modal',function(e)
+        {
+            $(`#edit_uploaded_view_0`).find("img").remove();
+            $('#edit_error_msg_0').text("");
+        })
+        
+    
+        var modalDelete = $('#modalDelete');
+        modalDelete.on('shown.bs.modal',function(e)
+        {
+            $('#delete-form').attr("action",`/moderator/delete-necessity/${$(e.relatedTarget).attr("data-id")}`);
+        })
+    })
+    */
+    
+    $( function() {
+    $("#slider-range").slider({
+        range: true,
+        min: 0,
+        max: 2000000,
+        values: [ 0, 1000000 ],
+        slide: function(event, ui) {
+            $("#amount").val("₫ " + ui.values[0] + " - ₫ " + ui.values[1]);
+            const table = document.getElementById("userTable");
+            var rows = table.rows;
+            for (i = 0; i < rows.length; i++)
+            {
+                var rowsItem = rows[i].getElementsByTagName("p");
+                var rowsVal = parseInt(rowsItem[0].innerHTML.toLowerCase().split(" ")[0]);
+                if (rowsVal >= ui.values[0]
+                    && rowsVal <= ui.values[1]
+                   )
+                   {
+                        rows[i].style.display = "inline";
+                   }
+                else
+                {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    });
+    $("#amount").val("₫ " + $("#slider-range").slider("values", 0) +
+      " - ₫ " + $("#slider-range").slider("values", 1) );
+  } );
+</script>

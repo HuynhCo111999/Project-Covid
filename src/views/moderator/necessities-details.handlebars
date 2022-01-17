@@ -1,0 +1,429 @@
+<!-- Details Card -->
+<article class="postcard light">
+    <div class="postcard__text">
+        <h1 class="postcard__title"><a href="#">{{productName}}</a></h1>
+        <div class="postcard__subtitle small">
+            <span class="text-dark text-md">
+                <i class="fas fa-tag mr-2"></i> {{productUnit}}
+            </span>
+        </div>
+        <div class="postcard__bar bg-gradient-primary"></div>
+        <div class="postcard__preview-txt text-dark">{{productPrice}} ₫</div>
+    </div>
+</article>
+
+<!-- Controller bars -->
+<div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-start mb-2">
+    {{!-- Back button --}}
+    <div class="input-group input-group-outline w-30 mt-1">
+        <a type="button" class="btn bg-gradient-primary btn-block" href="/moderator/necessities">
+            Quay lại
+        </a>
+    </div>
+    <div style="position: absolute; right: 17rem">
+        <button type="button" class="btn bg-gradient-success btn-block m-0" onclick="" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                data-name="{{productName}}"
+                data-price="{{productPrice}}"
+                data-unit="{{productUnit}}"
+                data-id="{{productId}}"
+                data-path="{{productPath}}"
+                >Chỉnh sửa thông tin sản phẩm</button>
+        <button type="button" class="btn bg-gradient-danger btn-block m-0 ms-2" onclick="" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                data-id="{{comboId}}"
+                >Xóa sản phẩm</button>
+    </div>
+    <!-- Add images to necessities -->
+    <div style="position: absolute; right: 2rem">
+        <button type="button" class="btn bg-gradient-primary btn-block m-0" data-bs-toggle="modal" data-bs-target="#modalAdd">
+        Thêm hình ảnh sản phẩm
+        </button>
+    </div>
+</div>
+
+<!-- Modal add -->
+<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Thêm ảnh sản phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="add-form" action="/moderator/add-image-to-necessity/{{productId}}" method="post" onsubmit="return validateAdd()"
+                          enctype="multipart/form-data">
+                        <main class="main_full">
+                            <div class="container">
+                                <div class="panel">
+                                    <div class="button_outer" id="button_outer_0">
+                                        <div class="btn_upload">
+                                            <input type="file" id="upload_file_0" name="upload">
+                                            Thêm ảnh
+                                        </div>
+                                        <div class="processing_bar"></div>
+                                        <div class="success_box"></div>
+                                    </div>
+                                </div>
+                                <div class="error_msg" id="error_msg_0"></div>
+                                <div class="uploaded_file_view" id="uploaded_view_0">
+                                    <span class="file_remove" id="file_remove_0">X</span>
+                                </div>
+						    </div>
+                        </main>
+                    </form>
+                    <p class="text-danger" id="add-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="add-form">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model remove -->
+<div class="modal fade" id="modalRemove" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Xóa hình ảnh sản phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="remove-form" method="post">
+                        <div class="input-group input-group-static my-3 row">
+                            <p class="text-dark text-lg">Bạn xác nhận <strong style="color: red">XÓA</strong> ảnh nhu yếu phẩm này?</p>
+                            <p class="text-dark">Ảnh bị xóa sẽ không thể <strong style="color: green">KHÔI PHỤC</strong>!</p>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="remove-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal edit necessity -->
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Chỉnh sửa thông tin nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="edit-form" action="/moderator/update-necessity/{{productId}}" method="post" onsubmit="return validateEdit()"
+                          enctype="multipart/form-data">
+                        <main class="main_full">
+                            <div class="container">
+                                <div class="panel">
+                                    <div class="button_outer" id="edit_button_outer_0">
+                                        <div class="btn_upload">
+                                            <input type="file" id="edit_upload_file_0" name="edit_upload">
+                                            Thêm ảnh 
+                                        </div>
+                                        <div class="processing_bar"></div>
+                                        <div class="success_box"></div>
+                                    </div>
+                                </div>
+                                <div class="error_msg" id="edit_error_msg_0"></div>
+                                <div class="uploaded_file_view" id="edit_uploaded_view_0">
+                                    <span class="file_remove" id="edit_file_remove_0">X</span>
+                                    <img id="edit_image">
+                                </div>
+						    </div>
+                        </main>
+                        <div class="input-group input-group-static my-3">
+                            <label>Tên sản phẩm</label>
+                            <input type="text" class="form-control" name="name" id="edit-name-input">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Giá sản phẩm</label>
+                            <input type="number" class="form-control" name="price" id="edit-price-input" min="0">
+                        </div>
+                        <div class="input-group input-group-static my-3">
+                            <label>Đơn vị định lượng</label>
+                            <input type="text" class="form-control" name="unit" id="edit-unit-input">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="edit-noti-msg"></p>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="edit-form">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model delete necessity -->
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title font-weight-normal">Xóa nhu yếu phẩm</h6>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label="Close">
+                    <span aria-hidden="true" class="text-primary">X</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="delete-form" action="/moderator/delete-necessity/{{productId}}" method="post">
+                        <div class="input-group input-group-static my-3 row">
+                            <p class="text-dark text-lg">Bạn xác nhận <strong style="color: red">XÓA</strong> nhu yếu phẩm này?</p>
+                            <p class="text-dark">Xóa nhu yếu phẩm này sẽ khiến các gói nhu yếu phẩm còn <strong style="color: green">ít hơn hai</strong> sản phẩm bị <strong style="color: red">XÓA</strong>!</p>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn bg-gradient-primary" form="delete-form">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- List of images -->
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Danh sách hình ảnh sản phẩm</h6>
+                </div>
+            </div>
+            <div class="row justify-content-start mx-3">
+                <table id="userTable">
+                    <tbody id="tableBody">
+                        {{#each images}}
+                                <tr style="display: inline">
+                                     <td>
+                                         <div class="col-md-auto m-3">
+                                                <div class="card" style="width: 18rem;">
+                                                    <img src="{{image_path}}" class="img-thumbnail m-2">
+                                                    <div class="card-body">
+                                                        <button type="button" class="btn btn-lg bg-transparent border border-white text-danger"
+                                                            data-bs-toggle="modal" data-bs-target="#modalRemove"
+                                                            data-id="{{id}}">
+                                                            Xóa ảnh
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                         </div>
+                                     </td>
+                                </tr>                 
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>  
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="/js/upload-file-script.js"></script>
+<script type="text/javascript">
+    const validateAdd = () => {
+        const image_input = $('#upload_file_0');
+        var ext = image_input.val().split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+			$('#error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+            return false;
+		}
+
+        return true;
+    }
+
+    const validateUpdateInfo = () => {
+        const name_input = $('#updateInfo-name-input');
+        const sales_limit_input = $('#updateInfo-sales-limit-input');
+        const sales_cycle_input = $('#updateInfo-sales-cycle-input');
+        name_input.parent().removeClass("is-invalid");
+        sales_limit_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#updateInfo-noti-msg').html("Vui lòng nhập tên gói.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(sales_limit_input.val() === "") {
+            $('#updateInfo-noti-msg').html("Vui lòng nhập số lượng mua giới hạn của gói.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if (document.getElementById('day').checked) {
+            sales_cycle_input.val("day");
+        }
+        else {
+            if (document.getElementById('week').checked) {
+                sales_cycle_input.val("week");
+            }
+            else
+            {
+                if (document.getElementById('month').checked) {
+                    sales_cycle_input.val("month");
+                }
+                else
+                {
+                    $('#updateInfo-noti-msg').html("Vui lòng chọn thời gian giới hạn mua.")
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    const validateEdit = () => {
+        const name_input = $('#edit-name-input');
+        const price_input = $('#edit-price-input');
+        const unit_input = $('#edit-unit-input');
+        const image_input = $('#edit_upload_file_0');
+        name_input.parent().removeClass("is-invalid");
+        price_input.parent().removeClass("is-invalid");
+        unit_input.parent().removeClass("is-invalid");
+        if(name_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập tên sản phẩm.")
+            name_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(price_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập giá sản phẩm.")
+            price_input.parent().addClass("is-invalid");
+            return false;
+        }
+        if(unit_input.val() === "") {
+            $('#edit-noti-msg').html("Vui lòng nhập đơn vị định lượng.")
+            unit_input.parent().addClass("is-invalid");
+            return false;
+        }
+        
+        var ext = image_input.val().split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1)
+        {
+            const image_uploaded = $("#edit_image");
+            if (image_uploaded.length == 0)
+            {
+                //return false;
+                const imgElement = $(`#edit_uploaded_view_0`).find("img");
+
+                if (imgElement.length == 0)
+                {
+                    $('#edit_error_msg_0').text("Vui lòng chọn ảnh sản phẩm.");
+                    return false;
+                }
+            }
+        } 
+        return true;
+    }
+
+    const validateUpdate = () => {
+        const min_limit_input = $("#update-min-input");
+        const max_limit_input = $("#update-max-input");
+        min_limit_input.parent().removeClass("is-invalid");
+        max_limit_input.parent().removeClass("is-invalid");
+
+        if (document.getElementById('update_opt').selected){
+             $('#update-noti-msg').html("Vui lòng chọn sản phẩm để thêm vào gói.")
+            return false;
+        }
+
+        if(min_limit_input.val() === "") {
+            $('#update-noti-msg').html("Vui lòng nhập số lượng mua tối thiểu của sản phẩm.")
+            min_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        if(max_limit_input.val() === "") {
+            $('#update-noti-msg').html("Vui lòng nhập số lượng mua tối đa của sản phẩm.")
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        const min = parseInt(min_limit_input.val());
+        const max = parseInt(max_limit_input.val());
+        if(min > max)
+        {
+            $('#update-noti-msg').html("Số lượng mua tối thiểu không được vượt quá tối đa.")
+            min_limit_input.parent().addClass("is-invalid");
+            max_limit_input.parent().addClass("is-invalid");
+            return false;
+        }
+
+        return true;
+    }
+
+    $().ready(() =>
+    {
+        var modalAdd = $('#modalAdd');
+        modalAdd.on('hidden.bs.modal',function(e)
+        {
+            $(`#uploaded_view_0`).find("img").remove();
+            $('#upload_file_0').val("");
+            $('#error_msg_0').text("");
+        })
+
+        var modalEdit = $('#modalEdit');
+        modalEdit.on('shown.bs.modal',function(e)
+        {
+            $('#edit-name-input').val($(e.relatedTarget).attr("data-name"));
+            $('#edit-price-input').val($(e.relatedTarget).attr("data-price"));
+            $('#edit-unit-input').val($(e.relatedTarget).attr("data-unit"));
+
+            var btnOuter = $(`#edit_button_outer_0`);
+            var btnUpload = $(`#editupload_file_0`);
+            btnOuter.addClass("file_uploading");
+            btnOuter.addClass("file_uploaded");
+            btnUpload.removeClass("show");
+            $(`#edit_uploaded_view_0`).append(`<img src="${$(e.relatedTarget).attr("data-path")}" />`).addClass("show");
+        })
+
+        modalEdit.on('hidden.bs.modal',function(e)
+        {
+            $(`#edit_uploaded_view_0`).find("img").remove();
+            $('#edit_upload_file_0').val("");
+            $('#edit_error_msg_0').text("");
+        })
+
+        var modalRemove = $('#modalRemove');
+        modalRemove.on('shown.bs.modal', function(e)
+        {
+            $('#remove-form').attr("action",`/moderator/remove-image-from-necessity/${$(e.relatedTarget).attr("data-id")}`);
+        })
+
+        var modalUpdateInfo = $('#modalUpdateInfo');
+        modalUpdateInfo.on('shown.bs.modal',function(e)
+        {
+            $('#updateInfo-name-input').val($(e.relatedTarget).attr("data-name"));
+            $('#updateInfo-sales-limit-input').val($(e.relatedTarget).attr("data-limit"));
+            const cycleVal = $(e.relatedTarget).attr("data-cycle");
+            const sales_cycle_input = $('#updateInfo-sales-cycle-input');
+            if(cycleVal == "false")
+            {
+                $('#week').attr('checked', true);
+                sales_cycle_input.val("week");
+            }
+            else
+            {
+                if(cycleVal == "true")
+                {
+                    $('#month').attr('checked', true);
+                    sales_cycle_input.val("month");
+                }
+                else
+                {
+                    $('#day').attr('checked', true);
+                    sales_cycle_input.val("day");
+                }
+            }
+        });
+    })
+</script>
