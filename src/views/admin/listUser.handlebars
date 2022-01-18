@@ -131,7 +131,7 @@
                             <tr>
                                 <td>
                                     <select class="lock" name="lock" onchange="onChangeLock({{id}})">
-                                        {{#if lock}}
+                                        {{#if isActive}}
                                             <option value=true>true</option>
                                             <option value=false>false</option>
                                             {{else}}

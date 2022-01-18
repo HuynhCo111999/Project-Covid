@@ -167,7 +167,7 @@ exports.signin = (req, res) => {
                 })
             }
             
-            if(!user.lock) {
+            if(!user.isActive) {
               return res.render('login', {
                 error: 'Account is locked!'
               })
