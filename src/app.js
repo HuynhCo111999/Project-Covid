@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const https = require("https");
+const fs = require("fs");
 require("dotenv").config();
 //set port local
 const port = process.env.PORT || 3000;
@@ -21,8 +23,8 @@ app.use(cookieParser());
 const db = require("./models");
 const init = require("./middleware/init-table");
 // db.sequelize.sync();
-db.sequelize.sync({ force: false, alter: true }).then(() => {
-  // init.initial();
+db.sequelize.sync({ force: true, alter: true }).then(() => {
+  init.initial();
 });
 app.use(
   session({
@@ -102,6 +104,14 @@ require("./routes/user.routes")(app);
 app.use("/moderator", require("./routes/moderator"));
 app.use("/user", require("./routes/user"));
 
-app.listen(port, () => {
+
+const sslServer = https.createServer({
+  key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'))
+  }, 
+  app
+)
+
+sslServer.listen(port, () => {
   console.log(`Server started on port: ${port}`);
 });
