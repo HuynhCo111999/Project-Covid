@@ -9,12 +9,14 @@
             </div>
             <div class="card-body px-0 pb-2">
                 <!-- Search bar -->
-                <div class="ms-md-auto pe-md-3 d-flex flex-row align-items-center justify-content-start mb-2">
-                    <div class="input-group input-group-outline w-40 mt-1" style="margin-left: 4rem">
-                        <label class="form-label">Tìm kiếm</label>
-                        <input type="text" class="form-control border-primary" id="searchInput">
+                <div class="ms-md-auto pe-md-3 row justify-content-md-center mb-2">
+                    <div class="p-2 col">
+                        <div class="input-group input-group-outline w-70" style="margin-left: 2rem;">
+                            <label class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control border-primary" id="searchInput">
+                        </div>
                     </div>
-                    <div class="p-2" style="margin-left: 10rem">
+                    <div class="p-2 col-md-auto">
                         <div class="dropdown">
                             <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="filterDropdownMenuLink">
                                 Lọc
@@ -32,12 +34,14 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="p-2">
-                      <button type="button" class="btn bg-gradient-primary btn-block m-0" onclick="sortProductByName()" id="arrange_name_btn">Sắp xếp theo tên &#9660</button>
-                      <button type="button" class="btn bg-gradient-primary btn-block m-0 ms-2" onclick="sortProductByPrice()" id="arrange_price_btn">Sắp xếp theo giá &#9660</button>
+                    <div class="p-2 col-md-auto">
+                        <button type="button" class="btn bg-gradient-primary btn-block m-0" onclick="sortProductByName()" id="arrange_name_btn">Sắp xếp theo tên &#9660</button>   
+                    </div>
+                    <div class="p-2 col-md-auto">
+                        <button type="button" class="btn bg-gradient-primary btn-block m-0 ms-2" onclick="sortProductByPrice()" id="arrange_price_btn">Sắp xếp theo giá &#9660</button>
                     </div>
                     <!-- Add necessities button -->
-                    <div class="p-2">
+                    <div class="p-2 col-md-auto" style="margin-right: 2rem;">
                       <button type="button" class="btn bg-gradient-success btn-block m-0" data-bs-toggle="modal" data-bs-target="#modalAdd">
                         Thêm nhu yếu phẩm
                       </button>
