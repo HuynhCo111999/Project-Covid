@@ -24,9 +24,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    related_person: {
-      type: Sequelize.STRING,
-    },
   });
 
   return User;

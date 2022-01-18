@@ -30,6 +30,16 @@ exports.getIndex = async (req, res) => {
           },
         ],
       },
+      {
+        model: covidUser,
+        as: 'upRelated',
+        attributes: ["id", "name", "yob"],
+      },
+      {
+        model: covidUser,
+        as: 'downRelated',
+        attributes: ["id", "name", "yob"],
+      },
     ],
     order: [
       [HistoryStatus, "id", "ASC"],
@@ -38,7 +48,7 @@ exports.getIndex = async (req, res) => {
     nest: true,
   });
   const obj = JSON.parse(JSON.stringify(users));
-
+  console.log(obj);
   for (let o of obj) {
     for (let h of o.histoty_user_statuses) {
       h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
@@ -128,7 +138,7 @@ exports.postAddUser = async (req, res) => {
       district: req.body.district,
       ward: req.body.ward,
       status: parseInt(req.body.status),
-      related_person: req.body.related_person,
+      related_person: parseInt(req.body.related_person),
       place: parseInt(req.body.place),
       function: "add-user",
     });
@@ -142,7 +152,7 @@ exports.postAddUser = async (req, res) => {
       province: req.body.province,
       district: req.body.district,
       ward: req.body.ward,
-      related_person: req.body.related_person,
+      related_personId: req.body.related_person,
     })
     .then(async (result) => {
       try {
@@ -282,7 +292,7 @@ exports.getEditUser = async (req, res) => {
     ward: user.ward,
     yob: user.yob,
     status: statusId,
-    related_person: user.related_person,
+    related_person: user.related_personId,
     place: locationId,
     function: "list",
   });
@@ -310,6 +320,11 @@ exports.editUser = async (req, res) => {
             attributes: ["name"],
           },
         ],
+      },
+      {
+        model: covidUser,
+        as: 'downRelated',
+        attributes: ["id", "name", "yob"],
       },
     ],
     order: [
@@ -382,7 +397,7 @@ exports.editUser = async (req, res) => {
       district: req.body.district,
       ward: req.body.ward,
       status: parseInt(req.body.status),
-      related_person: req.body.related_person,
+      related_person: parseInt(req.body.related_person),
       place: parseInt(req.body.place),
       function: "list",
     });
@@ -403,26 +418,19 @@ exports.editUser = async (req, res) => {
       return user.save();
     })
     .then(async () => {
-      // const related_people = await covidUser.findAll({
-      //   where: {
-      //     related_person: {
-      //       [Op.eq]: userId,
-      //     }
-      //   },
-      //   raw: true,
-      // });
-      // related_people.forEach(async (person) => {
-      //   await covidUser.updated({status: '3'},{
-      //     where: {
-      //       id: person.id,
-      //     },
-      //   });
+
       if (isChangeStatus) {
         try {
-          await HistoryStatus.create({
-            covidUserId: userId,
-            statusCovidUserId: req.body.status,
-          });
+          if(parseInt(req.body.status) === 1){
+            await HistoryStatus.create({
+              covidUserId: userId,
+              statusCovidUserId: req.body.status,
+            });
+          }
+          else{
+            var temp = parseInt(req.body.status) - user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId;
+            await changeStatusRelated(user.id, temp);
+          }     
         } catch (error) {
           console.log(error);
         }
@@ -469,6 +477,16 @@ exports.editUser = async (req, res) => {
               },
             ],
           },
+          {
+            model: covidUser,
+            as: 'upRelated',
+            attributes: ["id", "name", "yob"],
+          },
+          {
+            model: covidUser,
+            as: 'downRelated',
+            attributes: ["id", "name", "yob"],
+          },
         ],
         order: [
           [HistoryStatus, "id", "ASC"],
@@ -486,3 +504,58 @@ exports.editUser = async (req, res) => {
     })
     .catch((err) => console.log(err));
 };
+
+const changeStatusRelated = async (id, temp) => {
+  const rs = await covidUser.findByPk(id, {
+    include: [
+      {
+        // limit: 1,
+        model: HistoryStatus,
+        include: [
+          {
+            model: StatusCovid,
+            attributes: ["status"],
+          },
+        ],
+      },
+      {
+        model: HistoryLocation,
+        include: [
+          {
+            model: treatmentLocation,
+            attributes: ["name"],
+          },
+        ],
+      },
+      {
+        model: covidUser,
+        as: 'downRelated',
+        attributes: ["id", "name", "yob"],
+      },
+    ],
+    order: [
+      [HistoryStatus, "id", "ASC"],
+      [HistoryLocation, "id", "ASC"],
+    ],
+    nest: true,
+  });
+  const user = JSON.parse(JSON.stringify(rs));
+  if(user.downRelated){
+    console.log(user.downRelated.length);
+    user.downRelated.forEach(person => {
+      changeStatusRelated(person.id,temp);
+    });
+    var newStatus = user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId + temp;
+    await HistoryStatus.create({
+      covidUserId: user.id,
+      statusCovidUserId: newStatus,
+    });
+  }
+  else {
+    var newStatus = user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId + temp;
+    await HistoryStatus.create({
+      covidUserId: user.id,
+      statusCovidUserId: newStatus,
+    });
+  };
+}

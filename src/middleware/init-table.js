@@ -19,6 +19,9 @@ exports.initial = () => {
     name: "admin",
   });
   StatusCovid.create({
+    status: "Da khoi benh",
+  });
+  StatusCovid.create({
     status: "F0",
   });
   StatusCovid.create({
