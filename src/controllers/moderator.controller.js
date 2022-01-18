@@ -127,9 +127,9 @@ exports.postAddUser = async (req, res) => {
       province: req.body.province,
       district: req.body.district,
       ward: req.body.ward,
-      status: req.body.status,
+      status: parseInt(req.body.status),
       related_person: req.body.related_person,
-      place: req.body.place,
+      place: parseInt(req.body.place),
       function: "add-user",
     });
   }
@@ -381,9 +381,9 @@ exports.editUser = async (req, res) => {
       province: req.body.province,
       district: req.body.district,
       ward: req.body.ward,
-      status: req.body.status,
+      status: parseInt(req.body.status),
       related_person: req.body.related_person,
-      place: req.body.place,
+      place: parseInt(req.body.place),
       function: "list",
     });
   }

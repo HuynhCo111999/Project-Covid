@@ -83,7 +83,7 @@
                         <select class="form-control status-select" name="status" onclick="highlightStatus()">                      
                             <option {{#if status}}{{else}}selected{{/if}} value="" disabled>Trạng thái bệnh nhân</option>
                             {{#each statusCovid}}
-                            <option {{#ifStr status "{{this.id}}"}}selected{{/ifStr}} value="{{this.id}}">{{this.status}}</option>
+                                <option {{#ifStr ../status this.id }}selected{{/ifStr}} value="{{this.id}}">{{this.status}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -106,7 +106,7 @@
                 <select class="form-control place-select w-100" name="place" onchange="highlightPlace()">
                     <option {{#if place}}{{else}}selected{{/if}} disabled>Nơi điều trị/cách ly</option>
                     {{#each location}}
-                    <option {{#ifStr place "{{this.name}}" }}selected{{/ifStr}} value="{{this.id}}">{{this.name}} ({{this.current}}/{{this.capacity}})</option>
+                    <option {{#ifStr ../place this.id}}selected{{/ifStr}} value="{{this.id}}">{{this.name}} ({{this.current}}/{{this.capacity}})</option>
                     {{/each}}
                 </select>
                 {{#each errorMessage}}
