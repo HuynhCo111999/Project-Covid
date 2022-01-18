@@ -37,4 +37,6 @@ router.post('/history',
   authController.getHistory
 )
 
+router.post('/updateUser', authController.updateUser)
+
 module.exports = router;
