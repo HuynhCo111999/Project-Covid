@@ -5,6 +5,7 @@ const StatusCovid = require("../models/index").statusCovidUser;
 const HistoryStatus = require("../models/index").history_user_status;
 const HistoryLocation = require("../models/index").history_user_location;
 const Sequelize = require("sequelize");
+const bcrypt = require("bcryptjs");
 
 const { validationResult } = require("express-validator");
 const { Op } = require("sequelize");
@@ -32,12 +33,12 @@ exports.getIndex = async (req, res) => {
       },
       {
         model: covidUser,
-        as: 'upRelated',
+        as: "upRelated",
         attributes: ["id", "name", "yob"],
       },
       {
         model: covidUser,
-        as: 'downRelated',
+        as: "downRelated",
         attributes: ["id", "name", "yob"],
       },
     ],
@@ -185,8 +186,11 @@ exports.postAddUser = async (req, res) => {
     .then(() => {
       return User.create({
         username: req.body.card.toString(),
-        password: "12345678",
+        password: bcrypt.hashSync("12345678", 8),
       });
+    })
+    .then((user) => {
+      return user.setRoles([1]);
     })
     .then(async () => {
       const users = await covidUser.findAll({
@@ -323,7 +327,7 @@ exports.editUser = async (req, res) => {
       },
       {
         model: covidUser,
-        as: 'downRelated',
+        as: "downRelated",
         attributes: ["id", "name", "yob"],
       },
     ],
@@ -418,19 +422,20 @@ exports.editUser = async (req, res) => {
       return user.save();
     })
     .then(async () => {
-
       if (isChangeStatus) {
         try {
-          if(parseInt(req.body.status) === 1){
+          if (parseInt(req.body.status) === 1) {
             await HistoryStatus.create({
               covidUserId: userId,
               statusCovidUserId: req.body.status,
             });
-          }
-          else{
-            var temp = parseInt(req.body.status) - user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId;
+          } else {
+            var temp =
+              parseInt(req.body.status) -
+              user.histoty_user_statuses[user.histoty_user_statuses.length - 1]
+                .statusCovidUserId;
             await changeStatusRelated(user.id, temp);
-          }     
+          }
         } catch (error) {
           console.log(error);
         }
@@ -479,12 +484,12 @@ exports.editUser = async (req, res) => {
           },
           {
             model: covidUser,
-            as: 'upRelated',
+            as: "upRelated",
             attributes: ["id", "name", "yob"],
           },
           {
             model: covidUser,
-            as: 'downRelated',
+            as: "downRelated",
             attributes: ["id", "name", "yob"],
           },
         ],
@@ -529,7 +534,7 @@ const changeStatusRelated = async (id, temp) => {
       },
       {
         model: covidUser,
-        as: 'downRelated',
+        as: "downRelated",
         attributes: ["id", "name", "yob"],
       },
     ],
@@ -540,22 +545,25 @@ const changeStatusRelated = async (id, temp) => {
     nest: true,
   });
   const user = JSON.parse(JSON.stringify(rs));
-  if(user.downRelated){
+  if (user.downRelated) {
     console.log(user.downRelated.length);
-    user.downRelated.forEach(person => {
-      changeStatusRelated(person.id,temp);
+    user.downRelated.forEach((person) => {
+      changeStatusRelated(person.id, temp);
     });
-    var newStatus = user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId + temp;
+    var newStatus =
+      user.histoty_user_statuses[user.histoty_user_statuses.length - 1]
+        .statusCovidUserId + temp;
+    await HistoryStatus.create({
+      covidUserId: user.id,
+      statusCovidUserId: newStatus,
+    });
+  } else {
+    var newStatus =
+      user.histoty_user_statuses[user.histoty_user_statuses.length - 1]
+        .statusCovidUserId + temp;
     await HistoryStatus.create({
       covidUserId: user.id,
       statusCovidUserId: newStatus,
     });
   }
-  else {
-    var newStatus = user.histoty_user_statuses[user.histoty_user_statuses.length - 1].statusCovidUserId + temp;
-    await HistoryStatus.create({
-      covidUserId: user.id,
-      statusCovidUserId: newStatus,
-    });
-  };
-}
+};
