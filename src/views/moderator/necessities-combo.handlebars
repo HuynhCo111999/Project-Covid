@@ -286,6 +286,8 @@
     const month = $("#monthCheckbox");
 
     day.change(function() {
+        $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+        $("#amount").val( "1 - 10 gói");
         if(this.checked)
         {
             const table = document.getElementById("userTable");
@@ -320,6 +322,8 @@
     });
 
     week.change(function() {
+        $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+        $("#amount").val( "1 - 10 gói");
         if(this.checked)
         {
             const table = document.getElementById("userTable");
@@ -354,6 +358,8 @@
     });
 
     month.change(function() {
+        $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+        $("#amount").val( "1 - 10 gói");
         if(this.checked)
         {
             const table = document.getElementById("userTable");
@@ -393,6 +399,10 @@
         max: 20,
         values: [ 1, 10 ],
         slide: function(event, ui) {
+            day.prop("checked", false);
+            week.prop("checked", false);
+            month.prop("checked", false);
+
             $("#amount").val(ui.values[0] + " - " + ui.values[1] + " gói");
             const table = document.getElementById("userTable");
             var rows = table.rows;
@@ -400,11 +410,24 @@
             {
                 var rowsItem = rows[i].getElementsByTagName("p");
                 var rowsVal = parseInt(rowsItem[0].innerHTML.toLowerCase().split(" ")[0]);
+                var rowsVal2 = rowsItem[0].innerHTML.toLowerCase().substring(rowsItem[0].innerHTML.indexOf('/') + 1);
                 if (rowsVal >= ui.values[0]
                     && rowsVal <= ui.values[1]
                    )
                    {
                         rows[i].style.display = "inline";
+                        if(rowsVal2 == "ngày")
+                        {
+                            day.prop("checked", true);
+                        }
+                        if(rowsVal2 == "tuần")
+                        {
+                            week.prop("checked", true);
+                        }
+                        if(rowsVal2 == "tháng")
+                        {
+                            month.prop("checked", true);
+                        }
                    }
                 else
                 {
