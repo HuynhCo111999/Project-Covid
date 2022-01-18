@@ -187,6 +187,7 @@ exports.postAddUser = async (req, res) => {
       return User.create({
         username: req.body.card.toString(),
         password: bcrypt.hashSync("12345678", 8),
+        isActive: true,
       });
     })
     .then((user) => {

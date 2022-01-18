@@ -227,7 +227,7 @@
         let isActive = (option.val() === 'true');
         console.log("change: ", id, isActive, typeof isActive);
         const data = {
-            lock: isActive
+            isActive: isActive
         }
         fetch(`https://localhost:3000/admin/updateUser?id=${id}`, {
             method: 'POST',

@@ -17,7 +17,7 @@ exports.createUser = (req, res) => {
             username: req.body.username,
             email: req.body.email,
             password: bcrypt.hashSync(req.body.password, 8),
-            lock: true
+            isActive: true
         })
         .then(user => {
             console.log("roles create: ", req.body.roles);
@@ -103,7 +103,7 @@ exports.signup = (req, res) => {
     username: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
-    lock: true
+    isActive: true
   })
     .then(user => {
       if (req.body.roles) {
@@ -261,7 +261,7 @@ exports.getHistory = async(req, res) => {
 exports.updateUser = async(req, res) => {
   const userId = req.query.id;
   User.update({
-    lock: req.body.lock
+    isActive: req.body.isActive
   }, {
     where:
     {

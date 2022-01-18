@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
       password: {
         type: Sequelize.STRING
       },
-      lock: {
+      isActive: {
         type: Sequelize.BOOLEAN,
         allowNull: true
       }
