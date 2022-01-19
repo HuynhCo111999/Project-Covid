@@ -8,6 +8,7 @@ const { QueryTypes } = require('sequelize');
 
 exports.index = async (req, res) => {
     var date = new Date().toISOString();
+    var users;
     try {
         // const rs = await HistoryStatus.findAll({
         //     attributes: [[sequelize.fn('DISTINCT', sequelize.col('covidUserId')), 'alias_name'],'statusCovidUserId','createdAt'],
@@ -20,7 +21,7 @@ exports.index = async (req, res) => {
         //     raw: true
         // });
         // console.log(rs);
-        const users = await sequelize.query(
+        users = await sequelize.query(
             `SELECT DISTINCT on ("covidUserId") "covidUserId","statusCovidUserId", "createdAt"
             FROM "histoty_user_statuses" AS "histoty_user_status" 
             WHERE "histoty_user_status"."createdAt" < '${date}'
@@ -29,10 +30,38 @@ exports.index = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
+    var rs = {
+        f0: 0,
+        f1: 0,
+        f2: 0,
+        f3: 0,
+        Khoi: 0,
+    };
+    users.forEach(user => {
+        switch (user.statusCovidUserId) {
+            case 1:
+                rs.Khoi++;
+                break;
+            case 2:
+                rs.f0++;
+                break;
+            case 3:
+                rs.f1++;
+                break;
+            case 4:
+                rs.f2++;
+                break;
+            case 5:
+                rs.f3++;
+                break;
+            default:
+                break;
+        }
+    });
     res.render("moderator/analysis", {
         layout: "moderator/main",
         function: "information-statistics",
-
+        rs: rs,
     });
 }
 exports.getAmountByTime = async (req, res) => {
@@ -55,11 +84,11 @@ exports.getAmountByTime = async (req, res) => {
         console.log(error);
     }
     var rs = {
+        Khoi: 0,
         f0: 0,
         f1: 0,
         f2: 0,
         f3: 0,
-        Khoi: 0,
     };
     users.forEach(user => {
         switch (user.statusCovidUserId) {
