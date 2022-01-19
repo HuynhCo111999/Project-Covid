@@ -194,7 +194,7 @@ exports.postAddUser = async (req, res) => {
     })
     .then(async (user) => {
       axois
-        .post("http://localhost:3001/admin/createAccount", {
+        .post("https://localhost:3001/admin/createAccount", {
           username: user.username,
           email: user.email,
           password: "12345678",
