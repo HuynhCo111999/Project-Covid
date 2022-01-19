@@ -5,13 +5,13 @@
                     <div class="card z-index-0 my-4 fadeIn3 fadeInBottom">
                         <div class="card-header p-0 position-relative mx-3 z-index-2">
                             <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                                <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Thay đổi thông tin cá nhân</h4>
+                                <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Đổi mật khẩu</h4>
                             </div>
                         </div>
                         <div class="card-body">
                             <form role="form" class="text-start" method="post" action="/user/change-information">
-                                <div class="input-group input-group-outline mb-3 is-filled">
-                                    <label class="form-label">Nhập mật khẩu của bạn</label>
+                                <div class="input-group input-group-outline mb-3">
+                                    <label class="form-label">Nhập mật khẩu hiện tại</label>
                                     <input type="password" class="form-control" name="password" {{#if value1}}value="{{value1}}"{{/if}}>
                                     {{#if errMsg1}}
                                         <div class="invalid-feedback d-inline-block text-primary">
@@ -19,7 +19,7 @@
                                         </div>
                                     {{/if}}
                                 </div>
-                                <div class="input-group input-group-outline mb-3 is-filled">
+                                <div class="input-group input-group-outline mb-3">
                                     <label class="form-label">Nhập mật khẩu mới</label>
                                     <input type="password" class="form-control" name="newPassword" {{#if value2}}value="{{value2}}"{{/if}}>
                                     {{#if errMsg2}}
@@ -28,7 +28,7 @@
                                         </div>
                                     {{/if}}
                                 </div>
-                                <div class="input-group input-group-outline mb-3 is-filled">
+                                <div class="input-group input-group-outline mb-3">
                                     <label class="form-label">Xác nhận mật khẩu mới</label>
                                     <input type="password" class="form-control" name="confirmPassword" {{#if value3}}value="{{value3}}"{{/if}}>
                                     {{#if errMsg3}}
