@@ -108,6 +108,7 @@
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
+                                <th>Active</th>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
                                     UserId</th>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
@@ -128,6 +129,17 @@
                         <tbody>
                             {{#each listUsers}}
                             <tr>
+                                <td>
+                                    <select class="lock" name="lock" onchange="onChangeLock({{id}})">
+                                        {{#if isActive}}
+                                            <option value=true>true</option>
+                                            <option value=false>false</option>
+                                            {{else}}
+                                            <option value=false>false</option>
+                                            <option value=true>true</option>
+                                        {{/if }}
+                                    </select>
+                                </td>
                                 <td>
                                     <div class="d-flex px-4 py-1">
                                         <div class="d-flex flex-column justify-content-center">
@@ -179,6 +191,22 @@
 </div>
 
 <script src="/js/core/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    .lock {
+        background: #ec407a;
+        border: none;
+        height: 38px;
+        border-radius: 7px;
+        color: white;
+        outline: none;
+    }
+    select::-ms-expand {
+        display: none;
+    }
+    
+</style>
 
 <script>
     /* const editModal = $('#ModalEditCategory');
@@ -194,8 +222,45 @@
         $('#delete-user-form').attr("action",`/admin/deleteUser?id=${$(e.relatedTarget).attr("data-id")}`);
     }) */
 
+    const onChangeLock = (id) => {
+        let option = $('.lock').find('option:selected');
+        let isActive = (option.val() === 'true');
+        console.log("change: ", id, isActive, typeof isActive);
+        const data = {
+            isActive: isActive
+        }
+        fetch(`https://localhost:3000/admin/updateUser?id=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then(response => 
+            response.json()
+        ).then(data => {
+            if(data.success) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Update sucesss',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }
+            else {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Update error',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }
+        })
+    }
+
     const handleClickInfo = (id) => {
-        fetch(`http://localhost:3000/admin/history?id=${id}`, {
+        fetch(`https://localhost:3000/admin/history?id=${id}`, {
             method: 'POST'
         }).then(response => 
             response.json())

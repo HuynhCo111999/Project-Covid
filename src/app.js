@@ -104,13 +104,13 @@ require("./routes/user.routes")(app);
 app.use("/moderator", require("./routes/moderator"));
 app.use("/user", require("./routes/user"));
 
-
-const sslServer = https.createServer({
-  key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'))
-  }, 
+const sslServer = https.createServer(
+  {
+    key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+  },
   app
-)
+);
 
 sslServer.listen(port, () => {
   console.log(`Server started on port: ${port}`);
