@@ -29,6 +29,7 @@ router.post('/add-image-to-necessity/:id', upload.single('upload'), necessitiesC
 router.post('/remove-image-from-necessity/:id',necessitiesController.removeImages);
 
 router.get('/analysis', analysis.index);
+router.post('/api/getamountbytime', analysis.getAmountByTime);
 
 
 router.post(
