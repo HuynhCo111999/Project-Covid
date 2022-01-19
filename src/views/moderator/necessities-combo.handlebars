@@ -10,14 +10,46 @@
             <div class="card-body px-0 pb-2"> 
                 <div class="ms-md-auto pe-md-3 d-flex flex-row align-items-center justify-content-start mb-2">
                      <!-- Search bar -->
-                    <div class="input-group input-group-outline w-40 mt-1" style="margin-left: 4rem">
-                        <label class="form-label">Tìm kiếm</label>
-                        <input type="text" class="form-control border-primary" id="searchInput">
+                    <div class="p-2 col">
+                        <div class="input-group input-group-outline w-70" style="margin-left: 2rem;">
+                            <label class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control border-primary" id="searchInput">
+                        </div>
                     </div>
-                    <div class="p-2" style="margin-left: 20rem">
+                    <div class="p-2 col-md-auto">
+                        <div class="dropdown ms-2 m-0">
+                            <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="filterDropdownMenuLink2">
+                                Lọc thời gian
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="filterDropdownMenuLink2">
+                                <li>
+                                    <span class="dropdown-item">Thời gian giới hạn:</span>
+                                </li>
+                                <li>
+                                    <div class="col-md-auto mx-3">
+                                        <input type="checkbox" id="dayCheckbox" name="dayCheckBox" value="Day" checked>
+                                        <label for="dayCheckBox"> Ngày</label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="col-md-auto mx-3">
+                                        <input type="checkbox" id="weekCheckbox" name="weekCheckbox" value="Week" checked>
+                                        <label for="weekCheckbox"> Tuần</label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="col-md-auto mx-3">
+                                        <input type="checkbox" id="monthCheckbox" name="monthCheckbox" value="Month" checked>
+                                        <label for="monthCheckbox"> Tháng</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-2 col-md-auto">
                         <div class="dropdown ms-2 m-0">
                             <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="filterDropdownMenuLink">
-                                Lọc
+                                Lọc số lượng
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="filterDropdownMenuLink">
                                 <div class="dropdown-item d-flex justify-content-center">
@@ -26,17 +58,17 @@
                                             <label for="amount">Số lượng giới hạn:</label>
                                             <input type="text" id="amount" readonly style="border:0; color:#107ee6; font-weight:bold;">
                                         </p>
-                                    <div id="slider-range"></div>
-                                </div>  
+                                        <div id="slider-range"></div>
+                                    </div>
                                 </div>
                             </ul>
                         </div>
                     </div>
-                    <div class="p-2">
+                    <div class="p-2 col-md-auto">
                       <button type="button" class="btn bg-gradient-primary btn-block m-0" onclick="sortProductByName()" id="arrange_name_btn">Sắp xếp theo tên &#9660</button>
                     </div>
                     <!-- Add combos button -->
-                    <div class="p-2">
+                    <div class="p-2 col-md-auto" style="margin-right: 2rem;">
                         <button type="button" class="btn bg-gradient-success btn-block m-0" data-bs-toggle="modal" data-bs-target="#modalAdd">
                             Thêm gói nhu yếu phẩm
                         </button>
@@ -248,12 +280,129 @@
     }
 
     $( function() {
+    
+    const day = $("#dayCheckbox");
+    const week = $("#weekCheckbox");
+    const month = $("#monthCheckbox");
+
+    day.change(function() {
+        $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+        $("#amount").val( "1 - 10 gói");
+        if(this.checked)
+        {
+            const table = document.getElementById("userTable");
+            var rows = table.rows;
+            for (i = 0; i < rows.length; i++)
+            {
+                var rowsItem = rows[i].getElementsByTagName("p");
+                var rowsVal = rowsItem[0].innerHTML.toLowerCase().substring(rowsItem[0].innerHTML.indexOf('/') + 1);
+
+                if(rowsVal == "ngày")
+                {
+                    rows[i].style.display = "inline";
+                }
+            }
+        }
+        else
+        {
+            const table = document.getElementById("userTable");
+            var rows = table.rows;
+            for (i = 0; i < rows.length; i++)
+            {
+                var rowsItem = rows[i].getElementsByTagName("p");
+                var rowsVal = rowsItem[0].innerHTML.toLowerCase().substring(rowsItem[0].innerHTML.indexOf('/') + 1);
+
+                if(rowsVal == "ngày")
+                {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+        
+    });
+
+    week.change(function() {
+        $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+        $("#amount").val( "1 - 10 gói");
+        if(this.checked)
+        {
+            const table = document.getElementById("userTable");
+            var rows = table.rows;
+            for (i = 0; i < rows.length; i++)
+            {
+                var rowsItem = rows[i].getElementsByTagName("p");
+                var rowsVal = rowsItem[0].innerHTML.toLowerCase().substring(rowsItem[0].innerHTML.indexOf('/') + 1);
+
+                if(rowsVal == "tuần")
+                {
+                    rows[i].style.display = "inline";
+                }
+            }
+        }
+        else
+        {
+            const table = document.getElementById("userTable");
+            var rows = table.rows;
+            for (i = 0; i < rows.length; i++)
+            {
+                var rowsItem = rows[i].getElementsByTagName("p");
+                var rowsVal = rowsItem[0].innerHTML.toLowerCase().substring(rowsItem[0].innerHTML.indexOf('/') + 1);
+
+                if(rowsVal == "tuần")
+                {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+        
+    });
+
+    month.change(function() {
+        $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+        $("#amount").val( "1 - 10 gói");
+        if(this.checked)
+        {
+            const table = document.getElementById("userTable");
+            var rows = table.rows;
+            for (i = 0; i < rows.length; i++)
+            {
+                var rowsItem = rows[i].getElementsByTagName("p");
+                var rowsVal = rowsItem[0].innerHTML.toLowerCase().substring(rowsItem[0].innerHTML.indexOf('/') + 1);
+
+                if(rowsVal == "tháng")
+                {
+                    rows[i].style.display = "inline";
+                }
+            }
+        }
+        else
+        {
+            const table = document.getElementById("userTable");
+            var rows = table.rows;
+            for (i = 0; i < rows.length; i++)
+            {
+                var rowsItem = rows[i].getElementsByTagName("p");
+                var rowsVal = rowsItem[0].innerHTML.toLowerCase().substring(rowsItem[0].innerHTML.indexOf('/') + 1);
+
+                if(rowsVal == "tháng")
+                {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+        
+    });
+    
     $("#slider-range").slider({
         range: true,
         min: 1,
         max: 20,
         values: [ 1, 10 ],
         slide: function(event, ui) {
+            day.prop("checked", false);
+            week.prop("checked", false);
+            month.prop("checked", false);
+
             $("#amount").val(ui.values[0] + " - " + ui.values[1] + " gói");
             const table = document.getElementById("userTable");
             var rows = table.rows;
@@ -262,11 +411,24 @@
             {
                 var rowsItem = rows[i].getElementsByTagName("p");
                 var rowsVal = parseInt(rowsItem[0].innerHTML.toLowerCase().split(" ")[0]);
+                var rowsVal2 = rowsItem[0].innerHTML.toLowerCase().substring(rowsItem[0].innerHTML.indexOf('/') + 1);
                 if (rowsVal >= ui.values[0]
                     && rowsVal <= ui.values[1]
                    )
                    {
                         rows[i].style.display = "inline";
+                        if(rowsVal2 == "ngày")
+                        {
+                            day.prop("checked", true);
+                        }
+                        if(rowsVal2 == "tuần")
+                        {
+                            week.prop("checked", true);
+                        }
+                        if(rowsVal2 == "tháng")
+                        {
+                            month.prop("checked", true);
+                        }
                    }
                 else
                 {

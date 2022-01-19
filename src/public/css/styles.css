@@ -67,6 +67,7 @@ input[type=number]::-webkit-outer-spin-button {
     top: 4px;
 }
 
+<<<<<<< HEAD
 ul.images {
     margin: 0;
     padding: 0;
@@ -98,3 +99,5 @@ ul.images li {
     /* width: 200px; */
     margin: 0 0.5rem;
 }
+=======
+>>>>>>> ba1685667fb246d0598e284e2f7dc25eb568ab3e

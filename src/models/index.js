@@ -88,6 +88,9 @@ db.history_user_location.belongsTo(db.treatmentLocation);
 db.covidUser.hasMany(db.history_user_location);
 db.treatmentLocation.hasMany(db.history_user_location);
 
+db.covidUser.hasMany(db.covidUser, { foreignKey : 'related_personId', as: 'downRelated' });
+db.covidUser.belongsTo(db.covidUser, { foreignKey: 'related_personId', as: 'upRelated'});
+
 db.ROLES = ["user", "admin", "moderator"];
 
 module.exports = db;

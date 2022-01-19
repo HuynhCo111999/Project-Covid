@@ -5,12 +5,11 @@ const StatusCovid = require("../models/index").statusCovidUser;
 const HistoryStatus = require("../models/index").history_user_status;
 const HistoryLocation = require("../models/index").history_user_location;
 const Sequelize = require("sequelize");
+const bcrypt = require("bcryptjs");
+const axois = require("axios");
 
 const { validationResult } = require("express-validator");
 const { Op } = require("sequelize");
-
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
 
 exports.getIndex = async(req, res) => {
     const users = await covidUser.findAll({
@@ -28,6 +27,16 @@ exports.getIndex = async(req, res) => {
                     attributes: ["name"],
                 }, ],
             },
+            {
+                model: covidUser,
+                as: "upRelated",
+                attributes: ["id", "name", "yob"],
+            },
+            {
+                model: covidUser,
+                as: "downRelated",
+                attributes: ["id", "name", "yob"],
+            },
         ],
         order: [
             [HistoryStatus, "id", "ASC"],
@@ -36,7 +45,7 @@ exports.getIndex = async(req, res) => {
         nest: true,
     });
     const obj = JSON.parse(JSON.stringify(users));
-
+    console.log(obj);
     for (let o of obj) {
         for (let h of o.histoty_user_statuses) {
             h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
@@ -131,9 +140,9 @@ exports.postAddUser = async(req, res) => {
             province: req.body.province,
             district: req.body.district,
             ward: req.body.ward,
-            status: req.body.status,
-            related_person: req.body.related_person,
-            place: req.body.place,
+            status: parseInt(req.body.status),
+            related_person: parseInt(req.body.related_person),
+            place: parseInt(req.body.place),
             function: "add-user",
         });
     }
@@ -146,7 +155,7 @@ exports.postAddUser = async(req, res) => {
             province: req.body.province,
             district: req.body.district,
             ward: req.body.ward,
-            related_person: req.body.related_person,
+            related_personId: req.body.related_person,
         })
         .then(async(result) => {
             try {
@@ -173,33 +182,43 @@ exports.postAddUser = async(req, res) => {
                 console.log(error);
             }
         })
-        .then(async() => {
-            const pwd = await bcrypt.hash("12345678", 8);
+        .then(() => {
             return User.create({
                 username: req.body.card.toString(),
-                password: pwd,
+                email: req.body.card.toString() + "@user.com",
+                password: bcrypt.hashSync("12345678", 8),
+                isActive: true,
             });
         })
         .then(async(user) => {
-            console.log("roles create: ", req.body.roles);
-            user.setRoles([1]).then(async() => {
-                const users = await covidUser.findAll({
-                    raw: true,
-                });
-                const location = await treatmentLocation.findAll({
-                    raw: true,
-                });
-                const statusCovid = await StatusCovid.findAll({
-                    raw: true,
-                });
-                return res.render("moderator/add-user", {
-                    layout: "moderator/main",
-                    related_persons: users,
-                    location: location,
-                    statusCovid: statusCovid,
-                    successMessage: "Thêm thành công",
-                    function: "add-user",
-                });
+            axois
+                .post("http://localhost:3001/admin/createAccount", {
+                    username: user.username,
+                    email: user.email,
+                    password: "12345678",
+                    roles: ["user"],
+                })
+                .then((result) => console.log("SUCCESS"))
+                .catch((err) => console.log(err));
+            return user.setRoles([1]);
+        })
+        .then(async() => {
+            const users = await covidUser.findAll({
+                raw: true,
+            });
+            const location = await treatmentLocation.findAll({
+                raw: true,
+            });
+            const statusCovid = await StatusCovid.findAll({
+                raw: true,
+            });
+            return res.render("moderator/add-user", {
+                layout: "moderator/main",
+                related_persons: users,
+                location: location,
+                statusCovid: statusCovid,
+                successMessage: "Thêm thành công",
+                function: "add-user",
             });
         })
         .catch((err) => {
@@ -284,7 +303,7 @@ exports.getEditUser = async(req, res) => {
         ward: user.ward,
         yob: user.yob,
         status: statusId,
-        related_person: user.related_person,
+        related_person: user.related_personId,
         place: locationId,
         function: "list",
     });
@@ -307,6 +326,11 @@ exports.editUser = async(req, res) => {
                     model: treatmentLocation,
                     attributes: ["name"],
                 }, ],
+            },
+            {
+                model: covidUser,
+                as: "downRelated",
+                attributes: ["id", "name", "yob"],
             },
         ],
         order: [
@@ -380,9 +404,9 @@ exports.editUser = async(req, res) => {
             province: req.body.province,
             district: req.body.district,
             ward: req.body.ward,
-            status: req.body.status,
-            related_person: req.body.related_person,
-            place: req.body.place,
+            status: parseInt(req.body.status),
+            related_person: parseInt(req.body.related_person),
+            place: parseInt(req.body.place),
             function: "list",
         });
     }
@@ -402,26 +426,20 @@ exports.editUser = async(req, res) => {
             return user.save();
         })
         .then(async() => {
-            // const related_people = await covidUser.findAll({
-            //   where: {
-            //     related_person: {
-            //       [Op.eq]: userId,
-            //     }
-            //   },
-            //   raw: true,
-            // });
-            // related_people.forEach(async (person) => {
-            //   await covidUser.updated({status: '3'},{
-            //     where: {
-            //       id: person.id,
-            //     },
-            //   });
             if (isChangeStatus) {
                 try {
-                    await HistoryStatus.create({
-                        covidUserId: userId,
-                        statusCovidUserId: req.body.status,
-                    });
+                    if (parseInt(req.body.status) === 1) {
+                        await HistoryStatus.create({
+                            covidUserId: userId,
+                            statusCovidUserId: req.body.status,
+                        });
+                    } else {
+                        var temp =
+                            parseInt(req.body.status) -
+                            user.histoty_user_statuses[user.histoty_user_statuses.length - 1]
+                            .statusCovidUserId;
+                        await changeStatusRelated(user.id, temp);
+                    }
                 } catch (error) {
                     console.log(error);
                 }
@@ -457,6 +475,16 @@ exports.editUser = async(req, res) => {
                             attributes: ["name"],
                         }, ],
                     },
+                    {
+                        model: covidUser,
+                        as: "upRelated",
+                        attributes: ["id", "name", "yob"],
+                    },
+                    {
+                        model: covidUser,
+                        as: "downRelated",
+                        attributes: ["id", "name", "yob"],
+                    },
                 ],
                 order: [
                     [HistoryStatus, "id", "ASC"],
@@ -473,4 +501,57 @@ exports.editUser = async(req, res) => {
             });
         })
         .catch((err) => console.log(err));
+};
+
+const changeStatusRelated = async(id, temp) => {
+    const rs = await covidUser.findByPk(id, {
+        include: [{
+                // limit: 1,
+                model: HistoryStatus,
+                include: [{
+                    model: StatusCovid,
+                    attributes: ["status"],
+                }, ],
+            },
+            {
+                model: HistoryLocation,
+                include: [{
+                    model: treatmentLocation,
+                    attributes: ["name"],
+                }, ],
+            },
+            {
+                model: covidUser,
+                as: "downRelated",
+                attributes: ["id", "name", "yob"],
+            },
+        ],
+        order: [
+            [HistoryStatus, "id", "ASC"],
+            [HistoryLocation, "id", "ASC"],
+        ],
+        nest: true,
+    });
+    const user = JSON.parse(JSON.stringify(rs));
+    if (user.downRelated) {
+        console.log(user.downRelated.length);
+        user.downRelated.forEach((person) => {
+            changeStatusRelated(person.id, temp);
+        });
+        var newStatus =
+            user.histoty_user_statuses[user.histoty_user_statuses.length - 1]
+            .statusCovidUserId + temp;
+        await HistoryStatus.create({
+            covidUserId: user.id,
+            statusCovidUserId: newStatus,
+        });
+    } else {
+        var newStatus =
+            user.histoty_user_statuses[user.histoty_user_statuses.length - 1]
+            .statusCovidUserId + temp;
+        await HistoryStatus.create({
+            covidUserId: user.id,
+            statusCovidUserId: newStatus,
+        });
+    }
 };

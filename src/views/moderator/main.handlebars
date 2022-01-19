@@ -99,12 +99,25 @@
                                                         {{#if @last}}{{this.treatmentLocation.name}}{{/if}}
                                                         {{/each}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Người liên quan
-                                                            Covid-19: </strong>{{#if this.related_person}}{{#getName
-                                                        this.related_person}}{{/getName}} <a
+                                                            Covid-19: </strong>{{#if this.upRelated}}BN{{this.upRelated.id}} - {{this.upRelated.name}} - {{this.upRelated.yob}} <a
                                                             style="cursor: pointer; color: #e91e63"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#user{{#getId this.related_person}}{{/getId}}">(Xem
+                                                            data-bs-target="#user{{this.upRelated.id}}">(Xem
                                                             chi tiết thông tin)</a>{{else}}Không có{{/if}}</p>
+                                                    <p style="font-weight: 400; color: black"><strong>Người liên đới
+                                                            (dưới): </strong>{{#if this.downRelated}}
+                                                            <ul>
+                                                                {{#each this.downRelated}}
+                                                                    <li>
+                                                                        BN{{this.id}} - {{this.name}} - {{this.yob}} <a
+                                                                        style="cursor: pointer; color: #e91e63"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#user{{this.id}}">(Xem
+                                                                        chi tiết thông tin)</a>
+                                                                    </li>
+                                                                {{/each}}
+                                                            </ul>
+                                                            {{else}}Không có{{/if}}</p>
                                                     <p style="font-weight: 400; color: black"><strong>Lịch sử thay đổi trạng thái:</strong>
                                                     <ul>
                                                         {{#each this.histoty_user_statuses}}

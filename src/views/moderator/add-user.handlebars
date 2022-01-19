@@ -83,7 +83,7 @@
                         <select class="form-control status-select" name="status" onclick="highlightStatus()">                      
                             <option {{#if status}}{{else}}selected{{/if}} value="" disabled>Trạng thái bệnh nhân</option>
                             {{#each statusCovid}}
-                            <option {{#ifStr status "{{this.id}}"}}selected{{/ifStr}} value="{{this.id}}">{{this.status}}</option>
+                                <option {{#ifStr ../status this.id }}selected{{/ifStr}} value="{{this.id}}">{{this.status}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -96,7 +96,7 @@
                         <select class="form-control person-select" name="related_person" onchange="highlightPerson()">
                             <option {{#if related_person}}{{else}}selected{{/if}} disabled>Người liên quan</option>
                             {{#each related_persons}}
-                            <option {{#ifStr related_person "{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}"}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
+                            <option {{#ifStr ../related_person this.id}}selected{{/ifStr}} value="{{this.id}}">BN {{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -106,7 +106,7 @@
                 <select class="form-control place-select w-100" name="place" onchange="highlightPlace()">
                     <option {{#if place}}{{else}}selected{{/if}} disabled>Nơi điều trị/cách ly</option>
                     {{#each location}}
-                    <option {{#ifStr place "{{this.name}}" }}selected{{/ifStr}} value="{{this.id}}">{{this.name}} ({{this.current}}/{{this.capacity}})</option>
+                    <option {{#ifStr ../place this.id}}selected{{/ifStr}} value="{{this.id}}">{{this.name}} ({{this.current}}/{{this.capacity}})</option>
                     {{/each}}
                 </select>
                 {{#each errorMessage}}

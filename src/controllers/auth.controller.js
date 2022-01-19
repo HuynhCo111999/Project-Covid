@@ -12,10 +12,12 @@ var bcrypt = require("bcryptjs");
 
 exports.createUser = (req, res) => {
     // Save User to Database
+    console.log("create user: ", req.body);
     User.create({
             username: req.body.username,
             email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 8)
+            password: bcrypt.hashSync(req.body.password, 8),
+            isActive: true
         })
         .then(user => {
             console.log("roles create: ", req.body.roles);
@@ -100,7 +102,8 @@ exports.signup = (req, res) => {
   User.create({
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hashSync(req.body.password, 8),
+    isActive: true
   })
     .then(user => {
       if (req.body.roles) {
@@ -163,7 +166,12 @@ exports.signin = (req, res) => {
                     error: 'Password is wrong! Please check again!'
                 })
             }
-
+            
+            if(!user.isActive) {
+              return res.render('login', {
+                error: 'Account is locked!'
+              })
+            }
       var token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
@@ -248,6 +256,28 @@ exports.getHistory = async(req, res) => {
     };
   })
   res.json(result);
+}
+
+exports.updateUser = async(req, res) => {
+  const userId = req.query.id;
+  User.update({
+    isActive: req.body.isActive
+  }, {
+    where:
+    {
+        id: userId,
+    },
+  }).then((user) => {
+    res.json({
+      success: true,
+      user: user
+    })
+  }).catch((error) => {
+    res.json({
+      success: false,
+      error: error
+    })
+  })
 }
 
 exports.checkfirst = async() => {
