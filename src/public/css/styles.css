@@ -66,3 +66,35 @@ input[type=number]::-webkit-outer-spin-button {
 .btn-del {
     top: 4px;
 }
+
+ul.images {
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    width: 900px;
+    overflow-x: auto;
+    background-color: #ddd;
+}
+
+ul.images li {
+    display: inline;
+    width: 150px;
+    height: 150px;
+}
+
+.product-info {
+    display: flex;
+    overflow-x: auto;
+}
+
+.product-info img {
+    width: 150px;
+    text-align: center;
+    height: 150px;
+    border-radius: 0.75rem;
+}
+
+.product-item {
+    /* width: 200px; */
+    margin: 0 0.5rem;
+}

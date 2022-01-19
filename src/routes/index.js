@@ -3,22 +3,22 @@ const router = express.Router();
 const controller = require("../controllers/auth.controller");
 
 router.get('/', async(req, res) => {
+    console.log("req.cookies: ", req.cookies);
     controller.checkfirst().then((isCheck) => {
         console.log('check:', isCheck);
-        if(!isCheck) {
+        if (!isCheck) {
             return res.render('register', {
                 layout: 'main'
             })
         } else {
             const access_token = req.cookies['access_token'];
             const role = req.cookies['role']
-            if(!access_token) {
-                return res.render('login',{
+            if (!access_token) {
+                return res.render('login', {
                     layout: 'main'
                 });
-            }
-            else {
-                if(role === "admin") {
+            } else {
+                if (role === "admin") {
                     return res.redirect('/admin/users')
                 } else if (role === "moderator") {
                     return res.redirect('/moderator')

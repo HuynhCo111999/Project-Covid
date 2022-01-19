@@ -1,0 +1,107 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 text-center">
+                    <h5 class="text-white text-capitalize pt-2">LỊCH SỬ TIÊU THỤ GÓI NHU YẾU PHẨM</h5>
+                </div>
+                {{#if failureMessage}}
+                <h5 class="text-center mt-4 mb-4 text-danger">{{failureMessage}}</h5>
+                {{/if}}    
+            </div>
+            {{#if failureMessage}}
+            {{else}}
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-15 table-header">
+                                    Mã đơn hàng</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-30 table-header">
+                                    Mô tả</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-20 table-header">
+                                    Thành tiền</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-20 table-header">
+                                    Ngày đặt</th>
+								<th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="necessityCarts">
+                            {{#each listOrders}}   
+                            <tr class="necessityCart">
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md" style="white-space: normal;">{{this.id}}</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{#each this.description}}                                   
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md" style="white-space: normal;">{{sum @index 1}}. {{this}}</h6>
+                                    </div>    
+                                    {{/each}} 
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md mx-auto" style="white-space: normal;">{{this.amount}}đ</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-start">
+                                        <h6 class="mb-0 text-md mx-auto amountCombo" style="white-space: normal;">{{this.dateOrder}}</h6>
+                                    </div>
+                                </td>
+                                {{!-- <td>
+                                    <a href="#" class="btn btn-primary px-3 py-2 me-1 btn-del mx-3"> Chi tiết</a>
+                                </td> --}}
+                                <td style="white-space: normal">
+                                    <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Xem chi tiết</button>
+                                    <div class="modal fade" id="user{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">                                     
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary">
+                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin chi tiết</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body necessity-combo">                                                     
+                                                    {{#each this.necessityOfCombos}}
+                                                    <div class="input-group input-group-static my-3">
+                                                        <div class="w-100">
+                                                            <label style="font-size: 1rem; font-weight: bold; color: black">{{sum @index 1}}. {{this.nameCombo}}</label>
+                                                        </div>
+                                                        <div class="w-100" style="font-size: 1rem; color: black">
+                                                            - Mô tả:
+                                                            {{#each this.description}}
+                                                                <p style="margin-left: 2rem;">{{this}}</p>
+                                                            {{/each}}
+                                                        </div>
+                                                        <div class="w-100">
+                                                            <label style="font-size: 1rem; color: black">- Số lượng: {{this.quantity}}</label>
+                                                        </div>
+                                                            <div class="w-100">
+                                                            <label style="font-size: 1rem; color: black">- Giá tiền: {{this.amount}}đ</label>
+                                                        </div>
+                                                        <div class="err-msg mt-3"></div>   
+                                                    </div>    
+                                                    {{/each}}       
+                                                    <p style="font-weight: 400; color: black" class="my-3 amountCombo"><strong>Thành tiền:  </strong> {{this.amount}}đ</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>  
+                                </td>
+                            </tr>
+                            {{/each}} 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</div>

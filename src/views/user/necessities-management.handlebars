@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-end mb-3">
-    <a href="/user/cart" type="button" class="btn bg-gradient-primary btn-block">Giỏ hàng</a>
+    <a href="/user/cart" type="button" class="btn bg-gradient-primary btn-block mx-3">Giỏ hàng</a>
 </div>
 
 <div class="row">
@@ -18,24 +18,44 @@
             </div>
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive p-0">
-                    {{#if successMessage}}
-                    {{else}}
-                    <div class="ms-md-auto pe-md-3 d-flex align-items-center justify-content-center mb-2">
-                        <div class="input-group input-group-outline w-50 mt-1 me-4">
+                    <div class="ms-md-auto pe-md-3 d-flex flex-row align-items-center justify-content-left mt-4 mb-5">
+                        <div class="input-group input-group-outline w-45 mt-1 me-4" style="margin-left: 4rem">
                             <label class="form-label">Tìm kiếm</label>
                             <input type="text" class="form-control border-primary" id="searchInput">
-                        </div>   
+                        </div>
+                        <div class="p-2" style="margin-left: 2rem">
+                            <div class="dropdown ms-2 m-0">
+                                <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="filterDropdownMenuLink">
+                                    Lọc
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="filterDropdownMenuLink">
+                                    <div class="dropdown-item d-flex justify-content-center">
+                                        <div class="row m-1">
+                                            <p>
+                                                <label for="amount">Số lượng giới hạn:</label>
+                                                <input type="text" id="amount" readonly style="border:0; color:#107ee6; font-weight:bold;">
+                                            </p>
+                                            <div id="slider-range"></div>
+                                        </div>  
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+                        {{!-- <div class="d-flex justify-content-end p-2">
+                                <div class="ms-2 m-0">
+                                <a href="/user/cart" type="button" class="btn bg-gradient-primary btn-block mt-3">Giỏ hàng</a>
+                            </div>
+                        </div> --}}
                     </div>
-                    {{/if}}
                     <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header">
-                                    STT &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-35 table-header" onclick="sortTable(1)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-30 table-header" onclick="sortTable(0)">
                                     Tên gói nhu yếu phẩm &#9650</th> 
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-40 table-header" onclick="sortTable(2)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-30 table-header" onclick="sortTable(1)">
                                     Mô tả &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-20 table-header" onclick="sortTable(2)">
+                                    Giới hạn mua &#9650</th>
 								<th></th>
                             </tr>
                         </thead>
@@ -44,20 +64,20 @@
                             <tr>
                                 <td>
                                     <div class="d-flex px-4 py-1 justify-content-center">
-                                        <h6 class="mb-0 text-md">{{sum @index 1}}</h6>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex px-4 py-1 justify-content-start">
-                                        <h6 class="mb-0 text-md">{{this.name}}</h6>
+                                        <h6 class="mb-0 text-md" style="white-space: normal;">{{this.name}}</h6>
                                     </div>
                                 </td>
                                 <td> 
                                     {{#each this.necessities}}                                   
                                     <div class="d-flex px-4 py-1 justify-content-start">
-                                        <h6 class="mb-0 text-md">{{sum @index 1}}. {{this.name_necessity}} ({{this.price_necessity}}đ/{{this.unit_of_measurement}})</h6>
+                                        <h6 class="mb-0 text-md" style="white-space: normal;">{{sum @index 1}}. {{this.name_necessity}} ({{this.price_necessity}}đ/{{this.unit_of_measurement}})</h6>
                                     </div>    
                                     {{/each}}                                       
+                                </td>
+                                <td>
+                                    <div class="d-flex px-4 py-1 justify-content-center">
+                                        <h6 class="mb-0 text-md" style="white-space: normal;">{{this.sales_limit}} gói/{{#parseTimeLimit this.sales_cycle}}{{/parseTimeLimit}}</h6>
+                                    </div>
                                 </td>
                                 <td style="white-space: normal">
                                     <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#user{{this.id}}">Mua hàng</button>
@@ -73,7 +93,14 @@
                                                         <p style="font-weight: 400; color: black"><strong>Tên gói nhu yếu phẩm:  </strong> {{this.name}}</p>													
                                                         {{#each this.necessities}}
                                                         <div class="input-group input-group-static my-3">
-                                                            <label style="font-size: 1rem; font-weight: bold; color: black">{{sum @index 1}}. {{this.name_necessity}} ({{this.price_necessity}}đ/{{this.unit_of_measurement}})</label>
+                                                            <div class="w-100">
+                                                                <label style="font-size: 1rem; font-weight: bold; color: black">{{sum @index 1}}. {{this.name_necessity}} ({{this.price_necessity}}đ/{{this.unit_of_measurement}})</label>
+                                                            </div>
+                                                            <div class="product-info my-2">
+                                                                <div class="product-item">
+                                                                    <img src="{{this.image_path}}">
+                                                                </div>
+                                                            </div>
                                                             <input type="number" class="form-control" id="{{../this.id}}-{{../this.amount}}" name="currentInput" value="{{this.min_limit}}" placeholder="Nhập số lượng">
                                                             <input type="hidden" class="form-control" name="dataHide" value="{{this.id_necessity}}-{{this.price_necessity}}-{{this.min_limit}}-{{this.max_limit}}">
                                                             <div class="err-msg mt-3"></div>   
@@ -103,7 +130,41 @@
 </div>
 
 
+<script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
+
 <script>
+    $( function() {
+        console.log("****VO HAM NE")
+        $("#slider-range").slider({
+            range: true,
+            min: 1,
+            max: 20,
+            values: [ 1, 10 ],
+            slide: function(event, ui) {
+                console.log("\n\n***event", event);
+                $("#amount").val(ui.values[0] + " - " + ui.values[1] + " gói");
+                const table = document.getElementById("userTable");
+                let rows = table.rows;
+
+                for (i = 1; i < rows.length; i++)
+                {
+                    let rowsItem = rows[i].getElementsByTagName("td")[2];
+                    let rowsDataItem = rowsItem.getElementsByTagName("h6")[0];
+                    let rowsVal = parseInt(rowsDataItem.innerHTML.toLowerCase().split(" ")[0]);
+
+                    if (rowsVal >= ui.values[0] && rowsVal <= ui.values[1]){
+                            rows[i].style.display = "table-row";
+                    }
+                    else{
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+            });
+            $("#amount").val($("#slider-range").slider("values", 0) +
+            " - " + $("#slider-range").slider("values", 1) + " gói" );
+    } );
+
     document.addEventListener("DOMContentLoaded", function(){
         function validate(inputElements){
             Array.from(inputElements).forEach(function(inputElement) {

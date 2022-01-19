@@ -25,12 +25,14 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <!-- CSS Files -->
     <link id="pagestyle" href="/css/material-dashboard.css" rel="stylesheet" />
+    <link id="uploadfilestyle" href="/css/upload-file-style.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 </head>
 
 <body class="g-sidenav-show bg-gray-200">
     {{> user/sidebar}}
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        {{> user/navbar passThisToView=someData passThisToView2=someData2}}
+        {{> user/navbar passThisToView=nameItem1 passThisToView2=nameItem2}}
         <div class="container-fluid py-4">
             {{{body}}}
             {{> footer}}
