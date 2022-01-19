@@ -1,132 +1,264 @@
 const db = require('../models');
 const User = db.user;
+const Role = db.role;
 const covidUser = require("../models/index").covidUser;
 const covidNecessityCombo = require("../models/index").covidNecessityCombo;
 const covidNecessityOfCombo = require("../models/index").covidNecessityOfCombo;
 const covidNecessity = require("../models/index").covidNecessity;
-const order = require("../models/index").order;
+const Order = require("../models/index").order;
 const orderDetail = require("../models/index").orderDetail;
-
-const user = require("../models/index").user;
+const treatmentLocation = require("../models/index").treatmentLocation;
+const StatusCovid = require("../models/index").statusCovidUser;
+const HistoryStatus = require("../models/index").history_user_status;
+const HistoryLocation = require("../models/index").history_user_location;
+const Sequelize = require("sequelize");
+const { Op } = require("sequelize");
 const bcrypt = require('bcryptjs');
 
-exports.getModerators = async (req, res) => {
-  const  listUsers = await User.findAll({ raw: true });
-  let filterUsers = [];
-  await listUsers.map(item => {
-    User.findOne({
-      where: {
-        id: item.id
-      }
-    }).then((user) => {
-      user.getRoles().then(roles => {
-        console.log(roles[0].name)
-        if(roles[0].name === 'moderator') {
-          let temp = {...item, role: roles[0].name}
-          filterUsers.push(temp)
-        }
-      })
-    })
-  })
-  // console.log("listUsers: ", listUsers)
-  return res.render('admin/listUser', {
-    layout: 'admin/main',
-    listUsers: filterUsers,
-  });
+exports.getModerators = async(req, res) => {
+    const listUsers = await User.findAll({
+        raw: true,
+        include: [{
+            model: Role,
+            attributes: ['name']
+        }]
+    }, );
+
+    let filterUsers = await listUsers.filter(item => item["roles.name"] === 'moderator');
+
+    console.log("listUsers: ", filterUsers)
+    return res.render('admin/listUser', {
+        layout: 'admin/main',
+        listUsers: filterUsers,
+    });
 }
 
 
 exports.getIndex = (req, res) => {
-    res.render("user/main", {
+    if (!req.cookies.userId || req.cookies.role != "user") {
+        return res.redirect("/");
+    }
+
+    return res.render("user/main", {
         layout: "user/main",
+        function: "personal-information",
+        nameItem1: "Xem thông tin cá nhân",
     });
 };
 
-// /user/personal-information
-exports.getPersonalInformation = (req, res) => {
-    // if (req.user) {
-    //     currentUser = req.user;
-    //     currentCovidUser = covidUser.findOne({ where: { identity_card: 123456789}})
-    // }
-    req.user = {
-        id: 3,
-        name: 'Ken Nguyen',
-        identity_card: 123456789,
-        yob: 1995,
-        province: 'TPHCM',
-        district: 'THU DUC',
-        ward: 'Ward 3',
-        status: 'F0',
-        relatedPerson: 'Không có',
-        treatment_place: 'Khu cách li Quận 9',
-        createdAt: '2021 - 12 - 21 T14: 23: 40.106 Z',
-        updatedAt: '2021 - 12 - 21 T14: 23: 40.106 Z'
-    };
+exports.getPersonalInformation = async(req, res) => {
+    if (req.cookies.userId) {
+        try {
+            let idUser = parseInt(req.cookies.userId);
+            const user = await User.findOne({
+                where: { id: idUser },
+                raw: true,
+            });
 
-    console.log("req user2: ", req.user)
+            const idCovidUser = await covidUser.findOne({
+                where: { identity_card: parseInt(user.username) },
+                attributes: ["id"],
+                raw: true,
+            });
 
-    return res.render("user/personal-information", {
-        layout: "user/main",
-        function: "personal-information",
-        currentUser: req.user,
-        someData: 'Xem thông tin cá nhân',
-        someData2: 'Các thông tin cơ bản',
-    });
+            const rs = await covidUser.findByPk(idCovidUser.id, {
+                include: [{
+                        // limit: 1,
+                        model: HistoryStatus,
+                        include: [{
+                            model: StatusCovid,
+                            attributes: ["status"],
+                        }, ],
+                    },
+                    {
+                        model: HistoryLocation,
+                        include: [{
+                            model: treatmentLocation,
+                            attributes: ["name"],
+                        }, ],
+                    },
+                ],
+                order: [
+                    [HistoryStatus, "id", "ASC"],
+                    [HistoryLocation, "id", "ASC"],
+                ],
+                nest: true,
+            });
+
+            const infoUser = JSON.parse(JSON.stringify(rs));
+
+            const statusId =
+                infoUser.histoty_user_statuses[infoUser.histoty_user_statuses.length - 1]
+                .statusCovidUserId;
+            const locationId =
+                infoUser.histoty_user_locations[infoUser.histoty_user_locations.length - 1]
+                .treatmentLocationId;
+
+            const location = await treatmentLocation.findOne({
+                where: {
+                    id: locationId
+                },
+                raw: true,
+            });
+            const statusCovid = await StatusCovid.findOne({
+                where: {
+                    id: statusId
+                },
+                raw: true,
+            });
+
+            const userCovid = {
+                userId: infoUser.id,
+                name: infoUser.name,
+                location: location.name,
+                identity_card: infoUser.identity_card,
+                province: infoUser.province,
+                district: infoUser.district,
+                ward: infoUser.ward,
+                yob: infoUser.yob,
+                status: statusCovid.status,
+                related_person: infoUser.related_person,
+            };
+
+            return res.render("user/personal-information", {
+                layout: "user/main",
+                function: "personal-information",
+                currentUser: userCovid,
+                nameItem1: "Xem thông tin cá nhân",
+                nameItem2: "Các thông tin cơ bản",
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    } else {
+        return res.redirect("/");
+    }
+};
+
+exports.getHistoryNecessityCombo = async(req, res) => {
+    if (!req.cookies.userId || req.cookies.role != "user") {
+        return res.redirect("/");
+    }
+
+    try {
+        let idUser = parseInt(req.cookies.userId);
+
+        const orders = await Order.findAll({
+            where: { userId: idUser },
+            raw: true,
+        });
+
+        if (orders.length <= 0) {
+            return res.render("user/history-necessity-combo", {
+                layout: "user/main",
+                function: "personal-information",
+                nameItem1: "Xem thông tin cá nhân",
+                nameItem2: "Lịch sử tiêu thụ gói Nhu yếu phẩm",
+                failureMessage: "Bạn chưa tiêu thụ gói nhu yếu phẩm nào",
+            });
+        } else {
+            let listOrders = [];
+            for (let i = 0; i < orders.length; i++) {
+                let orderDetails = await orderDetail.findAll({
+                    where: { id_order: orders[i].id },
+                    raw: true,
+                });
+                let date = orders[i].createdAt.toLocaleDateString("en-GB");
+                let time = orders[i].createdAt.toLocaleTimeString("en-GB");
+                let dateOrder = time + " - " + date;
+                let necessityOfCombos = [];
+                let descriptionOrder = [];
+                for (let j = 0; j < orderDetails.length; j++) {
+                    let necessityCombo = await covidNecessityCombo.findOne({
+                        where: { id: orderDetails[j].id_combo },
+                        raw: true,
+                    });
+                    let descriptionSplit = orderDetails[j].description.split("\n");
+                    necessityOfCombos.push({
+                        nameCombo: necessityCombo.name,
+                        description: descriptionSplit,
+                        quantity: orderDetails[j].quantity,
+                        amount: orderDetails[j].amount,
+                    })
+                    descriptionOrder.push(`${necessityCombo.name} (x${orderDetails[j].quantity})`);
+                }
+
+                listOrders.push({
+                    id: orders[i].id,
+                    description: descriptionOrder,
+                    amount: orders[i].totalAmount,
+                    dateOrder: dateOrder,
+                    necessityOfCombos: necessityOfCombos,
+                });
+            }
+
+            return res.render("user/history-necessity-combo", {
+                layout: "user/main",
+                listOrders: listOrders,
+                function: "personal-information",
+                nameItem1: "Xem thông tin cá nhân",
+                nameItem2: "Lịch sử tiêu thụ gói Nhu yếu phẩm",
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 exports.getChangeInformation = (req, res) => {
+    if (!req.cookies.userId || req.cookies.role != "user") {
+        return res.redirect("/");
+    }
     return res.render("user/change-information", {
         layout: "user/main",
         function: "change-information",
-        someData: 'Thay đổi thông tin cá nhân',
+        nameItem1: "Thay đổi thông tin cá nhân",
     });
-}
+};
 
 exports.postChangeInformation = async(req, res) => {
-    console.log("req body: ", req.body)
+    if (!req.cookies.userId) {
+        return res.redirect("/");
+    }
+    let idUser = parseInt(req.cookies.userId);
+    const user = await User.findOne({
+        where: { id: idUser },
+        raw: true,
+    });
+
     let inputPwd = req.body.password;
     let inputNewPwd = req.body.newPassword;
     let inputConfirmPwd = req.body.confirmPassword;
 
-
-    let initPassword = '123456';
-    const pwd = await bcrypt.hash(initPassword, 10);
-    const currentUser = {
-        username: 'userTest1',
-        email: 'userTest1@gmail.com',
-        password: pwd,
-    }
-
-    await user.create(currentUser);
-
     let flag = false;
-    let errMsg1 = '',
-        errMsg2 = '',
-        errMsg3 = '';
+    let errMsg1 = "",
+        errMsg2 = "",
+        errMsg3 = "";
 
-    const resultChallenge = await bcrypt.compare(inputPwd, currentUser.password);
+    const resultChallenge = await bcrypt.compare(inputPwd, user.password);
+    console.log("resultChallenge: ", resultChallenge);
 
     if (inputPwd.length < 6) {
-        errMsg1 = 'Vui lòng nhập tối thiểu 6 ký tự';
+        errMsg1 = "Vui lòng nhập tối thiểu 6 ký tự";
         flag = true;
     } else {
         if (!resultChallenge) {
-            errMsg1 = 'Mật khẩu không chính xác';
+            errMsg1 = "Mật khẩu không chính xác";
             flag = true;
         }
     }
 
     if (inputNewPwd.length < 6) {
-        errMsg2 = 'Vui lòng nhập tối thiểu 6 ký tự';
+        errMsg2 = "Vui lòng nhập tối thiểu 6 ký tự";
         flag = true;
     }
 
     if (inputConfirmPwd.length < 6) {
-        errMsg3 = 'Vui lòng nhập tối thiểu 6 ký tự';
+        errMsg3 = "Vui lòng nhập tối thiểu 6 ký tự";
         flag = true;
     } else {
         if (!inputNewPwd.includes(inputConfirmPwd)) {
-            errMsg3 = 'Mật khẩu không khớp';
+            errMsg3 = "Mật khẩu không khớp";
             flag = true;
         }
     }
@@ -134,7 +266,7 @@ exports.postChangeInformation = async(req, res) => {
     if (flag == true) {
         res.render("user/change-information", {
             layout: "user/main",
-            someData: 'Thay đổi thông tin cá nhân',
+            nameItem1: "Thay đổi thông tin cá nhân",
             errMsg1: errMsg1,
             errMsg2: errMsg2,
             errMsg3: errMsg3,
@@ -145,17 +277,21 @@ exports.postChangeInformation = async(req, res) => {
         return;
     }
 
-    const updatePwd = await bcrypt.hash(inputNewPwd, 10);
-    await user.update({
+    const updatePwd = await bcrypt.hash(inputNewPwd, 8);
+    await User.update({
         password: updatePwd,
     }, {
-        where: { username: currentUser.username }
+        where: { username: user.username }
     });
 
-    res.redirect('/user');
+    return res.redirect('/user');
 };
 
 exports.getBuyNecessityCombo = async(req, res) => {
+    if (!req.cookies.userId || req.cookies.role != "user") {
+        return res.redirect("/");
+    }
+
     if (!req.session.cart) {
         req.session.cart = [];
     }
@@ -216,6 +352,7 @@ exports.getBuyNecessityCombo = async(req, res) => {
                     unit_of_measurement: tempNecessity.unit_of_measurement,
                     min_limit: necessityOfCombo.min_limit,
                     max_limit: necessityOfCombo.max_limit,
+                    image_path: tempNecessity.image_path,
                 }]
             })
         } else {
@@ -226,6 +363,7 @@ exports.getBuyNecessityCombo = async(req, res) => {
                 unit_of_measurement: tempNecessity.unit_of_measurement,
                 min_limit: necessityOfCombo.min_limit,
                 max_limit: necessityOfCombo.max_limit,
+                image_path: tempNecessity.image_path,
             });
             dataNeccessityCombo[flag].price += necessityOfCombo.min_limit * tempNecessity.price;
             dataNeccessityCombo[flag].amount = dataNeccessityCombo[flag].price;
@@ -236,31 +374,26 @@ exports.getBuyNecessityCombo = async(req, res) => {
         layout: "user/main",
         necessityCombos: dataNeccessityCombo,
         function: "buy-necessity-combo",
-        someData: 'Mua gói nhu yếu phẩm',
+        nameItem1: "Mua gói nhu yếu phẩm",
     });
 };
 
-
 exports.getCart = async(req, res) => {
+    if (!req.cookies.userId || req.cookies.role != "user") {
+        return res.redirect("/");
+    }
 
-    console.log("\n\n\nGET CART req.session.cart: \n", req.session.cart);
-    // let initPassword = '123456';
-    // const pwd = await bcrypt.hash(initPassword, 10);
-    // const currentUser = {
-    //     username: 'userTest11',
-    //     email: 'userTest@gmail.com',
-    //     password: pwd,
-    // }
-
-    // await user.create(currentUser);
+    if (!req.session.cart) {
+        req.session.cart = [];
+    }
 
     if (!req.session.cart || req.session.cart.length == 0) {
         return res.render("user/cart", {
             layout: "user/main",
             carts: req.session.cart,
             function: "buy-necessity-combo",
-            someData: "Mua gói nhu yếu phẩm",
-            someData2: "Giỏ hàng",
+            nameItem1: "Mua gói nhu yếu phẩm",
+            nameItem2: "Giỏ hàng",
             failureMessage2: "Không có gói nhu yếu phẩm nào trong giỏ hàng",
         });
     } else {
@@ -273,14 +406,22 @@ exports.getCart = async(req, res) => {
             layout: "user/main",
             carts: req.session.cart,
             function: "buy-necessity-combo",
-            someData: "Mua gói nhu yếu phẩm",
-            someData2: "Giỏ hàng",
+            nameItem1: "Mua gói nhu yếu phẩm",
+            nameItem2: "Giỏ hàng",
             totalAmount: totalAmount,
         });
     }
 };
 
 exports.postAddCart = async(req, res) => {
+    if (!req.cookies.userId || req.cookies.role != "user") {
+        return res.redirect("/");
+    }
+
+    if (!req.session.cart) {
+        req.session.cart = [];
+    }
+
     let carts = req.session.cart;
     let idCombo = parseInt(req.body.dataHide2);
     for (let cart of carts) {
@@ -289,8 +430,8 @@ exports.postAddCart = async(req, res) => {
                 layout: "user/main",
                 carts: req.session.cart,
                 function: "buy-necessity-combo",
-                someData: "Mua gói nhu yếu phẩm",
-                someData2: "Giỏ hàng",
+                nameItem1: "Mua gói nhu yếu phẩm",
+                nameItem2: "Giỏ hàng",
                 failureMessage: "Gói nhu yếu phẩm này đã có trong giỏ hàng",
             });
         }
@@ -346,21 +487,25 @@ exports.postAddCart = async(req, res) => {
         layout: "user/main",
         carts: req.session.cart,
         function: "buy-necessity-combo",
-        someData: 'Mua gói nhu yếu phẩm',
-        someData2: 'Giỏ hàng',
+        nameItem1: "Mua gói nhu yếu phẩm",
+        nameItem2: 'Giỏ hàng',
         totalAmount: totalAmount,
     });
 };
 
 exports.deleteCart = async(req, res) => {
+    if (!req.cookies.userId || req.cookies.role != "user") {
+        return res.redirect("/");
+    }
+
     let idCombo = parseInt(req.params.id);
     if (!req.session.cart || req.session.cart.length == 0) {
         return res.render("user/cart", {
             layout: "user/main",
             carts: req.session.cart,
             function: "buy-necessity-combo",
-            someData: "Mua gói nhu yếu phẩm",
-            someData2: "Giỏ hàng",
+            nameItem1: "Mua gói nhu yếu phẩm",
+            nameItem2: "Giỏ hàng",
             failureMessage2: "Không có gói nhu yếu phẩm nào trong giỏ hàng để xóa",
         });
     } else {
@@ -383,8 +528,8 @@ exports.deleteCart = async(req, res) => {
                 layout: "user/main",
                 carts: req.session.cart,
                 function: "buy-necessity-combo",
-                someData: "Mua gói nhu yếu phẩm",
-                someData2: "Giỏ hàng",
+                nameItem1: "Mua gói nhu yếu phẩm",
+                nameItem2: "Giỏ hàng",
                 failureMessage2: "Không có gói nhu yếu phẩm nào trong giỏ hàng",
             });
         }
@@ -392,15 +537,17 @@ exports.deleteCart = async(req, res) => {
             layout: "user/main",
             carts: req.session.cart,
             function: "buy-necessity-combo",
-            someData: "Mua gói nhu yếu phẩm",
-            someData2: "Giỏ hàng",
+            nameItem1: "Mua gói nhu yếu phẩm",
+            nameItem2: "Giỏ hàng",
             totalAmount: totalAmount,
         });
     }
 };
 
 exports.postOrderNecessityCombo = async(req, res) => {
-    console.log("\n\nVO HAM ORDER");
+    if (!req.cookies.userId || req.cookies.role != "user") {
+        return res.redirect("/");
+    }
 
     let keys = Object.keys(req.body);
     let values = Object.values(req.body);
@@ -474,6 +621,7 @@ exports.postOrderNecessityCombo = async(req, res) => {
                     unit_of_measurement: tempNecessity.unit_of_measurement,
                     min_limit: necessityOfCombo.min_limit,
                     max_limit: necessityOfCombo.max_limit,
+                    image_path: tempNecessity.image_path,
                 }]
             })
         } else {
@@ -484,40 +632,28 @@ exports.postOrderNecessityCombo = async(req, res) => {
                 unit_of_measurement: tempNecessity.unit_of_measurement,
                 min_limit: necessityOfCombo.min_limit,
                 max_limit: necessityOfCombo.max_limit,
+                image_path: tempNecessity.image_path,
             });
             dataNeccessityCombo[flag].price += necessityOfCombo.min_limit * tempNecessity.price;
             dataNeccessityCombo[flag].amount = dataNeccessityCombo[flag].price;
         }
     }
 
-
-    let idUserDemo = 27;
-    const userDemo = await user.findOne({
-        where: { id: idUserDemo },
-        raw: true,
-    });
-
-    // Tìm thông tin chi tiết của 1 user
-    // const covidUserDemo = await covidUser.findOne({
-    //     where: { identity_card: parseInt(userDemo.username) },
-    //     raw: true,
-    // });
+    let idUser = parseInt(req.cookies.userId);
 
     let totalAmount = 0;
     for (let cart of req.session.cart) {
         totalAmount += cart.amount;
     }
 
-    const orders = await order.findAll({
-        where: { userId: idUserDemo },
+    const orders = await Order.findAll({
+        where: { userId: idUser },
         raw: true,
     });
-    console.log("orders: ", orders);
 
     if (orders.length <= 0) {
-        console.log("\n\n---nguoi dung chua co don hang");
-        let orderAdd = await order.create({
-            userId: idUserDemo,
+        let orderAdd = await Order.create({
+            userId: idUser,
             totalAmount: totalAmount,
             status: false,
         });
@@ -536,11 +672,10 @@ exports.postOrderNecessityCombo = async(req, res) => {
             layout: "user/main",
             necessityCombos: dataNeccessityCombo,
             function: "buy-necessity-combo",
-            someData: 'Mua gói nhu yếu phẩm',
+            nameItem1: "Mua gói nhu yếu phẩm",
             successMessage: "Đặt hàng thành công",
         });
     } else {
-        console.log("\n\n----nguoi dung da co don hang");
         let quantityRemain = [];
         var now = new Date();
         let current_day = now.getDay();
@@ -624,14 +759,14 @@ exports.postOrderNecessityCombo = async(req, res) => {
                 layout: "user/main",
                 carts: req.session.cart,
                 function: "buy-necessity-combo",
-                someData: 'Mua gói nhu yếu phẩm',
-                someData2: 'Giỏ hàng',
+                nameItem1: "Mua gói nhu yếu phẩm",
+                nameItem2: 'Giỏ hàng',
                 totalAmount: totalAmount,
                 failureMessageString: errorMessageArray,
             });
         } else {
-            let orderAdd = await order.create({
-                userId: idUserDemo,
+            let orderAdd = await Order.create({
+                userId: idUser,
                 totalAmount: totalAmount,
                 status: false,
             });
@@ -651,7 +786,7 @@ exports.postOrderNecessityCombo = async(req, res) => {
                 layout: "user/main",
                 necessityCombos: dataNeccessityCombo,
                 function: "buy-necessity-combo",
-                someData: 'Mua gói nhu yếu phẩm',
+                nameItem1: "Mua gói nhu yếu phẩm",
                 successMessage: "Đặt hàng thành công",
             });
         }

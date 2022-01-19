@@ -18,10 +18,3 @@
 .uploaded_file_view.show {opacity: 1;}
 .error_msg {text-align: center; color: #f00}
 /* option */
-.lock {
-    background: #ec407a;
-    border: none;
-    height: 38px;
-    border-radius: 7px;
-    color: white;
-}
