@@ -6,6 +6,7 @@ const HistoryStatus = require("../models/index").history_user_status;
 const HistoryLocation = require("../models/index").history_user_location;
 const Sequelize = require("sequelize");
 const bcrypt = require("bcryptjs");
+const axois = require("axios");
 
 const { validationResult } = require("express-validator");
 const { Op } = require("sequelize");
@@ -186,11 +187,21 @@ exports.postAddUser = async (req, res) => {
     .then(() => {
       return User.create({
         username: req.body.card.toString(),
+        email: req.body.card.toString() + "@user.com",
         password: bcrypt.hashSync("12345678", 8),
         isActive: true,
       });
     })
-    .then((user) => {
+    .then(async (user) => {
+      axois
+        .post("http://localhost:3001/admin/createAccount", {
+          username: user.username,
+          email: user.email,
+          password: "12345678",
+          roles: ["user"],
+        })
+        .then((result) => console.log("SUCCESS"))
+        .catch((err) => console.log(err));
       return user.setRoles([1]);
     })
     .then(async () => {
