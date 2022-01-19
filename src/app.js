@@ -9,6 +9,8 @@ const session = require("express-session");
 const https = require("https");
 const fs = require("fs");
 require("dotenv").config();
+//config https
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 //set port local
 const port = process.env.PORT || 3000;
 
