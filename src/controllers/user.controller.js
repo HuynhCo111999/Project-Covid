@@ -38,10 +38,6 @@ exports.getModerators = async (req, res) => {
 };
 
 exports.getIndex = (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   return res.render("user/main", {
     layout: "user/main",
     function: "personal-information",
@@ -146,10 +142,6 @@ exports.getPersonalInformation = async (req, res) => {
 };
 
 exports.getHistoryNecessityCombo = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   try {
     let idUser = parseInt(req.cookies.userId);
 
@@ -218,9 +210,6 @@ exports.getHistoryNecessityCombo = async (req, res) => {
 };
 
 exports.getChangeInformation = (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
   return res.render("user/change-information", {
     layout: "user/main",
     function: "change-information",
@@ -304,10 +293,6 @@ exports.postChangeInformation = async (req, res) => {
 };
 
 exports.getBuyNecessityCombo = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   if (!req.session.cart) {
     req.session.cart = [];
   }
@@ -396,10 +381,6 @@ exports.getBuyNecessityCombo = async (req, res) => {
 };
 
 exports.getCart = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   if (!req.session.cart) {
     req.session.cart = [];
   }
@@ -431,10 +412,6 @@ exports.getCart = async (req, res) => {
 };
 
 exports.postAddCart = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   if (!req.session.cart) {
     req.session.cart = [];
   }
@@ -518,10 +495,6 @@ exports.postAddCart = async (req, res) => {
 };
 
 exports.deleteCart = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   let idCombo = parseInt(req.params.id);
   if (!req.session.cart || req.session.cart.length == 0) {
     return res.render("user/cart", {
@@ -569,10 +542,6 @@ exports.deleteCart = async (req, res) => {
 };
 
 exports.postOrderNecessityCombo = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   let keys = Object.keys(req.body);
   let values = Object.values(req.body);
   let idCombos = [];
