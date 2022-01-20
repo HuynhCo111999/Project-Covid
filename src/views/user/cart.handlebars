@@ -105,8 +105,11 @@
     <p class="btn bg-gradient-secondary btn-block amountAllCombo mx-3">Tổng tiền thanh toán: {{totalAmount}}đ</p>
 </div>
 <div class="d-flex justify-content-end mb-3">
-    <button type="submit" class="btn bg-gradient-primary btn-block mx-3">
-        Đặt hàng
+    <button type="click" class="btn bg-gradient-primary btn-block mx-3" id="debit">
+        GHI NỢ
+        </button>
+    <button type="click" class="btn bg-gradient-primary btn-block mx-3" id="payment">
+        THANH TOÁN NGAY
     </button>
 </div>
 {{/if}}
@@ -186,4 +189,31 @@
             
             amountAllCombo.innerHTML = `Tổng tiền thanh toán: ${totalAmount}đ`;
         }
+
+
+        document.addEventListener("DOMContentLoaded", function(){
+            let formElement = document.forms['formCart'];
+
+            let debitElement = document.querySelector("#debit");
+            let paymentElement = document.querySelector("#payment");
+
+            debitElement.onclick = function() {
+                let type = "debit";
+                formElement.onsubmit = function(e) {
+                    //e.preventDefault();
+                    formElement.action = "/user/order/" + type;
+                    console.log("formElement.action: ", formElement.action);
+                }
+            }
+
+            paymentElement.onclick = function() {
+                let type = "payment";
+                formElement.onsubmit = function(e) {
+                    //e.preventDefault();
+                    formElement.action = "/user/order/" + type;
+                    console.log("formElement.action: ", formElement.action);
+
+                }
+            }
+        });
 </script> 

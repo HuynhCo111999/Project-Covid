@@ -713,6 +713,8 @@ exports.deleteCart = async(req, res) => {
 };
 
 exports.postOrderNecessityCombo = async(req, res) => {
+    console.log("req params: ", req.params);
+
     let keys = Object.keys(req.body);
     let values = Object.values(req.body);
     let idCombos = [];
@@ -817,54 +819,80 @@ exports.postOrderNecessityCombo = async(req, res) => {
     });
 
     if (orders.length <= 0) {
-        const currentUser = await User.findOne({
-            where: { id: idUser },
-            raw: true,
-        });
-        const currentCovidUser = await covidUser.findOne({
-            where: { identity_card: parseInt(currentUser.username) },
-            raw: true,
-        });
+        // xử lí ghi khi nhấn vào debit
+        if (req.params.type === "debit") {
+            let token = req.cookies["access_token"];
+            //const paymentUrl = `https://localhost:3001/connectsystem?token=${token}`;
+            // res.redirect(paymentUrl);
 
-        let totalPayment = currentCovidUser.payment + totalAmount;
-        await covidUser.update({
-            payment: totalPayment,
-        }, {
-            where: { id: currentCovidUser.id },
-        });
+            axois
+                .post("https://localhost:3001/user/getDebit", {
+                    payment: totalAmount,
+                })
+                .then((result) => console.log("SUCCESS"))
+                .catch((err) => console.log(err));
+        } else if (req.params.type === "payment") {
+            // xử lí khi nhấn vào payment
+            let token = req.cookies["access_token"];
+            //const paymentUrl = `https://localhost:3001/connectsystem?token=${token}`;
+            // res.redirect(paymentUrl);
 
-        let orderAdd = await Order.create({
-            userId: idUser,
-            totalAmount: totalAmount,
-            status: false,
-        });
-        for (let i = 0; i < req.session.cart.length; i++) {
-            for (let j = 0; j < req.session.cart[i].necessities.length; j++) {
-                await orderDetailNecessity.create({
-                    id_order: orderAdd.dataValues.id,
-                    id_combo: req.session.cart[i].idCombo,
-                    id_necessity: req.session.cart[i].necessities[j].idNecessity,
-                    quantity: req.session.cart[i].quantity * req.session.cart[i].necessities[j].quantity_necessity
-                });
-            }
+            axois
+                .post("https://localhost:3001/user/getPayment", {
+                    payment: totalAmount,
+                })
+                .then((result) => console.log("SUCCESS"))
+                .catch((err) => console.log(err));
 
-            await orderDetail.create({
-                id_order: orderAdd.dataValues.id,
-                id_combo: req.session.cart[i].idCombo,
-                description: req.session.cart[i].description,
-                price: req.session.cart[i].price,
-                quantity: req.session.cart[i].quantity,
-                amount: req.session.cart[i].amount,
-            });
         }
-        req.session.cart = [];
-        return res.render("user/necessities-management", {
-            layout: "user/main",
-            necessityCombos: dataNeccessityCombo,
-            function: "buy-necessity-combo",
-            nameItem1: "Mua gói nhu yếu phẩm",
-            successMessage: "Đặt hàng thành công",
-        });
+        // const currentUser = await User.findOne({
+        //     where: { id: idUser },
+        //     raw: true,
+        // });
+        // const currentCovidUser = await covidUser.findOne({
+        //     where: { identity_card: parseInt(currentUser.username) },
+        //     raw: true,
+        // });
+
+        // let totalPayment = currentCovidUser.payment + totalAmount;
+        // await covidUser.update({
+        //     payment: totalPayment,
+        // }, {
+        //     where: { id: currentCovidUser.id },
+        // });
+
+        // let orderAdd = await Order.create({
+        //     userId: idUser,
+        //     totalAmount: totalAmount,
+        //     status: false,
+        // });
+        // for (let i = 0; i < req.session.cart.length; i++) {
+        //     for (let j = 0; j < req.session.cart[i].necessities.length; j++) {
+        //         await orderDetailNecessity.create({
+        //             id_order: orderAdd.dataValues.id,
+        //             id_combo: req.session.cart[i].idCombo,
+        //             id_necessity: req.session.cart[i].necessities[j].idNecessity,
+        //             quantity: req.session.cart[i].quantity * req.session.cart[i].necessities[j].quantity_necessity
+        //         });
+        //     }
+
+        //     await orderDetail.create({
+        //         id_order: orderAdd.dataValues.id,
+        //         id_combo: req.session.cart[i].idCombo,
+        //         description: req.session.cart[i].description,
+        //         price: req.session.cart[i].price,
+        //         quantity: req.session.cart[i].quantity,
+        //         amount: req.session.cart[i].amount,
+        //     });
+        // }
+        // req.session.cart = [];
+        // return res.render("user/necessities-management", {
+        //     layout: "user/main",
+        //     necessityCombos: dataNeccessityCombo,
+        //     function: "buy-necessity-combo",
+        //     nameItem1: "Mua gói nhu yếu phẩm",
+        //     successMessage: "Đặt hàng thành công",
+        // });
     } else {
         let quantityRemain = [];
         var now = new Date();
@@ -961,53 +989,66 @@ exports.postOrderNecessityCombo = async(req, res) => {
                 failureMessageString: errorMessageArray,
             });
         } else {
-            const currentUser = await User.findOne({
-                where: { id: idUser },
-                raw: true,
-            });
-            const currentCovidUser = await covidUser.findOne({
-                where: { identity_card: parseInt(currentUser.username) },
-                raw: true,
-            });
-            let totalPayment = currentCovidUser.payment + totalAmount;
-            await covidUser.update({
-                payment: totalPayment,
-            }, {
-                where: { id: currentCovidUser.id },
-            });
+            // xử lí ghi khi nhấn vào debit
+            if (req.params.type === "debit") {
+                let token = req.cookies["access_token"];
+                //const paymentUrl = `https://localhost:3001/connectsystem?token=${token}`;
+                // res.redirect(https://localhost:3001/user/getDebit);
 
-            let orderAdd = await Order.create({
-                userId: idUser,
-                totalAmount: totalAmount,
-                status: false,
-            });
-            for (let i = 0; i < req.session.cart.length; i++) {
-                for (let j = 0; j < req.session.cart[i].necessities.length; j++) {
-                    await orderDetailNecessity.create({
-                        id_order: orderAdd.dataValues.id,
-                        id_combo: req.session.cart[i].idCombo,
-                        id_necessity: req.session.cart[i].necessities[j].idNecessity,
-                        quantity: req.session.cart[i].quantity * req.session.cart[i].necessities[j].quantity_necessity,
-                    });
-                }
-                await orderDetail.create({
-                    id_order: orderAdd.dataValues.id,
-                    id_combo: req.session.cart[i].idCombo,
-                    description: req.session.cart[i].description,
-                    price: req.session.cart[i].price,
-                    quantity: req.session.cart[i].quantity,
-                    amount: req.session.cart[i].amount,
-                });
+            } else if (req.params.type === "payment") {
+                // xử lí ghi khi nhấn vào payment
+                let token = req.cookies["access_token"];
+                //const paymentUrl = `https://localhost:3001/connectsystem?token=${token}`;
+                // res.redirect(paymentUrl);
+
             }
+            // const currentUser = await User.findOne({
+            //     where: { id: idUser },
+            //     raw: true,
+            // });
+            // const currentCovidUser = await covidUser.findOne({
+            //     where: { identity_card: parseInt(currentUser.username) },
+            //     raw: true,
+            // });
+            // let totalPayment = currentCovidUser.payment + totalAmount;
+            // await covidUser.update({
+            //     payment: totalPayment,
+            // }, {
+            //     where: { id: currentCovidUser.id },
+            // });
 
-            req.session.cart = [];
-            return res.render("user/necessities-management", {
-                layout: "user/main",
-                necessityCombos: dataNeccessityCombo,
-                function: "buy-necessity-combo",
-                nameItem1: "Mua gói nhu yếu phẩm",
-                successMessage: "Đặt hàng thành công",
-            });
+            // let orderAdd = await Order.create({
+            //     userId: idUser,
+            //     totalAmount: totalAmount,
+            //     status: false,
+            // });
+            // for (let i = 0; i < req.session.cart.length; i++) {
+            //     for (let j = 0; j < req.session.cart[i].necessities.length; j++) {
+            //         await orderDetailNecessity.create({
+            //             id_order: orderAdd.dataValues.id,
+            //             id_combo: req.session.cart[i].idCombo,
+            //             id_necessity: req.session.cart[i].necessities[j].idNecessity,
+            //             quantity: req.session.cart[i].quantity * req.session.cart[i].necessities[j].quantity_necessity,
+            //         });
+            //     }
+            //     await orderDetail.create({
+            //         id_order: orderAdd.dataValues.id,
+            //         id_combo: req.session.cart[i].idCombo,
+            //         description: req.session.cart[i].description,
+            //         price: req.session.cart[i].price,
+            //         quantity: req.session.cart[i].quantity,
+            //         amount: req.session.cart[i].amount,
+            //     });
+            // }
+
+            // req.session.cart = [];
+            // return res.render("user/necessities-management", {
+            //     layout: "user/main",
+            //     necessityCombos: dataNeccessityCombo,
+            //     function: "buy-necessity-combo",
+            //     nameItem1: "Mua gói nhu yếu phẩm",
+            //     successMessage: "Đặt hàng thành công",
+            // });
         }
     }
 };
@@ -1020,6 +1061,7 @@ exports.getPayment = (req, res) => {
         function: "payment",
         nameItem1: "Thanh toán",
         paymentUrl: paymentUrl,
+        token: token,
     });
 };
 

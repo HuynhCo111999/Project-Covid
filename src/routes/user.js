@@ -4,29 +4,29 @@ const isUser = require("../middleware/isUser");
 
 // localhost:3000/user
 router.get(
-  "/personal-information",
-  isUser,
-  userController.getPersonalInformation
+    "/personal-information",
+    isUser,
+    userController.getPersonalInformation
 );
 router.get(
-  "/history-necessity-combo",
-  isUser,
-  userController.getHistoryNecessityCombo
+    "/history-necessity-combo",
+    isUser,
+    userController.getHistoryNecessityCombo
 );
 router.get("/change-information", isUser, userController.getChangeInformation);
 router.post(
-  "/change-information",
-  isUser,
-  userController.postChangeInformation
+    "/change-information",
+    isUser,
+    userController.postChangeInformation
 );
 router.get("/changepassfirst", isUser, userController.getChangePassFirst);
 router.post(
-  "/changepassfirst",
-  isUser,
-  userController.postChangePassFirst
+    "/changepassfirst",
+    isUser,
+    userController.postChangePassFirst
 );
 router.get("/buy-necessity-combo", isUser, userController.getBuyNecessityCombo);
-router.post("/order", isUser, userController.postOrderNecessityCombo);
+router.post("/order/:type", isUser, userController.postOrderNecessityCombo);
 router.get("/cart", isUser, userController.getCart);
 router.post("/cart/add/:name", isUser, userController.postAddCart);
 router.get("/cart/delete/:id", isUser, userController.deleteCart);
