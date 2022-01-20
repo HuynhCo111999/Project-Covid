@@ -123,6 +123,8 @@ exports.getIndex = async (req, res) => {
     for (let h of infoUser.histoty_user_locations) {
       h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
     }
+
+    console.log(infoUser);
     const userCovid = {
       userId: infoUser.id,
       name: infoUser.name,
@@ -135,7 +137,7 @@ exports.getIndex = async (req, res) => {
       status: statusCovid.status,
       related_person: related_person,
       histoty_user_statuses: infoUser.histoty_user_statuses,
-      histoty_user_locations: infoUser.history_user_location,
+      histoty_user_locations: infoUser.histoty_user_locations,
     };
 
     return res.render("user/main", {
