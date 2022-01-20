@@ -12,5 +12,6 @@ router.get("/cart", userController.getCart);
 router.post("/cart/add/:name", userController.postAddCart);
 router.get("/cart/delete/:id", userController.deleteCart);
 router.get("/", userController.getIndex);
+router.get("/user-to-payment", userController.getPayment);
 
 module.exports = router;
