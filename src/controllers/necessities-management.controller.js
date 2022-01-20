@@ -23,6 +23,7 @@ exports.get = async(req, res) => {
         layout: "moderator/main",
         necessities: necessities,
         function: "necessities-product",
+        tabItemName: "Nhu yếu phẩm",
     });
 };
 
@@ -182,6 +183,7 @@ exports.getDetails = async(req, res) => {
             productUnit: necessityInstance.unit_of_measurement,
             productPrice: necessityInstance.price,
             productPath: necessityInstance.image_path,
+            tabItemName: "Chi tiết nhu yếu phẩm",
         });
     } catch (error) {
         return res.send(error);

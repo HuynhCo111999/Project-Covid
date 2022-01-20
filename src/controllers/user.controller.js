@@ -828,6 +828,17 @@ exports.postOrderNecessityCombo = async (req, res) => {
   }
 };
 
+exports.getPayment = (req, res) => {
+  let token = req.cookies['access_token'];
+  const paymentUrl = `https://localhost:3001/connectsystem?token=${token}`;
+  res.render("user/user-to-payment", {
+    layout: "user/main",
+    function: "payment",
+    nameItem1: "Đến thanh toán",
+    paymentUrl: paymentUrl,
+  });
+};
+
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
