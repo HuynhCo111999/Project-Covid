@@ -98,7 +98,7 @@
                         <select class="form-control border-primary border-2" name="related_person">
                             <option {{#if related_person}}{{else}}selected{{/if}} disabled>Người liên quan</option>
                             {{#each related_persons}}
-                            <option {{#ifStr ../related_person this.id}}selected{{/ifStr}}>{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
+                            <option {{#ifStr ../related_person this.id}}selected{{/ifStr}} value="{{this.id}}">{{this.id}}. {{this.name}}, {{this.yob}}, {{this.ward}}-{{this.district}}-{{this.province}}</option>
                             {{/each}}
                         </select>
                     </div>
