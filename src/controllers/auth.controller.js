@@ -200,6 +200,12 @@ exports.signin = (req, res) => {
             })
           }
           else {
+            if(user.isFirst){
+              res.cookie("access_token", token);
+              res.cookie("userId", user.id);
+              res.cookie("role", 'user');
+              return res.redirect('/user/changepassfirst');
+            }
             res.cookie("access_token", token);
             res.cookie("userId", user.id);
             res.cookie("role", 'user');

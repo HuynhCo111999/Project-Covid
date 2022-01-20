@@ -19,6 +19,12 @@ router.post(
   isUser,
   userController.postChangeInformation
 );
+router.get("/changepassfirst", isUser, userController.getChangePassFirst);
+router.post(
+  "/changepassfirst",
+  isUser,
+  userController.postChangePassFirst
+);
 router.get("/buy-necessity-combo", isUser, userController.getBuyNecessityCombo);
 router.post("/order", isUser, userController.postOrderNecessityCombo);
 router.get("/cart", isUser, userController.getCart);
