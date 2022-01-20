@@ -1,13 +1,73 @@
-<div class="container-fluid w-75">
-
+<div class="card">
+<div class="container-fluid w-75 py-4">
 <h1 class="text-center my-3">XEM THÔNG TIN CÁ NHÂN</h1>
-<ul style="list-style-type: disc; margin-top: 3rem;">
-  <li><a href="/user/personal-information"><h6 class="font-weight-bolder mb-3">Thông tin cơ bản</h6></a></li>
-  <li><a href=""><h6 class="font-weight-bolder mb-3">Lịch sử được quản lý</h6></a></li>
-  <li><a href="/user/history-necessity-combo"><h6 class="font-weight-bolder mb-3">Lịch sử tiêu thụ gói Nhu yếu phẩm</h6></a></li>
-  <li><a href=""><h6 class="font-weight-bolder mb-3">Dư nợ</h6></a></li>
-  <li><a href=""><h6 class="font-weight-bolder mb-3">Lịch sử thanh toán</h6></a></li>
-  <li><a href=""><h6 class="font-weight-bolder mb-3">Thông báo nhắc thanh toán</h6></a></li>
+<ul style="list-style-type: disc; margin-top: 3rem; font-size: 1.25rem; margin-left: 4rem">
+  <li class="mb-3">
+    <a class="font-weight-bolder" data-bs-toggle="modal" data-bs-target="#userInfo" style="cursor: pointer;">Thông tin cơ bản</a>
+  </li>
+  <li class="mb-3"><a class="font-weight-bolder" data-bs-toggle="modal" data-bs-target="#manageHistory" style="cursor: pointer;">Lịch sử được quản lý</a></li>
+  <li class="mb-3"><a class="font-weight-bolder mb-3" href="/user/history-necessity-combo">Lịch sử tiêu thụ gói Nhu yếu phẩm</a></li>
+  <li class="mb-3"><a class="font-weight-bolder mb-3" href="">Dư nợ</a></li>
+  <li class="mb-3"><a class="font-weight-bolder mb-3" href="">Lịch sử thanh toán</a></li>
+  <li class="mb-3"><a class="font-weight-bolder mb-3" href="">Thông báo nhắc thanh toán</a></li>
 </ul>
+</div>
 
+<div class="modal fade" id="userInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-weight: 400; color: black"><strong>Họ và tên:</strong> {{user.name}}</p>
+                <p style="font-weight: 400; color: black"><strong>CMND/CCCD:</strong> {{user.identity_card}}</p>
+                <p style="font-weight: 400; color: black"><strong>Năm sinh:</strong> {{user.yob}}</p>
+                <p style="font-weight: 400; color: black"><strong>Địa chỉ: </strong>{{user.ward}} - {{user.district}} - {{user.province}}</p>
+                <p style="font-weight: 400; color: black"><strong>Trạng thái hiện tại:</strong> {{user.status}}
+                <p style="font-weight: 400; color: black"><strong>Người liên quan: </strong> {{user.related_person}}
+                <p style="font-weight: 400; color: black"><strong>Địa điểm cách ly hiện tại:</strong> {{user.location}}
+            </div>
+            <div class="modal-footer d-flex justify-content-end">
+                <button type="button" class="btn btn-primary"
+                    data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="manageHistory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Thông tin người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <p style="font-weight: 400; color: black"><strong>Lịch sử thay đổi trạng thái:</strong>
+              <ul>
+                  {{#each user.histoty_user_statuses}}
+                      <li><strong>Ngày {{this.createdAt}}: </strong>{{this.statusCovidUser.status}}</li>
+                  {{/each}}
+              </ul>
+            </p>
+            <p style="font-weight: 400; color: black"><strong>Lịch sử thay đổi nơi điều trị:</strong>
+              <ul>
+                  {{#each user.histoty_user_locations}}
+                      <li><strong>Ngày {{this.createdAt}}: </strong>{{this.treatmentLocation.name}}</li>
+                  {{/each}}
+              </ul>
+            </p>   
+            </div>
+            <div class="modal-footer d-flex justify-content-end">
+                <button type="button" class="btn btn-primary"
+                    data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </div>

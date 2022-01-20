@@ -39,9 +39,113 @@ exports.getModerators = async (req, res) => {
   });
 };
 
-exports.getIndex = (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
+exports.getIndex = async (req, res) => {
+  try {
+    let idUser = parseInt(req.cookies.userId);
+    const user = await User.findOne({
+      where: { id: idUser },
+      raw: true,
+    });
+
+    const idCovidUser = await covidUser.findOne({
+      where: { identity_card: parseInt(user.username) },
+      attributes: ["id"],
+      raw: true,
+    });
+
+    const rs = await covidUser.findByPk(idCovidUser.id, {
+      include: [
+        {
+          // limit: 1,
+          model: HistoryStatus,
+          include: [
+            {
+              model: StatusCovid,
+              attributes: ["status"],
+            },
+          ],
+        },
+        {
+          model: HistoryLocation,
+          include: [
+            {
+              model: treatmentLocation,
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+      order: [
+        [HistoryStatus, "id", "ASC"],
+        [HistoryLocation, "id", "ASC"],
+      ],
+      nest: true,
+    });
+
+    const infoUser = JSON.parse(JSON.stringify(rs));
+
+    const statusId =
+      infoUser.histoty_user_statuses[infoUser.histoty_user_statuses.length - 1]
+        .statusCovidUserId;
+    const locationId =
+      infoUser.histoty_user_locations[
+        infoUser.histoty_user_locations.length - 1
+      ].treatmentLocationId;
+
+    const location = await treatmentLocation.findOne({
+      where: {
+        id: locationId,
+      },
+      raw: true,
+    });
+    const statusCovid = await StatusCovid.findOne({
+      where: {
+        id: statusId,
+      },
+      raw: true,
+    });
+
+    const relativeUser = await covidUser.findOne({
+      where: { id: infoUser.related_personId },
+      raw: true,
+    });
+
+    let related_person;
+    if (relativeUser) {
+      related_person = relativeUser.name;
+    } else {
+      related_person = "Không có";
+    }
+
+    for (let h of infoUser.histoty_user_statuses) {
+      h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+    }
+    for (let h of infoUser.histoty_user_locations) {
+      h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+    }
+    const userCovid = {
+      userId: infoUser.id,
+      name: infoUser.name,
+      location: location.name,
+      identity_card: infoUser.identity_card,
+      province: infoUser.province,
+      district: infoUser.district,
+      ward: infoUser.ward,
+      yob: infoUser.yob,
+      status: statusCovid.status,
+      related_person: related_person,
+      histoty_user_statuses: infoUser.histoty_user_statuses,
+      histoty_user_locations: infoUser.history_user_location,
+    };
+
+    return res.render("user/main", {
+      layout: "user/main",
+      function: "personal-information",
+      nameItem1: "Xem thông tin cá nhân",
+      user: userCovid,
+    });
+  } catch (error) {
+    console.log(error);
   }
 
   return res.render("user/main", {
@@ -160,10 +264,6 @@ exports.getPersonalInformation = async (req, res) => {
 };
 
 exports.getHistoryNecessityCombo = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   try {
     let idUser = parseInt(req.cookies.userId);
 
@@ -232,9 +332,6 @@ exports.getHistoryNecessityCombo = async (req, res) => {
 };
 
 exports.getChangeInformation = (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
   return res.render("user/change-information", {
     layout: "user/main",
     function: "change-information",
@@ -318,10 +415,6 @@ exports.postChangeInformation = async (req, res) => {
 };
 
 exports.getBuyNecessityCombo = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   if (!req.session.cart) {
     req.session.cart = [];
   }
@@ -410,10 +503,6 @@ exports.getBuyNecessityCombo = async (req, res) => {
 };
 
 exports.getCart = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   if (!req.session.cart) {
     req.session.cart = [];
   }
@@ -445,10 +534,6 @@ exports.getCart = async (req, res) => {
 };
 
 exports.postAddCart = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   if (!req.session.cart) {
     req.session.cart = [];
   }
@@ -532,10 +617,6 @@ exports.postAddCart = async (req, res) => {
 };
 
 exports.deleteCart = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   let idCombo = parseInt(req.params.id);
   if (!req.session.cart || req.session.cart.length == 0) {
     return res.render("user/cart", {
@@ -583,10 +664,6 @@ exports.deleteCart = async (req, res) => {
 };
 
 exports.postOrderNecessityCombo = async (req, res) => {
-  if (!req.cookies.userId || req.cookies.role != "user") {
-    return res.redirect("/");
-  }
-
   let keys = Object.keys(req.body);
   let values = Object.values(req.body);
   let idCombos = [];

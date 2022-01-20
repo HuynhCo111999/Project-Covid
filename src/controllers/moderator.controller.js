@@ -50,7 +50,7 @@ exports.getIndex = async (req, res) => {
     nest: true,
   });
   const obj = JSON.parse(JSON.stringify(users));
-  console.log(obj);
+  
   for (let o of obj) {
     for (let h of o.histoty_user_statuses) {
       h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
@@ -59,6 +59,7 @@ exports.getIndex = async (req, res) => {
       h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
     }
   }
+  
   res.render("moderator/main", {
     layout: "moderator/main",
     function: "list",
