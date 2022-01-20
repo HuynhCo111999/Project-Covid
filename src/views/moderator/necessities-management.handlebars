@@ -70,14 +70,14 @@
                             {{#each necessities}}
                             <tr style="display: inline">
                                 <td>
-                                    <div class="col-md-auto m-3">
-                                        <div class="card" style="width: 18rem;">                                            
-                                            <img src="{{image_path}}" class="card-img-top" alt="Hình ảnh sản phẩm {{id}}">
+                                    <div class="col-md-auto m-4">
+                                        <div class="card" style="width: 18rem; height: 28rem !important">                                            
+                                            <img src="{{image_path}}" class="card-img-top" alt="Hình ảnh sản phẩm {{id}}" style="max-height: 15rem">
                                             <div class="card-body" class="cardContent">
                                                 <h4 class="card-title">{{name}}</h4>
                                                 <p class="card-text font-weight-bold">{{price}} ₫/{{unit_of_measurement}}</p>
                                             </div>
-                                            <div class="card-body d-flex justify-content-center">
+                                            <div class="card-body d-flex justify-content-center align-items-end">
                                                 <a class="btn btn-primary my-1" type="button" href="/moderator/necessity-details/{{id}}"
                                                    data-id="{{id}}">Xem chi tiết</a>
                                             </div>

@@ -193,6 +193,7 @@ exports.getDetails = async (req, res) => {
       productPrice: necessityInstance.price,
       productPath: necessityInstance.image_path,
       title: "Chi tiết nhu yếu phẩm",
+      function: "necessities-product",
     });
   } catch (error) {
     return res.send(error);

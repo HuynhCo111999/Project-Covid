@@ -1,14 +1,13 @@
 <!-- Details Card -->
 <article class="postcard light" style="padding-left: 2rem;">
-    <div class="postcard__text">
+    <div class="postcard__text py-3">
         <h1 class="postcard__title"><a href="#">{{productName}}</a></h1>
         <div class="postcard__subtitle small">
             <span class="text-dark text-md">
-                <i class="fas fa-tag mr-2"></i> {{productUnit}}
+                <i class="fas fa-tag mr-2"></i> {{productPrice}}đ/{{productUnit}}
             </span>
         </div>
         <div class="postcard__bar bg-gradient-primary"></div>
-        <div class="postcard__preview-txt text-dark">{{productPrice}} ₫</div>
     </div>
 </article>
 
@@ -199,29 +198,29 @@
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Danh sách hình ảnh sản phẩm</h6>
+                    <h6 class="text-white text-capitalize ps-3">DANH SÁCH HÌNH ẢNH SẢN PHẨM</h6>
                 </div>
             </div>
             <div class="row justify-content-start mx-3">
                 <table id="userTable">
                     <tbody id="tableBody">
                         {{#each images}}
-                                <tr style="display: inline">
-                                     <td>
-                                         <div class="col-md-auto m-3">
-                                                <div class="card" style="width: 18rem;">
-                                                    <img src="{{image_path}}" class="img-thumbnail m-2">
-                                                    <div class="card-body">
-                                                        <button type="button" class="btn btn-lg bg-transparent border border-white text-danger"
-                                                            data-bs-toggle="modal" data-bs-target="#modalRemove"
-                                                            data-id="{{id}}">
-                                                            Xóa ảnh
-                                                        </button>
-                                                    </div>
+                            <tr style="display: inline">
+                                <td>
+                                     <div class="col-md-auto m-3">
+                                            <div class="card" style="width: 18rem;">
+                                                <img src="{{image_path}}" class="img-thumbnail m-2">
+                                                <div class="card-body">
+                                                    <button type="button" class="btn btn-lg bg-transparent border border-white text-danger"
+                                                        data-bs-toggle="modal" data-bs-target="#modalRemove"
+                                                        data-id="{{id}}">
+                                                        Xóa ảnh
+                                                    </button>
                                                 </div>
-                                         </div>
-                                     </td>
-                                </tr>                 
+                                            </div>
+                                     </div>
+                                </td>
+                            </tr>                 
                         {{/each}}
                     </tbody>
                 </table>
