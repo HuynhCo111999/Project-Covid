@@ -97,7 +97,6 @@ exports.getAddUser = async (req, res) => {
 };
 
 exports.postAddUser = async (req, res) => {
-  console.log(req.body.status);
   const errors = validationResult(req);
   const users = await covidUser.findAll({
     raw: true,
@@ -437,7 +436,7 @@ exports.editUser = async (req, res) => {
       user.province = req.body.province;
       user.district = req.body.district;
       user.ward = req.body.ward;
-      user.related_personId = parseInt(req.body.related_person.split(".")[0]);
+      user.related_personId = req.body.related_person;
       return user.save();
     })
     .then(async () => {
