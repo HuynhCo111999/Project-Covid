@@ -2,6 +2,7 @@ const db = require("../models");
 const treatmentLocation = db.treatmentLocation;
 const HistoryStatus = require("../models/index").history_user_status;
 const covidNecessityCombo = db.covidNecessityCombo;
+const covidNecessity = db.covidNecessity;
 const sequelize = db.sequelize;
 
 const { Op } = require("sequelize");
@@ -83,8 +84,24 @@ exports.index = async (req, res) => {
     arrSumCombo.push(temp);
   }
 
+  //Get thong tin necessity theo ngay
+  var b = await getNumberNecessityByTime(text2, date, -1);
+  var arrSumNecessity = [b];
+  for (let i = 0; i < 6; i++) {
+    var temp = await getNumberNecessityByTime(
+      arrISOString[i + 1],
+      arrISOString[i],
+      -1
+    );
+    arrSumNecessity.push(temp);
+  }
+
   //get Combo
   const combo = await covidNecessityCombo.findAll({
+    raw: true,
+  });
+  //get Necessity
+  const necessity = await covidNecessity.findAll({
     raw: true,
   });
 
@@ -98,7 +115,9 @@ exports.index = async (req, res) => {
     sumKhoi: sumKhoi,
     arrDateString: arrDateString,
     arrSumCombo: arrSumCombo,
+    arrSumNecessity: arrSumNecessity,
     combo: combo,
+    necessity: necessity,
     title: "Thống kê thông tin",
   });
 };
@@ -185,9 +204,40 @@ exports.getAmountByCombo = async (req, res) => {
   res.send(arrSumCombo);
 };
 
-// exports.getAmountByTime = async (req, res) => {
+exports.getAmountByNecessity = async (req, res) => {
+  var necessityId = parseInt(req.body.necessity);
 
-// }
+  var date = new Date().toISOString();
+  var date2 = new Date();
+  date2.setHours(0);
+  date2.setMinutes(0);
+  date2.setSeconds(0);
+  date2.setMilliseconds(0);
+  var text2 = date2.toISOString();
+
+  var arrISOString = [text2];
+  for (let i = 1; i < 7; i++) {
+    var temp = new Date(date2);
+    temp.setDate(date2.getDate() - i);
+    arrISOString.push(temp.toISOString());
+  }
+  //Get thong tin combo theo ngay
+  var a = await getNumberNecessityByTime(text2, date, necessityId);
+  var arrSumNecessity = [a];
+  for (let i = 0; i < 6; i++) {
+    var temp = await getNumberNecessityByTime(
+      arrISOString[i + 1],
+      arrISOString[i],
+      necessityId
+    );
+    arrSumNecessity.push(temp);
+  }
+  var revertArray = arrSumNecessity.reverse();
+  res.send(revertArray);
+};
+
+
+
 const getNumberByStatusToday = async (date, statusid) => {
   try {
     const row = await sequelize.query(
@@ -237,6 +287,34 @@ const getNumberComboByTime = async (start, end, combo) => {
         `SELECT COALESCE(SUM("quantity"),0) AS "sum"
                 FROM "orderDetails" 
                 WHERE "id_combo" = ${combo} AND "createdAt" >= '${start}' AND "createdAt" < '${end}'`,
+        { type: QueryTypes.SELECT }
+      );
+      return row[0].sum;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return 0;
+};
+const getNumberNecessityByTime = async (start, end, necessity) => {
+  if (necessity == -1) {
+    try {
+      const row = await sequelize.query(
+        `SELECT COALESCE(SUM("quantity"),0) AS "sum"
+                FROM "order_detail-necessities"
+                WHERE "createdAt" >= '${start}' AND "createdAt" < '${end}'`,
+        { type: QueryTypes.SELECT }
+      );
+      return row[0].sum;
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    try {
+      const row = await sequelize.query(
+        `SELECT COALESCE(SUM("quantity"),0) AS "sum"
+                FROM "order_detail-necessities" 
+                WHERE "id_necessity" = ${necessity} AND "createdAt" >= '${start}' AND "createdAt" < '${end}'`,
         { type: QueryTypes.SELECT }
       );
       return row[0].sum;

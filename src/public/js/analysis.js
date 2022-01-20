@@ -34,3 +34,18 @@ function handleChangeCombo() {
         }
     });
 }
+function handleChangeNecessity() {
+    const necessity = $("#selectNecessity").val();
+    $.ajax({
+        url: "https://localhost:3000/moderator/api/getamountbynecessity",
+        type: 'post',
+        data: { necessity },
+        success: function (data) {
+            chart3.data.datasets[0].data = data;
+            chart3.update();
+        },
+        error: function (e) {
+            console.log(e.message);
+        }
+    });
+}
