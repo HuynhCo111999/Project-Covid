@@ -26,7 +26,7 @@ const db = require("./models");
 const init = require("./middleware/init-table");
 // db.sequelize.sync();
 db.sequelize.sync({ force: false, alter: true }).then(() => {
-    //init.initial();
+    // init.initial();
 });
 app.use(
     session({

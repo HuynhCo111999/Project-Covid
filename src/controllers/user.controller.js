@@ -402,6 +402,69 @@ exports.postChangeInformation = async(req, res) => {
     return res.redirect("/user");
 };
 
+exports.getChangePassFirst = (req, res) => {
+    return res.render("user/changePassFirst", {
+        layout: "main",
+    });
+};
+
+exports.postChangePassFirst = async(req, res) => {
+    if (!req.cookies.userId) {
+        return res.redirect("/");
+    }
+    let idUser = parseInt(req.cookies.userId);
+    const user = await User.findOne({
+        where: { id: idUser },
+        raw: true,
+    });
+
+    let inputNewPwd = req.body.newPassword;
+    let inputConfirmPwd = req.body.confirmPassword;
+
+    let flag = false;
+    let errMsg1 = "",
+        errMsg2 = "",
+        errMsg3 = "";
+
+    if (inputNewPwd.length < 6) {
+        errMsg2 = "Vui lòng nhập tối thiểu 6 ký tự";
+        flag = true;
+    }
+
+    if (inputConfirmPwd.length < 6) {
+        errMsg3 = "Vui lòng nhập tối thiểu 6 ký tự";
+        flag = true;
+    } else {
+        if (!inputNewPwd.includes(inputConfirmPwd)) {
+            errMsg3 = "Mật khẩu không khớp";
+            flag = true;
+        }
+    }
+
+    if (flag == true) {
+        res.render("user/changePassFirst", {
+            layout: "main",
+            errMsg1: errMsg1,
+            errMsg2: errMsg2,
+            errMsg3: errMsg3,
+            // value1: inputPwd,
+            // value2: inputNewPwd,
+            // value3: inputConfirmPwd,
+        });
+        return;
+    }
+
+    const updatePwd = await bcrypt.hash(inputNewPwd, 8);
+    await User.update({
+        password: updatePwd,
+        isFirst: false,
+    }, {
+        where: { username: user.username },
+    });
+
+    return res.redirect("/user");
+};
+
 exports.getBuyNecessityCombo = async(req, res) => {
     if (!req.session.cart) {
         req.session.cart = [];

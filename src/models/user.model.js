@@ -12,6 +12,11 @@ module.exports = (sequelize, Sequelize) => {
       isActive: {
         type: Sequelize.BOOLEAN,
         allowNull: true
+      },
+      isFirst: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: true,
       }
     });
   
