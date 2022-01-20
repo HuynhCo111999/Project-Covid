@@ -28,11 +28,12 @@ db.statusCovidUser = require("../models/status-covid-user.model.js")(sequelize, 
 db.history_user_status = require("../models/history-user-status.model.js")(sequelize, Sequelize);
 db.history_user_location = require("../models/history-user-treatmentLocation.model.js")(sequelize, Sequelize);
 db.covidNecessity = require("../models/covid-necessity.model")(sequelize, Sequelize);
-db.covidNecessityImages = require("../models/covid-necessity-images.model")(sequelize,Sequelize);
+db.covidNecessityImages = require("../models/covid-necessity-images.model")(sequelize, Sequelize);
 db.covidNecessityCombo = require("../models/covid-necessity-combo.model")(sequelize, Sequelize);
 db.covidNecessityOfCombo = require("../models/covid-necessitiy-of-combo.model")(sequelize, Sequelize);
 db.order = require("../models/order.model")(sequelize, Sequelize);
 db.orderDetail = require("../models/order-detail.model")(sequelize, Sequelize);
+db.orderDetailNecessity = require("../models/order-detail-necessity.model")(sequelize, Sequelize);
 
 
 db.role.belongsToMany(db.user, {
@@ -50,16 +51,16 @@ db.histories.belongsTo(db.user, {
     foreignKey: "userId",
 });
 
-// db.covidNecessity.belongsToMany(db.covidNecessityCombo, {
-//     through: "covid-necessities-of-combo",
-//     foreignKey: "id_necessity",
-//     otherKey: "id_combo",
-// });
-// db.covidNecessityCombo.belongsToMany(db.covidNecessity, {
-//     through: "covid-necessities-of-combo",
-//     foreignKey: "id_combo",
-//     otherKey: "id_necessity",
-// });
+db.covidNecessity.belongsToMany(db.covidNecessityCombo, {
+    through: "covid-necessities-of-combo",
+    foreignKey: "id_necessity",
+    otherKey: "id_combo",
+});
+db.covidNecessityCombo.belongsToMany(db.covidNecessity, {
+    through: "covid-necessities-of-combo",
+    foreignKey: "id_combo",
+    otherKey: "id_necessity",
+});
 
 db.order.belongsTo(db.user, {
     foreignKey: "userId",
@@ -88,8 +89,8 @@ db.history_user_location.belongsTo(db.treatmentLocation);
 db.covidUser.hasMany(db.history_user_location);
 db.treatmentLocation.hasMany(db.history_user_location);
 
-db.covidUser.hasMany(db.covidUser, { foreignKey : 'related_personId', as: 'downRelated' });
-db.covidUser.belongsTo(db.covidUser, { foreignKey: 'related_personId', as: 'upRelated'});
+db.covidUser.hasMany(db.covidUser, { foreignKey: 'related_personId', as: 'downRelated' });
+db.covidUser.belongsTo(db.covidUser, { foreignKey: 'related_personId', as: 'upRelated' });
 
 db.ROLES = ["user", "admin", "moderator"];
 
