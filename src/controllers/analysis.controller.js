@@ -3,6 +3,7 @@ const treatmentLocation = db.treatmentLocation;
 const HistoryStatus = require("../models/index").history_user_status;
 const covidNecessityCombo = db.covidNecessityCombo;
 const covidNecessity = db.covidNecessity;
+const covidUser = db.covidUser;
 const sequelize = db.sequelize;
 
 const { Op } = require("sequelize");
@@ -95,6 +96,8 @@ exports.index = async (req, res) => {
     );
     arrSumNecessity.push(temp);
   }
+  //get Du no theo ngay
+  var payment = await getPayment();
 
   //get Combo
   const combo = await covidNecessityCombo.findAll({
@@ -116,6 +119,7 @@ exports.index = async (req, res) => {
     arrDateString: arrDateString,
     arrSumCombo: arrSumCombo,
     arrSumNecessity: arrSumNecessity,
+    payment: payment,
     combo: combo,
     necessity: necessity,
     title: "Thống kê thông tin",
@@ -321,6 +325,19 @@ const getNumberNecessityByTime = async (start, end, necessity) => {
     } catch (error) {
       console.log(error);
     }
+  }
+  return 0;
+};
+const getPayment = async () => {
+  try {
+    const row = await sequelize.query(
+      `SELECT COALESCE(SUM("payment"),0) AS "sum"
+              FROM "covid-users"`,
+      { type: QueryTypes.SELECT }
+    );
+    return row[0].sum;
+  } catch (error) {
+    console.log(error);
   }
   return 0;
 };

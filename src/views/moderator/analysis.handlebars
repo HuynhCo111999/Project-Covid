@@ -62,7 +62,7 @@
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col-lg-4 col-md-6 mt-4 mb-4">
+        <div class="col-lg-6 col-md-6 mt-4 mb-4">
             <div class="card z-index-2 ">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
                     <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 mt-4 mb-4">
+        <div class="col-lg-6 col-md-6 mt-4 mb-4">
             <div class="card z-index-2  ">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
                     <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
@@ -115,7 +115,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 mt-4 mb-3">
+        <div class="col-lg-6 mt-4 mb-3">
             <div class="card z-index-2 ">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
                     <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
@@ -144,6 +144,22 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 mt-4 mb-3">
+            <div class="card z-index-2 ">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                    <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
+                        <div class="chart">
+                            <canvas id="chart-line-tasks2" class="chart-canvas" height="170"></canvas>
+                        </div>
+                    </div>
+                </div>
+            <div class="card-body">
+                <h6 class="mb-0 ">Thống kê dư nợ hệ thống</h6>
+                    <p class="text-sm ">Tổng dư nợ hiện hành theo ngày.</p>
+                    <hr class="dark horizontal">
+                </div>
+            </div>
+        </div>
     </div>
     <script src="/js/plugins/chartjs.min.js"></script>
     <script>
@@ -154,7 +170,7 @@
             data: {
                 labels: ["Đã khỏi", "F0", "F1", "F2", "F3"],
                 datasets: [{
-                    label: "Sales",
+                    label: "Người",
                     tension: 0.4,
                     borderWidth: 0,
                     borderRadius: 4,
@@ -389,6 +405,86 @@
             },
         },
     });
+
+    var ctx4 = document.getElementById("chart-line-tasks2").getContext("2d");
+    var chart4 = new Chart(ctx4, {
+            type: "bar",
+            data: {
+                labels: ["Dư nợ"],
+                datasets: [{
+                    label: "VND",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    backgroundColor: "rgba(255, 255, 255, .8)",
+                    data: [{{payment}}],
+                    maxBarThickness: 6
+                },],
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5],
+                            color: 'rgba(255, 255, 255, .2)'
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            suggestedMax: 500,
+                            beginAtZero: true,
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                weight: 300,
+                                family: "Roboto",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                            color: "#fff"
+                        },
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5],
+                            color: 'rgba(255, 255, 255, .2)'
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#f8f9fa',
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                weight: 300,
+                                family: "Roboto",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                },
+            },
+        });
     </script>
     <script src="/js/analysis.js"></script>
 </div>

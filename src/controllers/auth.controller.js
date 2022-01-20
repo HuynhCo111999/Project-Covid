@@ -229,6 +229,8 @@ exports.logout = async(req, res) => {
       userId: userId
     }).then(() => {
       res.clearCookie("access_token");
+      res.clearCookie("userId");
+      res.clearCookie("role");
       return res.redirect('/');
     }).catch((error) => {
       console.log(error);
