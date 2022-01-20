@@ -2,6 +2,128 @@
     <a href="/user/buy-necessity-combo" type="button" class="btn bg-gradient-primary btn-block mx-3">Tiếp tục mua hàng</a>
 </div>
 
+<div class="modal fade" id="debit" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align:center" class="modal-title font-weight-normal" id="exampleModalLabel">
+                    GHI NỢ
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    totalAmount: {{totalAmount}}
+                    <p class="text-danger" id="errmsg"></p>
+                    <button onclick="handleClickDebit({{userId}}, {{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align:center" class="modal-title font-weight-normal" id="exampleModalLabel">
+                    THANH TOÁN
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    totalAmount: {{totalAmount}}
+                    <p class="text-danger" id="paymsg"></p>
+                    <button onclick="handlePayment({{userId}}, {{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ConfirmPayment" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align:center" class="modal-title font-weight-normal" id="exampleModalLabel">
+                    XÁC NHẬN THANH TOÁN
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <div class="col-12">
+                        <p>Sao chép token và xác nhận</p>
+                    </div>
+                    <div class="col-12">
+                        <span id="token-payment"></span>
+                    </div>
+                    <form role="form text-left" id="add-location-form" >
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Token Recharge</label>
+                            <input type="text" class="form-control" name="token-recharge" id="token-recharge">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="msg"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="confirmPayment({{userInfo.userId}})" class="btn bg-gradient-primary">Xác nhận</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ConfirmDebit" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align:center" class="modal-title font-weight-normal" id="exampleModalLabel">
+                    XÁC NHẬN GHI NỢ
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <div class="col-12">
+                        <p>Sao chép token và xác nhận</p>
+                    </div>
+                    <div class="col-12">
+                        <span id="token-debit"></span>
+                    </div>
+                    <form role="form text-left" id="add-location-form" >
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Token Recharge</label>
+                            <input type="text" class="form-control" name="token-recharge" id="token-recharge">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="msg"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="confirmDebit({{userInfo.userId}})" class="btn bg-gradient-primary">Xác nhận</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <form method="POST" action="/user/order" name="formCart">
 <div class="row">
@@ -105,17 +227,212 @@
     <p class="btn bg-gradient-secondary btn-block amountAllCombo mx-3">Tổng tiền thanh toán: {{totalAmount}}đ</p>
 </div>
 <div class="d-flex justify-content-end mb-3">
-    <button type="click" class="btn bg-gradient-primary btn-block mx-3" id="debit">
-        GHI NỢ
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
+            data-bs-target="#debit">
+            GHI NỢ
         </button>
-    <button type="click" class="btn bg-gradient-primary btn-block mx-3" id="payment">
-        THANH TOÁN NGAY
-    </button>
+    </div>
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
+            data-bs-target="#payment">
+            THANH TOÁN NGAY
+        </button>
+    </div>
 </div>
 {{/if}}
 </form>
 
+<script src="/js/core/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
+        let dataMain = null;
+
+        const handleClickDebit = (id, temp) => {
+            console.log("handleClickDebit: ", id, temp);
+            if(!temp) {
+                $("#errmsg").text("Không có tiền để ghi nợ");
+                return;
+            }
+            const money = Number(temp);
+            if(money <= 0) {
+                $("#errmsg").text("Số tiền phải lớn hơn 0.")
+                return;
+            }
+            const data = {
+                money: money,
+                position: 'RECHARGE',
+                status: 'START',
+                userId: id
+            }
+            fetch(`https://localhost:3001/credit/recharge`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }).then(response => 
+                response.json())
+            .then(data => {
+                if(data.success) {
+                    $('#debit').modal('hide');
+                    $('#ConfirmDebit').modal('show');
+                    $("#token-debit").text(data.data.tokenpayment);
+                    dataMain = data.data;
+                    console.log("data: ", data);
+                } else {
+                    $('#exampleModalSignUp').modal('hide');
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Update error',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                }
+            });
+
+        } 
+
+
+        const handlePayment = (id, temp) => {
+            
+            console.log("handleClickDebit: ", id, temp);
+            if(!temp) {
+                $("#paymsg").text("Không có tiền để thanh toán");
+                return;
+            }
+            const money = Number(temp);
+            if(money <= 0) {
+                $("#paymsg").text("Số tiền phải lớn hơn 0.")
+                return;
+            }
+            const data = {
+                money: money,
+                position: 'PAYMENT',
+                status: 'START',
+                userId: id
+            }
+            fetch(`https://localhost:3001/credit/payment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }).then(response => 
+                response.json())
+            .then(data => {
+                if(data.success) {
+                    $('#payment').modal('hide');
+                    $('#ConfirmPayment').modal('show');
+                    $("#token-payment").text(data.data.tokenpayment);
+                    dataMain = data.data;
+                    console.log("data: ", data);
+                } else {
+                    $('#exampleModalSignUp').modal('hide');
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Update error',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                }
+            });
+        }
+
+        const confirmDebit = (id) => {
+        const temp = $("#token-recharge").val();
+        if(!temp) {
+            $("#msg").text("Vui lòng nhập số tiền.")
+            return;
+        }
+        const data = {
+            token: temp,
+            userId: id,
+            postion: 'DEBIT',
+            money: dataMain.money
+        }
+
+        fetch(`https://localhost:3001/credit/identify`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then(response => 
+            response.json())
+          .then(data => {
+            if(data.success) {
+                $('#ConfirmDebit').modal('hide');
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Update sucesss',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+                console.log("data: ", data);
+            } else {
+                $('#exampleModalSignUp').modal('hide');
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Update error',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }
+          });
+    }
+
+
+        const confirmPayment = (id) => {
+        const temp = $("#token-recharge").val();
+        if(!temp) {
+            $("#msg").text("Vui lòng nhập số tiền.")
+            return;
+        }
+        const data = {
+            token: temp,
+            userId: id,
+            postion: 'PAYMENT',
+            money: dataMain.money
+        }
+
+        fetch(`https://localhost:3001/credit/identify`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then(response => 
+            response.json())
+          .then(data => {
+            if(data.success) {
+                $('#ConfirmPayment').modal('hide');
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Update sucesss',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+                console.log("data: ", data);
+            } else {
+                $('#exampleModalSignUp').modal('hide');
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Update error',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }
+          });
+    }
+
         function getParent(element, selector) {
             while (element.parentElement) {
                 if (element.parentElement.matches(selector)) {
@@ -216,4 +533,5 @@
                 }
             }
         });
+
 </script> 

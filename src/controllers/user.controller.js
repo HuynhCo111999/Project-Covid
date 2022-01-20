@@ -555,7 +555,7 @@ exports.getCart = async(req, res) => {
     if (!req.session.cart) {
         req.session.cart = [];
     }
-
+    const userId = req.cookies['userId']
     if (!req.session.cart || req.session.cart.length == 0) {
         return res.render("user/cart", {
             layout: "user/main",
@@ -563,6 +563,7 @@ exports.getCart = async(req, res) => {
             function: "buy-necessity-combo",
             nameItem1: "Mua gói nhu yếu phẩm",
             nameItem2: "Giỏ hàng",
+            userId: userId,
             failureMessage2: "Không có gói nhu yếu phẩm nào trong giỏ hàng",
         });
     } else {
@@ -578,6 +579,7 @@ exports.getCart = async(req, res) => {
             nameItem1: "Mua gói nhu yếu phẩm",
             nameItem2: "Giỏ hàng",
             totalAmount: totalAmount,
+            userId: userId
         });
     }
 };
@@ -586,6 +588,7 @@ exports.postAddCart = async(req, res) => {
     if (!req.session.cart) {
         req.session.cart = [];
     }
+    const userId = req.cookies['userId']
 
     let carts = req.session.cart;
     let idCombo = parseInt(req.body.dataHide2);
@@ -597,6 +600,7 @@ exports.postAddCart = async(req, res) => {
                 function: "buy-necessity-combo",
                 nameItem1: "Mua gói nhu yếu phẩm",
                 nameItem2: "Giỏ hàng",
+                userId: userId,
                 failureMessage: "Gói nhu yếu phẩm này đã có trong giỏ hàng",
             });
         }
@@ -662,6 +666,7 @@ exports.postAddCart = async(req, res) => {
         nameItem1: "Mua gói nhu yếu phẩm",
         nameItem2: "Giỏ hàng",
         totalAmount: totalAmount,
+        userId: userId
     });
 };
 
@@ -701,6 +706,7 @@ exports.deleteCart = async(req, res) => {
                 failureMessage2: "Không có gói nhu yếu phẩm nào trong giỏ hàng",
             });
         }
+        const userId = req.cookies['userId']
         return res.render("user/cart", {
             layout: "user/main",
             carts: req.session.cart,
@@ -708,6 +714,7 @@ exports.deleteCart = async(req, res) => {
             nameItem1: "Mua gói nhu yếu phẩm",
             nameItem2: "Giỏ hàng",
             totalAmount: totalAmount,
+            userId: userId
         });
     }
 };
@@ -979,6 +986,7 @@ exports.postOrderNecessityCombo = async(req, res) => {
         }
 
         if (flag === true) {
+            const userId = req.cookies['userId']
             return res.render("user/cart", {
                 layout: "user/main",
                 carts: req.session.cart,
@@ -986,6 +994,7 @@ exports.postOrderNecessityCombo = async(req, res) => {
                 nameItem1: "Mua gói nhu yếu phẩm",
                 nameItem2: "Giỏ hàng",
                 totalAmount: totalAmount,
+                userId: userId,
                 failureMessageString: errorMessageArray,
             });
         } else {
