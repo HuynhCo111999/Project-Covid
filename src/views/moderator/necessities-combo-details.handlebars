@@ -1,6 +1,6 @@
 <!-- Details Card -->
 <article class="postcard light" style="padding-left: 2rem;">
-    <div class="postcard__text">
+    <div class="postcard__text py-3">
         <h1 class="postcard__title"><a href="#">{{comboName}}</a></h1>
         <div class="postcard__subtitle small">
             <span class="text-dark text-md">
@@ -240,22 +240,23 @@
     <div class="col-12">
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Danh sách các nhu yếu phẩm trong gói</h6>
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-3 pb-2">
+                    <h6 class="text-white text-center ps-3" style="font-size: 1.05rem">DANH SÁCH CÁC NHU YẾU PHẨM TRONG GÓI</h6>
                 </div>
             </div>
             <div class="table-responsive p-0">
-                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
+                    <table id="userTable" class="table align-items-center mb-0 mt-3" style="table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-30 table-header" onclick="sortTable(0)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" style="width: 22.5%" onclick="sortTable(0)">
                                     Tên sản phẩm &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(1)">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-25 table-header" style="width: 10%" onclick="sortTable(1)">
                                     Giá/ Định lượng &#9650</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(2)">
-                                    Số lượng mua tối thiểu &#9650</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header ps-1" onclick="sortTable(2)">
+                                    SL Mua tối thiểu &#9650</th>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder text-center table-header" onclick="sortTable(3)">
-                                    Số lượng mua tối đa &#9650</th>  
+                                    SL mua tối đa &#9650</th>  
+                                    <th style="width:22%"></th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
