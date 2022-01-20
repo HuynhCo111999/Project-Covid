@@ -19,7 +19,7 @@ exports.initial = () => {
     name: "admin",
   });
   StatusCovid.create({
-    status: "Da khoi benh",
+    status: "Đã khỏi bệnh",
   });
   StatusCovid.create({
     status: "F0",
@@ -34,27 +34,27 @@ exports.initial = () => {
     status: "F3",
   });
   TreatmentLocation.create({
-    name: "Benh Vien A",
+    name: "Bệnh viện A",
     capacity: 1000,
     current: 0,
   });
   TreatmentLocation.create({
-    name: "Trung tam y te B",
+    name: "Trung tâm y tế B",
     capacity: 200,
     current: 0,
   });
   TreatmentLocation.create({
-    name: "Benh Vien C",
+    name: "Bệnh Viện C",
     capacity: 1000,
     current: 0,
   });
   TreatmentLocation.create({
-    name: "Benh Vien D",
+    name: "Bệnh Viện D",
     capacity: 5000,
     current: 0,
   });
   TreatmentLocation.create({
-    name: "Trung tam y te E",
+    name: "Trung tâm y tế E",
     capacity: 1000,
     current: 0,
   });

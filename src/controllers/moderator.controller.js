@@ -53,10 +53,12 @@ exports.getIndex = async (req, res) => {
   
   for (let o of obj) {
     for (let h of o.histoty_user_statuses) {
-      h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+      var temp = new Date(h.createdAt);
+      h.createdAt = temp.toLocaleString('en-GB');
     }
     for (let h of o.histoty_user_locations) {
-      h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+      var temp = new Date(h.createdAt);
+      h.createdAt = temp.toLocaleString('en-GB');
     }
   }
   
@@ -83,6 +85,11 @@ exports.getAddUser = async (req, res) => {
     raw: true,
   });
   const statusCovid = await StatusCovid.findAll({
+    where: {
+      id: {
+        [Op.ne]: 1,
+      }
+    },
     raw: true,
   });
 
@@ -111,6 +118,11 @@ exports.postAddUser = async (req, res) => {
     raw: true,
   });
   const statusCovid = await StatusCovid.findAll({
+    where: {
+      id: {
+        [Op.ne]: 1,
+      }
+    },
     raw: true,
   });
 
@@ -215,6 +227,11 @@ exports.postAddUser = async (req, res) => {
         raw: true,
       });
       const statusCovid = await StatusCovid.findAll({
+        where: {
+          id: {
+            [Op.ne]: 1,
+          }
+        },
         raw: true,
       });
       return res.render("moderator/add-user", {
@@ -518,6 +535,16 @@ exports.editUser = async (req, res) => {
         nest: true,
       });
       const obj = JSON.parse(JSON.stringify(users));
+      for (let o of obj) {
+        for (let h of o.histoty_user_statuses) {
+          var temp = new Date(h.createdAt);
+          h.createdAt = temp.toLocaleString('en-GB');
+        }
+        for (let h of o.histoty_user_locations) {
+          var temp = new Date(h.createdAt);
+          h.createdAt = temp.toLocaleString('en-GB');
+        }
+      }
       res.render("moderator/main", {
         layout: "moderator/main",
         function: "list",
