@@ -75,6 +75,8 @@ router.post(
 router.get('/analysis', isMod,analysis.index);
 router.post('/api/getamountbytime', isMod, analysis.getAmountByTime);
 router.post('/api/getamountbycombo', isMod, analysis.getAmountByCombo);
+router.post('/api/getamountbynecessity', isMod, analysis.getAmountByNecessity);
+
 
 
 
