@@ -1,11 +1,3 @@
-<div class="d-flex justify-content-end mb-3">
-    <div class="d-flex justify-content-end mb-3">
-        <a href="/user/cart" type="button" class="btn bg-gradient-primary btn-block mx-3">
-            <i class="material-icons opacity-10">shopping_cart</i>
-        </a>
-    </div>
-</div>
-
 <div class="row">
     <div class="col-12">
         <div class="card my-4">
@@ -23,14 +15,45 @@
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive p-0">
                     <div class="ms-md-auto pe-md-3 d-flex flex-row align-items-center justify-content-left mt-4 mb-5">
-                        <div class="input-group input-group-outline w-45 mt-1 me-4" style="margin-left: 4rem">
+                        <div class="input-group input-group-outline w-45 mt-1 me-4" style="margin-left: 2rem">
                             <label class="form-label">Tìm kiếm</label>
                             <input type="text" class="form-control border-primary" id="searchInput">
                         </div>
-                        <div class="p-2" style="margin-left: 2rem">
+                        <div class="p-2 col-md-auto">
+                            <div class="dropdown ms-2 m-0">
+                                <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="filterDropdownMenuLink2">
+                                    Lọc thời gian
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="filterDropdownMenuLink2">
+                                    <li>
+                                        <span class="dropdown-item">Thời gian giới hạn:</span>
+                                    </li>
+                                    <li>
+                                        <div class="col-md-auto mx-3">
+                                            <input type="checkbox" id="dayCheckbox" name="dayCheckBox" value="Day" checked>
+                                            <label for="dayCheckBox"> Ngày</label>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="col-md-auto mx-3">
+                                            <input type="checkbox" id="weekCheckbox" name="weekCheckbox" value="Week" checked>
+                                            <label for="weekCheckbox"> Tuần</label>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="col-md-auto mx-3">
+                                            <input type="checkbox" id="monthCheckbox" name="monthCheckbox" value="Month" checked>
+                                            <label for="monthCheckbox"> Tháng</label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-2">
+                        {{!-- <div class="p-2 col-md-auto"></div> --}}
                             <div class="dropdown ms-2 m-0">
                                 <a href="#" class="btn bg-gradient-primary dropdown-toggle m-0" data-bs-toggle="dropdown" id="filterDropdownMenuLink">
-                                    Lọc
+                                    Lọc số lượng
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="filterDropdownMenuLink">
                                     <div class="dropdown-item d-flex justify-content-center">
@@ -45,13 +68,15 @@
                                 </ul>
                             </div>
                         </div>
-                        {{!-- <div class="d-flex justify-content-end p-2">
+                        <div class="d-flex justify-content-end p-2">
                                 <div class="ms-2 m-0">
-                                <a href="/user/cart" type="button" class="btn bg-gradient-primary btn-block mt-3">Giỏ hàng</a>
-                            </div>
-                        </div> --}}
+                                    <a href="/user/cart" type="button" class="btn bg-gradient-primary btn-block my-3">
+                                        <i class="material-icons opacity-10">shopping_cart</i>
+                                    </a>
+                                </div>
+                        </div>
                     </div>
-                    <table id="userTable" class="table align-items-center mb-0" style="table-layout: fixed;">
+                    <table id="userTable" class="table align-items-center mb-6" style="table-layout: fixed;">
                         <thead>
                             <tr>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder text-center w-30 table-header" onclick="sortTable(0)">
@@ -137,27 +162,157 @@
 <script type="text/javascript" src="/js/core/jquery-3.6.0.min.js"></script>
 
 <script>
+
     $( function() {
-        console.log("****VO HAM NE")
+    
+        const day = $("#dayCheckbox");
+        const week = $("#weekCheckbox");
+        const month = $("#monthCheckbox");
+
+        day.change(function() {
+            console.log("Day change");
+            $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+            $("#amount").val( "1 - 10 gói");
+            if(this.checked)
+            {
+                const table = document.getElementById("userTable");
+                let rows = table.rows;
+                for (i = 1; i < rows.length; i++)
+                {
+                    let rowsItem = rows[i].getElementsByTagName("td")[2];
+                    let rowsDataItem = rowsItem.getElementsByTagName("h6")[0];
+                    let rowsVal = rowsDataItem.innerHTML.toLowerCase().substring(rowsDataItem.innerHTML.indexOf('/') + 1);
+                    
+                    if(rowsVal == "ngày")
+                    {
+                        rows[i].style.display = "table-row";
+                    }
+                }
+            }
+            else
+            {
+                const table = document.getElementById("userTable");
+                let rows = table.rows;
+                for (i = 1; i < rows.length; i++)
+                {
+                    let rowsItem = rows[i].getElementsByTagName("td")[2];
+                    let rowsDataItem = rowsItem.getElementsByTagName("h6")[0];
+                    let rowsVal = rowsDataItem.innerHTML.toLowerCase().substring(rowsDataItem.innerHTML.indexOf('/') + 1);
+
+                    if(rowsVal == "ngày")
+                    {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }        
+        });
+
+        week.change(function() {
+            $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+            $("#amount").val( "1 - 10 gói");
+            if(this.checked)
+            {
+                const table = document.getElementById("userTable");
+                let rows = table.rows;
+                for (i = 1; i < rows.length; i++)
+                {
+                    let rowsItem = rows[i].getElementsByTagName("td")[2];
+                    let rowsDataItem = rowsItem.getElementsByTagName("h6")[0];
+                    let rowsVal = rowsDataItem.innerHTML.toLowerCase().substring(rowsDataItem.innerHTML.indexOf('/') + 1);
+
+                    if(rowsVal == "tuần")
+                    {
+                        rows[i].style.display = "table-row";
+                    }
+                }
+            }
+            else
+            {
+                const table = document.getElementById("userTable");
+                let rows = table.rows;
+                for (i = 1; i < rows.length; i++)
+                {
+                    let rowsItem = rows[i].getElementsByTagName("td")[2];
+                    let rowsDataItem = rowsItem.getElementsByTagName("h6")[0];
+                    let rowsVal = rowsDataItem.innerHTML.toLowerCase().substring(rowsDataItem.innerHTML.indexOf('/') + 1);
+
+                    if(rowsVal == "tuần")
+                    {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }           
+        });
+
+        month.change(function() {
+            $( "#slider-range" ).slider( "option", "values", [ 1, 10 ] );
+            $("#amount").val( "1 - 10 gói");
+            if(this.checked)
+            {
+                const table = document.getElementById("userTable");
+                let rows = table.rows;
+                for (i = 1; i < rows.length; i++)
+                {
+                    let rowsItem = rows[i].getElementsByTagName("td")[2];
+                    let rowsDataItem = rowsItem.getElementsByTagName("h6")[0];
+                    let rowsVal = rowsDataItem.innerHTML.toLowerCase().substring(rowsDataItem.innerHTML.indexOf('/') + 1);
+
+                    if(rowsVal == "tháng")
+                    {
+                        rows[i].style.display = "table-row";
+                    }
+                }
+            }
+            else
+            {
+                const table = document.getElementById("userTable");
+                let rows = table.rows;
+                for (i = 1; i < rows.length; i++)
+                {
+                    let rowsItem = rows[i].getElementsByTagName("td")[2];
+                    let rowsDataItem = rowsItem.getElementsByTagName("h6")[0];
+                    let rowsVal = rowsDataItem.innerHTML.toLowerCase().substring(rowsDataItem.innerHTML.indexOf('/') + 1);
+
+                    if(rowsVal == "tháng")
+                    {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }      
+        });
+
         $("#slider-range").slider({
             range: true,
             min: 1,
             max: 20,
             values: [ 1, 10 ],
             slide: function(event, ui) {
-                console.log("\n\n***event", event);
                 $("#amount").val(ui.values[0] + " - " + ui.values[1] + " gói");
                 const table = document.getElementById("userTable");
                 let rows = table.rows;
 
                 for (i = 1; i < rows.length; i++)
                 {
+                    console.log("rows: ", rows[i]);
                     let rowsItem = rows[i].getElementsByTagName("td")[2];
                     let rowsDataItem = rowsItem.getElementsByTagName("h6")[0];
                     let rowsVal = parseInt(rowsDataItem.innerHTML.toLowerCase().split(" ")[0]);
-
+                    let rowsVal2 = rowsDataItem.innerHTML.toLowerCase().substring(rowsDataItem.innerHTML.indexOf('/') + 1);
+        
                     if (rowsVal >= ui.values[0] && rowsVal <= ui.values[1]){
-                            rows[i].style.display = "table-row";
+                        rows[i].style.display = "table-row";
+                        if(rowsVal2 == "ngày")
+                        {
+                            day.prop("checked", true);
+                        }
+                        if(rowsVal2 == "tuần")
+                        {
+                            week.prop("checked", true);
+                        }
+                        if(rowsVal2 == "tháng")
+                        {
+                            month.prop("checked", true);
+                        }
                     }
                     else{
                         rows[i].style.display = "none";
@@ -165,6 +320,7 @@
                 }
             }
             });
+
             $("#amount").val($("#slider-range").slider("values", 0) +
             " - " + $("#slider-range").slider("values", 1) + " gói" );
     } );
