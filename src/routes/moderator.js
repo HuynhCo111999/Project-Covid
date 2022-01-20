@@ -30,6 +30,8 @@ router.post('/remove-image-from-necessity/:id',necessitiesController.removeImage
 
 router.get('/analysis', analysis.index);
 router.post('/api/getamountbytime', analysis.getAmountByTime);
+router.post('/api/getamountbycombo', analysis.getAmountByCombo);
+
 
 
 router.post(

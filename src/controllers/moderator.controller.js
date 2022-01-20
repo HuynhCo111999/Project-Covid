@@ -48,10 +48,14 @@ exports.getIndex = async(req, res) => {
     console.log(obj);
     for (let o of obj) {
         for (let h of o.histoty_user_statuses) {
-            h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+            var temp = new Date(h.createdAt);
+            // h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+            h.createdAt = temp.toLocaleString('en-GB');
         }
         for (let h of o.histoty_user_locations) {
-            h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+            var temp = new Date(h.createdAt);
+            // h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+            h.createdAt = temp.toLocaleString('en-GB');
         }
     }
     res.render("moderator/main", {
@@ -493,6 +497,18 @@ exports.editUser = async(req, res) => {
                 nest: true,
             });
             const obj = JSON.parse(JSON.stringify(users));
+            for (let o of obj) {
+                for (let h of o.histoty_user_statuses) {
+                    var temp = new Date(h.createdAt);
+                    // h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+                    h.createdAt = temp.toLocaleString('en-GB');
+                }
+                for (let h of o.histoty_user_locations) {
+                    var temp = new Date(h.createdAt);
+                    // h.createdAt = h.createdAt.split("T")[0].split("-").reverse().join("-");
+                    h.createdAt = temp.toLocaleString('en-GB');
+                }
+            }
             res.render("moderator/main", {
                 layout: "moderator/main",
                 function: "list",

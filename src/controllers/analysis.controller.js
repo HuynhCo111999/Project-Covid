@@ -1,6 +1,7 @@
 const db = require('../models');
 const treatmentLocation = db.treatmentLocation;
 const HistoryStatus = require("../models/index").history_user_status;
+const covidNecessityCombo = db.covidNecessityCombo;
 const sequelize = db.sequelize;
 
 const { Op } = require("sequelize");
@@ -47,14 +48,40 @@ exports.index = async (req, res) => {
                 break;
         }
     });
+
     var date2 = new Date();
-    date2.setUTCHours(0,0,0,0);
+    date2.setHours(0);
+    date2.setMinutes(0);
+    date2.setSeconds(0);
+    date2.setMilliseconds(0);
     var text2 = date2.toISOString();
+    
+    var arrISOString = [text2];
+    var arrDateString = [date2.toLocaleDateString('en-GB')];
+    for(let i = 1; i< 7;i++){
+        var temp = new Date(date2);
+        temp.setDate(date2.getDate()-i);
+        arrISOString.push(temp.toISOString());
+        arrDateString.push(temp.toLocaleDateString('en-GB'));
+    }
+    //get thong ke so lieu
     var numberKhoi = await getNumberByStatusToday(text2,1);
     var numberF0 = await getNumberByStatusToday(text2,2);
     var numberF1 = await getNumberByStatusToday(text2,3);
     var sumKhoi = await getSumStatus(1);
 
+    //Get thong tin combo theo ngay
+    var a = await getNumberComboByTime(text2,date,-1);
+    var arrSumCombo = [a];
+    for(let i = 0; i< 6;i++){
+        var temp = await getNumberComboByTime(arrISOString[i+1], arrISOString[i], -1);
+        arrSumCombo.push(temp);
+    }
+
+    //get Combo
+    const combo = await covidNecessityCombo.findAll({
+        raw: true,
+    });
 
     res.render("moderator/analysis", {
         layout: "moderator/main",
@@ -64,14 +91,18 @@ exports.index = async (req, res) => {
         numberF1: numberF1,
         numberKhoi: numberKhoi,
         sumKhoi: sumKhoi,
+        arrDateString: arrDateString,
+        arrSumCombo: arrSumCombo,
+        combo: combo,
     });
 }
 exports.getAmountByTime = async (req, res) => {
-    console.log(req.body.date);
     var date = new Date(req.body.date);
     date.setHours(23);
+    date.setMinutes(59);
+    date.setSeconds(59);
+    console.log(date);
     var dateString = date.toISOString();
-    // date = date.toISOString();
     // console.log(date);
     var users;
     try {
@@ -115,6 +146,37 @@ exports.getAmountByTime = async (req, res) => {
     });
     res.send({rs});
 }
+exports.getAmountByCombo = async (req, res) => {
+    var comboid = parseInt(req.body.combo);
+
+    var date = new Date().toISOString();
+    var date2 = new Date();
+    date2.setHours(0);
+    date2.setMinutes(0);
+    date2.setSeconds(0);
+    date2.setMilliseconds(0);
+    var text2 = date2.toISOString();
+    
+    var arrISOString = [text2];
+    for(let i = 1; i< 7;i++){
+        var temp = new Date(date2);
+        temp.setDate(date2.getDate()-i);
+        arrISOString.push(temp.toISOString());
+    }
+    //Get thong tin combo theo ngay
+    var a = await getNumberComboByTime(text2, date, comboid);
+    var arrSumCombo = [a];
+    for(let i = 0; i< 6;i++){
+        var temp = await getNumberComboByTime(arrISOString[i+1], arrISOString[i], comboid);
+        arrSumCombo.push(temp);
+    }
+    var revertArray = arrSumCombo.reverse();
+    res.send(arrSumCombo);
+}
+
+// exports.getAmountByTime = async (req, res) => {
+
+// }
 const getNumberByStatusToday = async (date, statusid) => {
     try {
         const row = await sequelize.query(
@@ -140,6 +202,33 @@ const getSumStatus = async (statusid) => {
         return row.length;
     } catch (error) {
         console.log(error);
+    }
+    return 0;
+}
+const getNumberComboByTime = async (start, end, combo) => {
+    if(combo == -1){
+        try {
+            const row = await sequelize.query(
+                `SELECT COALESCE(SUM("quantity"),0) AS "sum"
+                FROM "orderDetails"
+                WHERE "createdAt" >= '${start}' AND "createdAt" < '${end}'`
+                , { type: QueryTypes.SELECT });
+            return row[0].sum;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    else {
+        try {
+            const row = await sequelize.query(
+                `SELECT COALESCE(SUM("quantity"),0) AS "sum"
+                FROM "orderDetails" 
+                WHERE "id_combo" = ${combo} AND "createdAt" >= '${start}' AND "createdAt" < '${end}'`
+                , { type: QueryTypes.SELECT });
+            return row[0].sum;
+        } catch (error) {
+            console.log(error);
+        }
     }
     return 0;
 }
