@@ -133,7 +133,8 @@ exports.getIndex = async(req, res) => {
             histoty_user_statuses: infoUser.histoty_user_statuses,
             histoty_user_locations: infoUser.histoty_user_locations,
         };
-
+        res.cookie("username", userCovid.identity_card);
+        
         return res.render("user/main", {
             layout: "user/main",
             function: "personal-information",
@@ -556,6 +557,7 @@ exports.getCart = async(req, res) => {
         req.session.cart = [];
     }
     const userId = req.cookies['userId']
+    const username = req.cookies['username'] || null;
     if (!req.session.cart || req.session.cart.length == 0) {
         return res.render("user/cart", {
             layout: "user/main",
@@ -564,6 +566,7 @@ exports.getCart = async(req, res) => {
             nameItem1: "Mua gói nhu yếu phẩm",
             nameItem2: "Giỏ hàng",
             userId: userId,
+            username: username,
             failureMessage2: "Không có gói nhu yếu phẩm nào trong giỏ hàng",
         });
     } else {
@@ -579,6 +582,7 @@ exports.getCart = async(req, res) => {
             nameItem1: "Mua gói nhu yếu phẩm",
             nameItem2: "Giỏ hàng",
             totalAmount: totalAmount,
+            username: username,
             userId: userId
         });
     }
@@ -589,6 +593,7 @@ exports.postAddCart = async(req, res) => {
         req.session.cart = [];
     }
     const userId = req.cookies['userId']
+    const username = req.cookies['username'] || null;
 
     let carts = req.session.cart;
     let idCombo = parseInt(req.body.dataHide2);
@@ -601,6 +606,7 @@ exports.postAddCart = async(req, res) => {
                 nameItem1: "Mua gói nhu yếu phẩm",
                 nameItem2: "Giỏ hàng",
                 userId: userId,
+                username: username,
                 failureMessage: "Gói nhu yếu phẩm này đã có trong giỏ hàng",
             });
         }
@@ -666,7 +672,8 @@ exports.postAddCart = async(req, res) => {
         nameItem1: "Mua gói nhu yếu phẩm",
         nameItem2: "Giỏ hàng",
         totalAmount: totalAmount,
-        userId: userId
+        userId: userId,
+        username: username
     });
 };
 
@@ -707,6 +714,8 @@ exports.deleteCart = async(req, res) => {
             });
         }
         const userId = req.cookies['userId']
+        const username = req.cookies['username'] || null;
+        
         return res.render("user/cart", {
             layout: "user/main",
             carts: req.session.cart,
@@ -714,6 +723,7 @@ exports.deleteCart = async(req, res) => {
             nameItem1: "Mua gói nhu yếu phẩm",
             nameItem2: "Giỏ hàng",
             totalAmount: totalAmount,
+            username: username,
             userId: userId
         });
     }
@@ -987,6 +997,8 @@ exports.postOrderNecessityCombo = async(req, res) => {
 
         if (flag === true) {
             const userId = req.cookies['userId']
+            const username = req.cookies['username'] || null;
+
             return res.render("user/cart", {
                 layout: "user/main",
                 carts: req.session.cart,
@@ -995,6 +1007,7 @@ exports.postOrderNecessityCombo = async(req, res) => {
                 nameItem2: "Giỏ hàng",
                 totalAmount: totalAmount,
                 userId: userId,
+                username: username,
                 failureMessageString: errorMessageArray,
             });
         } else {

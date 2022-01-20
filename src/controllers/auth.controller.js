@@ -184,6 +184,7 @@ exports.signin = (req, res) => {
             res.cookie("access_token", token);
             res.cookie("userId", user.id);
             res.cookie("role", 'admin');
+            res.cookie("username", user.username);
             return res.redirect('/admin/users');
           }
           else if (roles[i].name.toUpperCase() === "MODERATOR") {
@@ -193,6 +194,7 @@ exports.signin = (req, res) => {
             }).then(() => {
               res.cookie("access_token", token);
               res.cookie("userId", user.id);
+              res.cookie("username", user.username);
               res.cookie("role", 'moderator');
               return res.redirect('/moderator');
             }).catch((error) => {
@@ -203,12 +205,14 @@ exports.signin = (req, res) => {
             if(user.isFirst){
               res.cookie("access_token", token);
               res.cookie("userId", user.id);
+              res.cookie("username", user.identity_card);
               res.cookie("role", 'user');
               return res.redirect('/user/changepassfirst');
             }
             res.cookie("access_token", token);
             res.cookie("userId", user.id);
             res.cookie("role", 'user');
+            res.cookie("username", user.identity_card);
             return res.redirect('/user');
           }
         }

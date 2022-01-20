@@ -18,7 +18,7 @@
                 <div class="card-body pb-3">
                     totalAmount: {{totalAmount}}
                     <p class="text-danger" id="errmsg"></p>
-                    <button onclick="handleClickDebit({{userId}}, {{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
+                    <button onclick="handleClickDebit({{userId}}, {{username}}, {{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
                     <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="card-body pb-3">
                     totalAmount: {{totalAmount}}
                     <p class="text-danger" id="paymsg"></p>
-                    <button onclick="handlePayment({{userId}}, {{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
+                    <button onclick="handlePayment({{userId}}, {{username}},{{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
                     <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button onclick="confirmPayment({{userInfo.userId}})" class="btn bg-gradient-primary">Xác nhận</button>
+                <button onclick="confirmPayment({{username}})" class="btn bg-gradient-primary">Xác nhận</button>
                 <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
             </div>
         </div>
@@ -117,7 +117,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button onclick="confirmDebit({{userInfo.userId}})" class="btn bg-gradient-primary">Xác nhận</button>
+                <button onclick="confirmDebit({{username}})" class="btn bg-gradient-primary">Xác nhận</button>
                 <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
             </div>
         </div>
@@ -249,7 +249,7 @@
 <script>
         let dataMain = null;
 
-        const handleClickDebit = (id, temp) => {
+        const handleClickDebit = (id, username, temp) => {
             console.log("handleClickDebit: ", id, temp);
             if(!temp) {
                 $("#errmsg").text("Không có tiền để ghi nợ");
@@ -260,43 +260,65 @@
                 $("#errmsg").text("Số tiền phải lớn hơn 0.")
                 return;
             }
-            const data = {
-                money: money,
-                position: 'RECHARGE',
-                status: 'START',
-                userId: id
-            }
-            fetch(`https://localhost:3001/credit/recharge`, {
+            fetch('https://localhost:3001/user/getUserByName', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    username: username
+                })
             }).then(response => 
-                response.json())
-            .then(data => {
+                response.json()
+            ).then(data => {
                 if(data.success) {
-                    $('#debit').modal('hide');
-                    $('#ConfirmDebit').modal('show');
-                    $("#token-debit").text(data.data.tokenpayment);
-                    dataMain = data.data;
-                    console.log("data: ", data);
+                    const data = {
+                        money: money,
+                        position: 'RECHARGE',
+                        status: 'START',
+                        userId: data.data.id
+                    }
+                    fetch(`https://localhost:3001/credit/recharge`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    }).then(response => 
+                        response.json())
+                    .then(data => {
+                        if(data.success) {
+                            $('#debit').modal('hide');
+                            $('#ConfirmDebit').modal('show');
+                            $("#token-debit").text(data.data.tokenpayment);
+                            dataMain = data.data;
+                            console.log("data: ", data);
+                        } else {
+                            $('#debit').modal('hide');
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: data.error,
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                        }
+                    });
                 } else {
-                    $('#exampleModalSignUp').modal('hide');
+                    $('#debit').modal('hide');
                     Swal.fire({
                         position: 'center',
                         icon: 'error',
-                        title: 'Update error',
+                        title: data.error,
                         showConfirmButton: false,
                         timer: 3000
                     })
                 }
-            });
-
+            })
         } 
 
 
-        const handlePayment = (id, temp) => {
+        const handlePayment = (id, username ,temp) => {
             
             console.log("handleClickDebit: ", id, temp);
             if(!temp) {
@@ -308,130 +330,199 @@
                 $("#paymsg").text("Số tiền phải lớn hơn 0.")
                 return;
             }
-            const data = {
-                money: money,
-                position: 'PAYMENT',
-                status: 'START',
-                userId: id
-            }
-            fetch(`https://localhost:3001/credit/payment`, {
+            fetch('https://localhost:3001/user/getUserByName', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    username: username
+                })
             }).then(response => 
-                response.json())
-            .then(data => {
+                response.json()
+            ).then(data => {
                 if(data.success) {
-                    $('#payment').modal('hide');
-                    $('#ConfirmPayment').modal('show');
-                    $("#token-payment").text(data.data.tokenpayment);
-                    dataMain = data.data;
-                    console.log("data: ", data);
+                    const data = {
+                        money: money,
+                        position: 'PAYMENT',
+                        status: 'START',
+                        userId: data.data.id
+                    }
+                    fetch(`https://localhost:3001/credit/payment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    }).then(response => 
+                        response.json())
+                    .then(data => {
+                        if(data.success) {
+                            $('#payment').modal('hide');
+                            $('#ConfirmPayment').modal('show');
+                            $("#token-payment").text(data.data.tokenpayment);
+                            dataMain = data.data;
+                            console.log("data: ", data);
+                        } else {
+                            $('#exampleModalSignUp').modal('hide');
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: data.error,
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                        }
+                    });
                 } else {
-                    $('#exampleModalSignUp').modal('hide');
+                    $('#debit').modal('hide');
                     Swal.fire({
                         position: 'center',
                         icon: 'error',
-                        title: 'Update error',
+                        title: data.error,
                         showConfirmButton: false,
                         timer: 3000
                     })
                 }
-            });
+            })
         }
 
-        const confirmDebit = (id) => {
-        const temp = $("#token-recharge").val();
-        if(!temp) {
-            $("#msg").text("Vui lòng nhập số tiền.")
-            return;
-        }
-        const data = {
-            token: temp,
-            userId: id,
-            postion: 'DEBIT',
-            money: dataMain.money
-        }
+        const confirmDebit = (username) => {
+            const temp = $("#token-recharge").val();
+                if(!temp) {
+                    $("#msg").text("Vui lòng nhập số tiền.")
+                    return;
+                }
+                fetch('https://localhost:3001/user/getUserByName', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username
+                    })
+                }).then(response => 
+                    response.json()
+                ).then(data => {
+                    if(data.success) {
+                        const data = {
+                            token: temp,
+                            userId: data.data.id,
+                            postion: 'DEBIT',
+                            money: dataMain.money
+                        }
 
-        fetch(`https://localhost:3001/credit/identify`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        }).then(response => 
-            response.json())
-          .then(data => {
-            if(data.success) {
-                $('#ConfirmDebit').modal('hide');
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Update sucesss',
-                    showConfirmButton: false,
-                    timer: 3000
-                })
-                console.log("data: ", data);
-            } else {
-                $('#exampleModalSignUp').modal('hide');
-                Swal.fire({
-                    position: 'center',
-                    icon: 'error',
-                    title: 'Update error',
-                    showConfirmButton: false,
-                    timer: 3000
-                })
-            }
-          });
-    }
-
-
-        const confirmPayment = (id) => {
-        const temp = $("#token-recharge").val();
-        if(!temp) {
-            $("#msg").text("Vui lòng nhập số tiền.")
-            return;
-        }
-        const data = {
-            token: temp,
-            userId: id,
-            postion: 'PAYMENT',
-            money: dataMain.money
-        }
-
-        fetch(`https://localhost:3001/credit/identify`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        }).then(response => 
-            response.json())
-          .then(data => {
-            if(data.success) {
-                $('#ConfirmPayment').modal('hide');
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Update sucesss',
-                    showConfirmButton: false,
-                    timer: 3000
-                })
-                console.log("data: ", data);
-            } else {
-                $('#exampleModalSignUp').modal('hide');
-                Swal.fire({
-                    position: 'center',
-                    icon: 'error',
-                    title: 'Update error',
-                    showConfirmButton: false,
-                    timer: 3000
+                        fetch(`https://localhost:3001/credit/identify`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data)
+                        }).then(response => 
+                            response.json())
+                        .then(data => {
+                            if(data.success) {
+                                $('#ConfirmDebit').modal('hide');
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Update sucesss',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                })
+                                console.log("data: ", data);
+                            } else {
+                                $('#ConfirmDebit').modal('hide');
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'error',
+                                    title: data.error,
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                })
+                            }
+                        });
+                    } else {
+                        $('#debit').modal('hide');
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: data.error,
+                            showConfirmButton: false,
+                            timer: 3000
+                        })
+                    }
                 })
             }
-          });
-    }
+
+
+        const confirmPayment = (username) => {
+            const temp = $("#token-recharge").val();
+            if(!temp) {
+                $("#msg").text("Vui lòng nhập số tiền.")
+                return;
+            }
+            fetch('https://localhost:3001/user/getUserByName', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username
+                })
+            }).then(response => 
+               response.json()
+             ).then(data => {
+                if(data.success) {
+                    const data = {
+                        token: temp,
+                        userId: id,
+                        postion: 'PAYMENT',
+                        money: dataMain.money
+                    }
+
+                    fetch(`https://localhost:3001/credit/identify`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    }).then(response => 
+                        response.json())
+                    .then(data => {
+                        if(data.success) {
+                            $('#ConfirmPayment').modal('hide');
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Update sucesss',
+                                showConfirmButton: false,
+                                 timer: 3000
+                            })
+                            console.log("data: ", data);
+                         } else {
+                            $('#ConfirmPayment').modal('hide');
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: data.error,
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                        }
+                    });
+                } else {
+                    $('#debit').modal('hide');
+                    Swal.fire({
+                         position: 'center',
+                        icon: 'error',
+                        title: data.error,
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                }
+            })
+        }
 
         function getParent(element, selector) {
             while (element.parentElement) {
