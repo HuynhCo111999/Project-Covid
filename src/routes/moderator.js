@@ -5,6 +5,7 @@ const necessitiesComboController = require("../controllers/necessities-combo.con
 const { check, body } = require("express-validator/check");
 const upload = require('../middleware/upload');
 const { route } = require("express/lib/application");
+const analysis = require("../controllers/analysis.controller");
 
 // localhost:3000/moderator
 router.get("/", moderatorController.getIndex);
@@ -26,6 +27,12 @@ router.post('/remove-necessity-from-combo/:id', necessitiesComboController.remov
 router.post('/update-necessity-for-combo/:id', necessitiesComboController.updateDetails);
 router.post('/add-image-to-necessity/:id', upload.single('upload'), necessitiesController.addImages);
 router.post('/remove-image-from-necessity/:id',necessitiesController.removeImages);
+
+router.get('/analysis', analysis.index);
+router.post('/api/getamountbytime', analysis.getAmountByTime);
+router.post('/api/getamountbycombo', analysis.getAmountByCombo);
+
+
 
 router.post(
   "/add-user",
