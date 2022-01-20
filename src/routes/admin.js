@@ -37,4 +37,6 @@ router.post("/history", isAdmin, authController.getHistory);
 
 router.post("/updateUser", isAdmin, authController.updateUser);
 
+router.get("/setting-limit-credit", authController.settingLimitCredit);
+
 module.exports = router;

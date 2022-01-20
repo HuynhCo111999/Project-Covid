@@ -1,0 +1,112 @@
+<div class="container">
+    <div class="main">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-12">
+                <div class="card">
+                    <div class="col-12 title">Change limit credit</div>
+                    <div class="content-card">
+                        <div class="row">
+                            
+                            <div class="col-12">
+                                <span id="info">Limit credit current: {{data.limitcredit}}</span>
+                            </div>
+                            <div class="col-12">
+                               <input type="number" value="limitcredit" id="limitcredit" style="width: 70%"/>
+                            </div>
+                            <div class="col-12">
+                                <span id="error" style="color: red;"></span>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn bg-gradient-primary" onclick="handleClick()">Change Limit Credit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+.container {
+    height: 100vh;
+    width: 100vw;
+}
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    width: 80%;
+}
+.card {
+    height: 300px;
+    width: 500px;
+}
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    color: black;
+    margin: 20px 0;
+    text-align: center;
+}
+.content-card {
+    margin: auto; 
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+}
+button {
+    margin-top: 10px;
+}
+</style>
+
+<script src="/js/core/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    const handleClick = () => {
+        const limitcredit = $("#limitcredit").val();
+        const dataCr = Number(limitcredit);
+        if(!limitcredit || dataCr < 0) {
+            $("#error").text("Number Limit Credit is wrong!");
+            return;
+        }
+
+        const data = {
+            limitcredit: dataCr
+        }
+        fetch("https://localhost:3001/admin/setting", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then(response => 
+            response.json()
+        ).then(data => {
+            if(data.success) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Update sucesss',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+                $("#error").text(null);
+                $("#info").text(`Limit credit current: ${data.data.limitcredit}`);
+            }
+            else {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Update error',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }
+        })
+
+    }
+</script>

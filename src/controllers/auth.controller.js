@@ -1,6 +1,7 @@
 const db = require("../models");
 const config = require("../config/auth.config");
 const moment = require('moment');
+const axios = require('axios');
 const User = db.user;
 const Role = db.role;
 const Histores = db.histories;
@@ -8,6 +9,7 @@ const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+
 // const { format } = require("path/posix");
 
 exports.createUser = (req, res) => {
@@ -292,4 +294,18 @@ exports.checkfirst = async() => {
         }
     });
     res.json(histores);
+}
+
+exports.settingLimitCredit = async(req, res) => {
+  const dataSetting = await axios.get('https://localhost:3001/admin/setting');
+  console.log("dataSetting: ", dataSetting.data);
+  let data = 0;
+  if(dataSetting.data.success) {
+    data = dataSetting.data.data
+  }
+  return res.render('admin/setting', {
+    layout: "admin/main",
+    data: data,
+    function: "setting-limit-credit"
+  })
 }
