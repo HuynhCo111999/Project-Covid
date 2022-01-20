@@ -172,7 +172,7 @@ exports.signin = (req, res) => {
                 error: 'Account is locked!'
               })
             }
-      var token = jwt.sign({ id: user.id }, config.secret, {
+      var token = jwt.sign({ id: user.id, username: user.username }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
       
