@@ -24,7 +24,7 @@ exports.get = async (req, res) => {
                     necessities: necessities,
                     combos: combos,
                     function: "necessities-package",
-                    tabItemName: "Gói nhu yếu phẩm",
+                    title: "Gói nhu yếu phẩm",
                 });
 };
 
@@ -194,7 +194,7 @@ exports.getDetails = async (req, res) => {
                         comboName: comboInstance.name,
                         comboSalesLimit: comboInstance.sales_limit,
                         comboSalesCycle: comboInstance.sales_cycle,
-                        tabItemName: "Chi tiết gói nhu yếu phẩm",
+                        title: "Chi tiết gói nhu yếu phẩm",
                     });
     }
     catch(error)

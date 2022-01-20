@@ -63,7 +63,7 @@ exports.getIndex = async (req, res) => {
     layout: "moderator/main",
     function: "list",
     users: obj,
-    tabItemName: "Người liên quan",
+    title: "Người liên quan",
   });
 };
 
@@ -91,7 +91,7 @@ exports.getAddUser = async (req, res) => {
     location: location,
     statusCovid: statusCovid,
     function: "add-user",
-    tabItemName: "Thêm người liên quan",
+    title: "Thêm người liên quan",
   });
 };
 
@@ -145,7 +145,7 @@ exports.postAddUser = async (req, res) => {
       related_person: parseInt(req.body.related_person),
       place: parseInt(req.body.place),
       function: "add-user",
-      tabItemName: "Thêm người liên quan",
+      title: "Thêm người liên quan",
     });
   }
 
@@ -224,7 +224,7 @@ exports.postAddUser = async (req, res) => {
         statusCovid: statusCovid,
         successMessage: "Thêm thành công",
         function: "add-user",
-        tabItemName: "Thêm người liên quan",
+        title: "Thêm người liên quan",
       });
     })
     .catch((err) => {
@@ -315,7 +315,7 @@ exports.getEditUser = async (req, res) => {
     related_person: user.related_personId,
     place: locationId,
     function: "list",
-    tabItemName: "Sửa thông tin người liên quan",
+    title: "Sửa thông tin người liên quan",
   });
 };
 
@@ -421,7 +421,7 @@ exports.editUser = async (req, res) => {
       related_person: parseInt(req.body.related_person),
       place: parseInt(req.body.place),
       function: "list",
-      tabItemName: "Sửa thông tin người liên quan",
+      title: "Sửa thông tin người liên quan",
     });
   }
   let isChangeStatus = statusId != parseInt(req.body.status) ? true : false;
@@ -523,7 +523,7 @@ exports.editUser = async (req, res) => {
         function: "list",
         users: obj,
         successMessage: "Sửa thành công",
-        tabItemName: "Sửa thông tin người liên quan",
+        title: "Sửa thông tin người liên quan",
       });
     })
     .catch((err) => console.log(err));

@@ -99,8 +99,8 @@
     <div class="col-12">
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Danh sách người quản lí</h6>
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-3 pb-2">
+                    <h6 class="text-white text-center ps-3" style="font-size:1.25rem">DANH SÁCH NGƯỜI QUẢN LÝ</h6>
                 </div>
             </div>
             <div class="card-body px-0 pb-2">
@@ -108,21 +108,19 @@
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
-                                <th>Active</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7" style="width: 10%">
+                                    Trạng thái</th>
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7" style="width: 10%">
                                     UserId</th>
                                 <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7">
                                     Username</th>
-                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 ps-2">
+                                <th class="text-uppercase text-secondary text-md font-weight-bolder opacity-7 pl-2">
                                     Email
                                 </th>
                                 <th
                                     class="text-center text-uppercase text-secondary text-md font-weight-bolder opacity-7">
-                                    UserType
+                                    Vai trò
                                 </th>
-                                <th
-                                    class="text-center text-uppercase text-secondary text-md font-weight-bolder opacity-7">
-                                    password</th>
                                 <th class="text-secondary opacity-7"></th>
                             </tr>
                         </thead>
@@ -130,27 +128,27 @@
                             {{#each listUsers}}
                             <tr>
                                 <td>
-                                    <select class="lock" name="lock" onchange="onChangeLock({{id}})">
+                                    <select class="lock ms-3" name="lock" onchange="onChangeLock({{id}})">
                                         {{#if isActive}}
-                                            <option value=true>true</option>
-                                            <option value=false>false</option>
-                                            {{else}}
-                                            <option value=false>false</option>
-                                            <option value=true>true</option>
+                                        <option value=true>Kích hoạt</option>
+                                        <option value=false>Khóa</option>
+                                        {{else}}
+                                        <option value=false>Khóa</option>
+                                        <option value=true>Kích hoạt</option>
                                         {{/if }}
                                     </select>
                                 </td>
                                 <td>
                                     <div class="d-flex px-4 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-md">{{id}}</h6>
+                                            <h6 class="mb-0 text-md ms-2">{{id}}</h6>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex px-4 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-md">{{username}}</h6>
+                                            <h6 class="mb-0 text-md text-center">{{username}}</h6>
                                         </div>
                                     </div>
                                 </td>
@@ -158,11 +156,8 @@
                                     <p class="text-md font-weight-bold mb-0">{{email}}</p>
                                 </td>
                                 <th >
-                                    <p class="text-md font-weight-bold mb-0" style="text-align: center;">{{role}}</p>
+                                    <p class="text-md font-weight-bold mb-0" style="text-align: center;">Người quản lý</p>
                                 </th>
-                                <td class="align-middle text-center text-md">
-                                    <span class="text-md">{{password}}</span>
-                                </td>
                                 {{!-- <td class="align-middle">
                                     <button style="height: auto; margin: auto" type="button" class="btn bg-gradient-primary btn-block"
                                         data-bs-toggle="modal" data-bs-target="#ModalEditUser" data-name="{{username}}" 
@@ -240,7 +235,7 @@
         ).then(data => {
             if(data.success) {
                 Swal.fire({
-                    position: 'top-end',
+                    position: 'center',
                     icon: 'success',
                     title: 'Update sucesss',
                     showConfirmButton: false,
@@ -249,7 +244,7 @@
             }
             else {
                 Swal.fire({
-                    position: 'top-end',
+                    position: 'center',
                     icon: 'error',
                     title: 'Update error',
                     showConfirmButton: false,
