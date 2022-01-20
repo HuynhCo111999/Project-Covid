@@ -1,30 +1,35 @@
 module.exports = (sequelize, Sequelize) => {
-  const User = sequelize.define("covid-users", {
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    identity_card: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
-    yob: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
-    province: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    district: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    ward: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-  });
+    const User = sequelize.define("covid-users", {
+        name: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        identity_card: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        yob: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        province: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        district: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        ward: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        payment: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+    });
 
-  return User;
+    return User;
 };

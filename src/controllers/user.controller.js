@@ -754,6 +754,22 @@ exports.postOrderNecessityCombo = async(req, res) => {
     });
 
     if (orders.length <= 0) {
+        const currentUser = await User.findOne({
+            where: { id: idUser },
+            raw: true,
+        });
+        const currentCovidUser = await covidUser.findOne({
+            where: { identity_card: parseInt(currentUser.username) },
+            raw: true,
+        });
+
+        let totalPayment = currentCovidUser.payment + totalAmount;
+        await covidUser.update({
+            payment: totalPayment,
+        }, {
+            where: { id: currentCovidUser.id },
+        });
+
         let orderAdd = await Order.create({
             userId: idUser,
             totalAmount: totalAmount,
@@ -882,6 +898,21 @@ exports.postOrderNecessityCombo = async(req, res) => {
                 failureMessageString: errorMessageArray,
             });
         } else {
+            const currentUser = await User.findOne({
+                where: { id: idUser },
+                raw: true,
+            });
+            const currentCovidUser = await covidUser.findOne({
+                where: { identity_card: parseInt(currentUser.username) },
+                raw: true,
+            });
+            let totalPayment = currentCovidUser.payment + totalAmount;
+            await covidUser.update({
+                payment: totalPayment,
+            }, {
+                where: { id: currentCovidUser.id },
+            });
+
             let orderAdd = await Order.create({
                 userId: idUser,
                 totalAmount: totalAmount,
