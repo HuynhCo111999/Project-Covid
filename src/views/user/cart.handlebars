@@ -18,7 +18,7 @@
                 <div class="card-body pb-3">
                     totalAmount: {{totalAmount}}
                     <p class="text-danger" id="errmsg"></p>
-                    <button onclick="handleClickDebit({{userId}}, {{username}}, {{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
+                    <button onclick="handleClickDebit({{userId}}, {{username}}, 200)" class="btn bg-gradient-primary">Ghi nợ</button>
                     <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
                 </div>
             </div>
@@ -272,7 +272,7 @@
                 response.json()
             ).then(data => {
                 if(data.success) {
-                    const data = {
+                    const datax = {
                         money: money,
                         position: 'RECHARGE',
                         status: 'START',
@@ -283,7 +283,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify(datax)
                     }).then(response => 
                         response.json())
                     .then(data => {
@@ -342,7 +342,7 @@
                 response.json()
             ).then(data => {
                 if(data.success) {
-                    const data = {
+                    const datax = {
                         money: money,
                         position: 'PAYMENT',
                         status: 'START',
@@ -353,7 +353,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify(datax)
                     }).then(response => 
                         response.json())
                     .then(data => {
@@ -405,7 +405,7 @@
                     response.json()
                 ).then(data => {
                     if(data.success) {
-                        const data = {
+                        const datax = {
                             token: temp,
                             userId: data.data.id,
                             postion: 'DEBIT',
@@ -417,7 +417,7 @@
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify(data)
+                            body: JSON.stringify(datax)
                         }).then(response => 
                             response.json())
                         .then(data => {
@@ -474,7 +474,7 @@
                response.json()
              ).then(data => {
                 if(data.success) {
-                    const data = {
+                    const datax = {
                         token: temp,
                         userId: id,
                         postion: 'PAYMENT',
@@ -486,7 +486,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify(datax)
                     }).then(response => 
                         response.json())
                     .then(data => {
