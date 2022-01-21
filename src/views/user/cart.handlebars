@@ -16,7 +16,7 @@
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
-                    totalAmount: {{totalAmount}}
+                    Số tiền: {{totalAmount}}
                     <p class="text-danger" id="errmsg"></p>
                     <button onclick="handleClickDebit({{userId}}, {{username}}, {{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
                     <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -40,9 +40,9 @@
             </div>
             <div class="modal-body p-0">
                 <div class="card-body pb-3">
-                    totalAmount: {{totalAmount}}
+                    Tổng tiền: {{totalAmount}}
                     <p class="text-danger" id="paymsg"></p>
-                    <button onclick="handlePayment({{userId}}, {{username}},{{totalAmount}})" class="btn bg-gradient-primary">Ghi nợ</button>
+                    <button onclick="handlePayment({{userId}}, {{username}},{{totalAmount}})" class="btn bg-gradient-primary" id="payMentButton">Thanh toán</button>
                     <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
                 </div>
             </div>
@@ -227,7 +227,7 @@
     <p class="btn bg-gradient-secondary btn-block amountAllCombo mx-3">Tổng tiền thanh toán: {{totalAmount}}đ</p>
 </div>
 <div class="d-flex justify-content-end mb-3">
-    <div class="d-flex justify-content-end mb-3">
+    <div class="d-flex justify-content-end mb-3 mx-3">
         <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
             data-bs-target="#debit">
             GHI NỢ
@@ -260,6 +260,8 @@
                 $("#errmsg").text("Số tiền phải lớn hơn 0.")
                 return;
             }
+            console.log("Data1 de");
+
             fetch('https://localhost:3001/user/getUserByName', {
                 method: 'POST',
                 headers: {
@@ -271,6 +273,7 @@
             }).then(response => 
                 response.json()
             ).then(data => {
+                console.log("Data debit: ", data);
                 if(data.success) {
                     const data = {
                         money: money,
@@ -320,7 +323,7 @@
 
         const handlePayment = (id, username ,temp) => {
             
-            console.log("handleClickDebit: ", id, temp);
+            console.log("handleClickPayment: ", id, temp);
             if(!temp) {
                 $("#paymsg").text("Không có tiền để thanh toán");
                 return;

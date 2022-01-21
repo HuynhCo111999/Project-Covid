@@ -1,4 +1,4 @@
-{{!-- <div class="container-fluid w-75">
+<div class="container-fluid w-75">
     <div class="row justify-content-center">
         <h1 class="text-center my-3" style="font-size: 2.5rem">CHUYỂN ĐẾN CỔNG THANH TOÁN</h1>
         <h5 class="text-center mb-3 text-success" id="msg" style="display: none;">Đang chuyển đến...</h5>
@@ -14,82 +14,4 @@
             $("#msg").hide();
         },3000);
     };
-</script> --}}
-
-
-
-<button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#exampleModalPayment">
-    THANH TOÁN
-</button>
-
-<div class="modal fade" id="exampleModalPayment" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title font-weight-normal" id="exampleModalLabel">XÁC NHẬN NỘP TIỀN
-                </h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body p-0">
-                <div class="card-body pb-3">
-                    <form role="form text-left" id="add-location-form" action="#" method="post" onsubmit="return validateAdd()">
-                        <p style="font-weight: 400; color: black"><strong>Sao chép token và xác nhận</p>	
-                        <p><strong>{{token}}</p>
-                        <div class="input-group input-group-static my-3">
-                            <input type="text" class="form-control" name="currentInput"  placeholder="Token rechange">
-                            <div class="err-msg mt-3"></div>   
-                        </div>    
-                    </form>
-                    <p class="text-danger" id="errmsg"></p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn bg-gradient-primary" form="add-location-form">Xác nhận</button>
-                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal" data-bs-target="#exampleModalDebit">
-    GHI NỢ
-</button>
-
-<div class="modal fade" id="exampleModalDebit" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title font-weight-normal" id="exampleModalLabel">NHẬP SỐ TIỀN CẦN NỘP
-                </h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body p-0">
-                <div class="card-body pb-3">
-                    <form role="form text-left" id="add-location-form" action="#" method="post" onsubmit="return validateAdd()">
-                        <div class="input-group input-group-outline mb-3">
-                            <label class="form-label">Số tiền</label>
-                            <input type="number" class="form-control" name="money">
-                            {{#if errMsg2}}
-                                <div class="invalid-feedback d-inline-block text-primary">
-                                    {{errMsg2}}
-                                </div>
-                            {{/if}}
-                        </div>  
-                    </form>
-                    <p class="text-danger" id="errmsg"></p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn bg-gradient-primary" form="add-location-form">Nộp</button>
-                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
-            </div>
-        </div>
-    </div>
-</div>
+</script>
