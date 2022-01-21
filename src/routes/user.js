@@ -26,7 +26,7 @@ router.post(
     userController.postChangePassFirst
 );
 router.get("/buy-necessity-combo", isUser, userController.getBuyNecessityCombo);
-router.post("/order/:type", isUser, userController.postOrderNecessityCombo);
+router.post("/order", isUser, userController.postOrderNecessityCombo);
 router.get("/cart", isUser, userController.getCart);
 router.post("/cart/add/:name", isUser, userController.postAddCart);
 router.get("/cart/delete/:id", isUser, userController.deleteCart);
