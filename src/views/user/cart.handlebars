@@ -76,7 +76,7 @@
                             <input type="text" class="form-control" name="token-recharge" id="token-recharge">
                         </div>
                     </form>
-                    <p class="text-danger" id="msg"></p>
+                    <p class="text-danger" id="msg_payment"></p>
                 </div>
             </div>
             <div class="modal-footer">
@@ -113,7 +113,7 @@
                             <input type="text" class="form-control" name="token-recharge" id="token-recharge">
                         </div>
                     </form>
-                    <p class="text-danger" id="msg"></p>
+                    <p class="text-danger" id="msg_debit"></p>
                 </div>
             </div>
             <div class="modal-footer">
@@ -391,9 +391,11 @@
         }
 
         const confirmDebit = (username) => {
-            const temp = $("#token-recharge").val();
+            const temp = $("#token-debit").val();
+            console.log("user: ", username, temp)
+
                 if(!temp) {
-                    $("#msg").text("Vui lòng nhập số tiền.")
+                    $("#msg_debit").text("Vui lòng nhập số tiền.")
                     return;
                 }
                 fetch('https://localhost:3001/user/getUserByName', {
@@ -460,9 +462,9 @@
 
 
         const confirmPayment = (username) => {
-            const temp = $("#token-recharge").val();
+            const temp = $("#token-payment").val();
             if(!temp) {
-                $("#msg").text("Vui lòng nhập số tiền.")
+                $("#msg_payment").text("Vui lòng nhập số tiền.")
                 return;
             }
             fetch('https://localhost:3001/user/getUserByName', {
